@@ -20,7 +20,7 @@ CSprites *CSprites::GetInstance()
 	return __instance;
 }
 
-void CSprite::Draw(float x, float y, int alpha)
+void CSprite::Draw(float x, float y, int alpha = 255)
 {
 	CGame * game = CGame::GetInstance();
 	game->Draw(x, y, texture, left, top, right, bottom, alpha);
@@ -49,6 +49,7 @@ void CAnimation::Add(int spriteId, DWORD time)
 
 void CAnimation::Render(float x, float y, int alpha)
 {
+	alpha = 255;
 	DWORD now = GetTickCount();
 	if (currentFrame == -1) 
 	{

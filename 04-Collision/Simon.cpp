@@ -5,76 +5,143 @@
 #include "SIMON.h"
 #include "Game.h"
 
+
 #include "Torch.h"
 
-void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	// Calculate dx, dy 
 	CGameObject::Update(dt);
-	// Simple fall down
-	vy += SIMON_GRAVITY*dt;
-
+	vy += SIMON_GRAVITY * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-
-	// turn off collision when die 
-	if (state!=SIMON_STATE_DIE)
+	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
-	if ( GetTickCount() - jump_start > SIMON_JUMP_TIME) 
+	if (GetTickCount() - jump_start > SIMON_JUMP_TIME)
 	{
 		jump_start = 0;
 		jump = 0;
+
+	}
+	else
+	{
+		//jumping up
+		if (GetTickCount() - jump_start < (SIMON_JUMP_TIME))
+		{
+			//jump when on ground
+			if (onGround)
+			{
+				vy = -SIMON_JUMP_SPEED_Y;
+				onGround = false;
+			}
+			else
+			{
+				vx = 0;
+			}
+		}
 	}
 	if (GetTickCount() - attack_start > SIMON_ATTACK_TIME)
 	{
 		attack_start = 0;
 		attack = 0;
 	}
-	// No collision occured, proceed normally
-	if (coEvents.size()==0)
+	if (GetTickCount() - changecolor_start > SIMON_EAT_TIME)
 	{
-		x += dx; 
+		changecolor_start = 0;
+		changecolor = 0;
+
+	}
+	// No collision occured, proceed normally
+	if (coEvents.size() == 0)
+	{
+		x += dx;
 		y += dy;
 	}
-	else
+	//check overlap
+	vector<LPGAMEOBJECT> tor;
+	for (UINT i = 0; i < coObjects->size(); i++)
 	{
+		if (dynamic_cast<CTorch*>(coObjects->at(i)))
+			tor.push_back(coObjects->at(i));
+	}
+	for (UINT i = 0; i < tor.size(); i++)
+	{
+		CTorch* torch = dynamic_cast<CTorch*>(tor[i]);
+		if (CheckOverlap(torch) != true)
+		{
+			torch->SetTouchable(true);
+
+		}
+	}
 		float min_tx, min_ty, nx = 0, ny;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-		// block 
-		x += min_tx*dx + nx*0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-		y += min_ty*dy + ny*0.4f;
-		
-		if (nx!=0) vx = 0;
-		if (ny!=0) vy = 0;
-
-		// Collision logic with Goombas
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (dynamic_cast<CBrick*>(e->obj))
+			{
+				// block 
+				x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+				y += min_ty * dy + ny * 0.4f;
 
-			//if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
-			//{
-			//	CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
+				if (nx != 0) vx = 0;
+				if (ny != 0) vy = 0;
+				SetOnGround(true);
+			}
+			else if (dynamic_cast<CTorch*>(e->obj))
+			{
+				if ((e->obj)->active == true)
+				{
+					CTorch* tor = dynamic_cast<CTorch*>(e->obj);
+					if (CheckOverlap(tor) != true)
+					{
+						switch (tor->GetState())
+						{
+						case 0:
+							tor->SetTouchable(false); break;
+						case 1:
+							tor->SetTouchable(false);
+							tor->SetActive(false);
+							tor->SetPosition(-100, 0);
+							break;
+						case 2:
+							tor->SetTouchable(false);
+							tor->SetActive(false);
+							tor->SetPosition(-100, 0);
+							break;
+						case 3:
+							StartChangeColor();
+							tor->SetTouchable(false);
+							tor->SetActive(false);
+							tor->SetPosition(-100, 0);
+							this->SetLevel(SIMON_LEVEL_MS_2);
+							break;
+						case 4:
+							StartChangeColor();
+							tor->SetTouchable(false);
+							tor->SetActive(false);
+							tor->SetPosition(-100, 0);
+							isThrowDagger = true;
+							isThrowAxe = false;
+							break;
+						case 5:
+							StartChangeColor();
+							tor->SetTouchable(false);
+							tor->SetActive(false);
+							tor->SetPosition(-100, 0);
+							isThrowAxe = true;
+							isThrowDagger = false;
+							break;
+						}
+					}
+				}
+			}
 
-			//	// jump on top >> kill Goomba and deflect a bit 
-			//	if (e->ny < 0)
-			//	{
-			//		if (goomba->GetState()!= GOOMBA_STATE_DIE)
-			//		{
-			//			goomba->SetState(GOOMBA_STATE_DIE);
-			//			vy = -SIMON_JUMP_DEFLECT_SPEED;
-			//		}
-			//	}
-			//}
 		}
-	}
-
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
@@ -108,6 +175,12 @@ void CSimon::Render()
 	else if (state == SIMON_STATE_WALKING_LEFT)
 	{
 	    ani = SIMON_ANI_WALKING_LEFT;
+	}
+	if (changecolor!=0)
+	{
+		if (nx > 0) 
+			ani = SIMON_ANI_EAT_RIGHT;
+		else ani = SIMON_ANI_EAT_LEFT;
 	}
 	if (attack != 0)
 		{
@@ -164,7 +237,6 @@ void CSimon::StandUp()
 	y = y - PULL_UP_SIMON_AFTER_SITTING;
 	sit = false;
 }
-
 void CSimon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;

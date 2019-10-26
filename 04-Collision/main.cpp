@@ -19,8 +19,11 @@
 ================================================================ */
 
 #include <windows.h>
+#include <iostream>
 #include <d3d9.h>
 #include <d3dx9.h>
+#include <cstdlib>
+#include <ctime>
 
 #include "debug.h"
 #include "Game.h"
@@ -31,6 +34,8 @@
 #include "MS.h"
 #include "Torch.h"
 #include "Brick.h"
+#include "Dagger.h"
+#include "Axe.h"
 
 #include<iostream>
 #include<fstream>
@@ -50,13 +55,20 @@
 #define ID_TEX_ENEMY 10
 #define ID_TEX_MISC 20
 #define ID_TEX_TORCH 30
+#define ID_TEX_DAGGERR 40
+#define ID_TEX_DAGGERL 41
+#define ID_TEX_LHEART 42
+#define ID_TEX_SHEART 43
+#define ID_TEX_MSUP 44
+#define ID_TEX_AXE 45
 
 #define ID_TEX_ENTRANCESTAGE 100
 CGame * game;
 
 CSimon* SIMON;
 CMS* MS;
-
+CDagger* dagger;
+CAxe* Axe;
 vector<LPGAMEOBJECT> objects;
 
 class CSampleKeyHander : public CKeyEventHandler
@@ -71,22 +83,55 @@ CSampleKeyHander* keyHandler;
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		SIMON->SetState(SIMON_STATE_JUMP);
-		SIMON->StartJump();
+		if (SIMON->GetOnGround())
+		{
+			SIMON->SetState(SIMON_STATE_JUMP);
+			SIMON->StartJump();
+		}
 		break;
 	case DIK_A:
 		if (game->IsKeyDown(DIK_RIGHT) || game->IsKeyDown(DIK_LEFT))
 		{
 			return;
 		}
-		MS->StartAttack();
-		MS->SetState(WHIP_STATE_ATTACK);
-		MS->SetActive(true);
-		SIMON->SetState(SIMON_STATE_ATTACK);
-		SIMON->StartAttack();
+		if (game->IsKeyDown(DIK_UP))
+		{
+			if (SIMON->GetThrowDagger())
+			{
+				dagger->StartAttack();
+				dagger->SetActive(true);
+				dagger->nx = SIMON->nx;
+				MS->SetActive(false);
+				SIMON->SetState(SIMON_STATE_ATTACK);
+				SIMON->StartAttack();
+			}
+			else if (SIMON->GetThrowAxe())
+			{
+				Axe->StartAttack();
+				Axe->SetActive(true);
+				Axe->nx = SIMON->nx;
+				MS->SetActive(false);
+				SIMON->SetState(SIMON_STATE_ATTACK);
+				SIMON->StartAttack();
+				
+			}
+		}
+		if (!game->IsKeyDown(DIK_UP))
+		{
+			MS->StartAttack();
+			MS->SetState(MS_STATE_ATTACK);
+			MS->SetActive(true);
+			SIMON->SetState(SIMON_STATE_ATTACK);
+			SIMON->StartAttack();
+			if (SIMON->GetLevel() == SIMON_LEVEL_MS_2)
+			{
+				MS->SetState(MS_STATE_ATTACK_2);
+			}
+        }
 		break;
 	case DIK_Q:
 		if (SIMON->GetActive() == true)
@@ -109,13 +154,13 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 void CSampleKeyHander::KeyState(BYTE* states)
 {
 	// disable control key when SIMON die 
-	if (SIMON->GetState() == SIMON_STATE_DIE) return;
-	if (game->IsKeyDown(DIK_RIGHT))
+	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
+	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN))
 	{
 		SIMON->SetState(SIMON_STATE_WALKING_RIGHT);
 		SIMON->SetRight(1);
 	}
-	else if (game->IsKeyDown(DIK_LEFT))
+	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN))
 	{
 		SIMON->SetState(SIMON_STATE_WALKING_LEFT);
 		SIMON->SetRight(0);
@@ -123,7 +168,6 @@ void CSampleKeyHander::KeyState(BYTE* states)
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
 		SIMON->SetState(SIMON_STATE_SIT);
-		/*SIMON->Sit();*/
 		SIMON->SetSit(true);
 	}
 	else
@@ -156,13 +200,20 @@ void LoadResources()
 	CAnimations* animations = CAnimations::GetInstance();
 
 	textures->Add(ID_TEX_SIMON, L"textures\\Simon.png", D3DCOLOR_XRGB(255, 0, 255));
+	textures->Add(ID_TEX_DAGGERR, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
+	textures->Add(ID_TEX_DAGGERL, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
+	textures->Add(ID_TEX_LHEART, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
+	textures->Add(ID_TEX_SHEART, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
+	textures->Add(ID_TEX_MSUP, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
+	textures->Add(ID_TEX_AXE, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
 	textures->Add(ID_TEX_TORCH, L"textures\\object.png", D3DCOLOR_XRGB(255, 0, 255));
 	textures->Add(ID_TEX_MISC, L"textures\\brick1.png", D3DCOLOR_XRGB(0, 0, 0));
 	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
 	textures->Add(ID_TEX_ENTRANCESTAGE, L"textures\\entrance.png", D3DCOLOR_XRGB(255, 255, 255));
+	
+	//divide map
 	LPDIRECT3DTEXTURE9 texEntrance = textures->Get(ID_TEX_ENTRANCESTAGE);
-
-	int l = 0, r = 32;
+    int l = 0, r = 32;
 	for (int i = 1; i <=20; i++)
 	{
 		sprites->Add(i, l, 0, r, 32, texEntrance);
@@ -177,26 +228,21 @@ void LoadResources()
 		l += 32;
 		r += 32;
 	}
-
-	
-
-	textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
-
-
-	
-
+    textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 0, 255));
+     
+	//read file simon.txt
 	LPDIRECT3DTEXTURE9 texSIMON = textures->Get(ID_TEX_SIMON);
 	vector<int> numbers;
 	
 	int flag = 0;
 	int number;
 	int arr[5];
-	ifstream file_mario("Simon.txt");
-	if (file_mario.is_open())
+	ifstream file_Simon("Simon.txt");
+	if (file_Simon.is_open())
 	{
-		while (!file_mario.eof())
+		while (!file_Simon.eof())
 		{
-			while (file_mario >> number)
+			while (file_Simon >> number)
 			{
 				arr[flag] = number;
 				flag++;
@@ -209,18 +255,30 @@ void LoadResources()
 		}
 	}
 
-	sprites->Add(10099, 215, 120, 231, 135, texSIMON);		// die 
-
-	
+	//add sprite weapon/map
 	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
 	sprites->Add(90001, 0, 0, 32, 32, texMisc);
 	LPDIRECT3DTEXTURE9 texTorch = textures->Get(ID_TEX_TORCH);
 	sprites->Add(90002, 47, 25, 64, 56, texTorch);
+	LPDIRECT3DTEXTURE9 texDGR = textures->Get(ID_TEX_DAGGERR);
+	sprites->Add(99999, 176, 39, 194, 49, texDGR);
+	LPDIRECT3DTEXTURE9 texDGL = textures->Get(ID_TEX_DAGGERL);
+	sprites->Add(99998, 176, 59, 194, 69, texDGL);
+	LPDIRECT3DTEXTURE9 texLheart = textures->Get(ID_TEX_LHEART);
+	sprites->Add(99997,123, 58, 136, 68, texLheart);
+	LPDIRECT3DTEXTURE9 texSheart = textures->Get(ID_TEX_SHEART);
+	sprites->Add(99996, 126, 39, 134, 47, texSheart);
+	LPDIRECT3DTEXTURE9 texMsup = textures->Get(ID_TEX_MSUP);
+	sprites->Add(99995,43, 42, 61, 60, texMsup);
+	LPDIRECT3DTEXTURE9 texAxe = textures->Get(ID_TEX_AXE);
+	sprites->Add(11000, 223, 38,  241, 53, texAxe);
+	sprites->Add(11001, 223, 62 , 241, 77, texAxe);
+	sprites->Add(11002, 223, 88 , 241 ,103, texAxe);
+	sprites->Add(11003, 223, 112, 241, 127, texAxe);
 
-	LPDIRECT3DTEXTURE9 texEnemy = textures->Get(ID_TEX_ENEMY);
 
 	LPANIMATION ani;
-	
+	//simon
 	ani = new CAnimation(100);	// idle right
 	ani->Add(10001);
 	animations->Add(400, ani);
@@ -262,6 +320,70 @@ void LoadResources()
 	ani->Add(10018);
 	animations->Add(504, ani);
 
+	ani = new CAnimation(100);	// eat item right
+	ani->Add(30001);
+	ani->Add(30002);
+	ani->Add(30003);
+	ani->Add(30004);
+	animations->Add(405, ani);
+	ani = new CAnimation(100);	// eat item right
+	ani->Add(30011);
+	ani->Add(30012);
+	ani->Add(30013);
+	ani->Add(30014);
+	animations->Add(505, ani);
+	
+	//weapon
+	ani = new CAnimation(100);		//mornig star
+	ani->Add(20001);
+	ani->Add(20002);
+	ani->Add(20003);
+	animations->Add(600, ani);
+	ani = new CAnimation(100);       //left morning starr
+	ani->Add(20011);
+	ani->Add(20012);
+	ani->Add(20013);
+	animations->Add(601, ani);
+	ani = new CAnimation(100);		//mornig star #2
+	ani->Add(20101);
+	ani->Add(20102);
+	ani->Add(20103);
+	animations->Add(602, ani);
+	ani = new CAnimation(100);       //left morning star #2
+	ani->Add(20111);
+	ani->Add(20112);
+	ani->Add(20113);
+	animations->Add(603, ani);
+  
+	ani = new CAnimation(100);		// dagger right
+	ani->Add(99999);
+	animations->Add(610, ani);
+	ani = new CAnimation(100);		// dagger left
+	ani->Add(99998);
+	animations->Add(611, ani);
+
+	ani = new CAnimation(100);		// Axe
+	ani->Add(11000);
+	ani->Add(11001);
+	ani->Add(11002);
+	ani->Add(11003);
+	animations->Add(615, ani);
+
+    //item
+	ani = new CAnimation(100);		// Lheart
+	ani->Add(99997);
+	animations->Add(612, ani);
+	ani = new CAnimation(100);		// Sheart
+	ani->Add(99996);
+	animations->Add(613, ani);
+	ani = new CAnimation(100);		// MS Up
+	ani->Add(99995);
+	animations->Add(614, ani);
+	ani = new CAnimation(100);      // Axe
+	ani->Add(11000);
+	animations->Add(616, ani);
+
+    //map
 	ani = new CAnimation(100);		// brick
 	ani->Add(90001);
 	animations->Add(1000, ani);
@@ -269,51 +391,55 @@ void LoadResources()
 	ani = new CAnimation(100);		// torch
 	ani->Add(90002);
 	animations->Add(1001, ani);
-	
-	ani = new CAnimation(100);		//mornig star
-	ani->Add(20001);
-	ani->Add(20002);
-	ani->Add(20003);
-	animations->Add(600, ani);
-	ani = new CAnimation(100);//left morning starr
-	ani->Add(20011);
-	ani->Add(20012);
-	ani->Add(20013);
-	animations->Add(601, ani);
-	
+
+	//declare simon-animations
 	SIMON = new CSimon();
 
 	SIMON->AddAnimation(400);		// idle right 
 	SIMON->AddAnimation(401);		// idle left 
     SIMON->AddAnimation(500);		// walk right 
 	SIMON->AddAnimation(501);		// walk left 
-	SIMON->AddAnimation(402);//attack right
-	SIMON->AddAnimation(502);//attack left
-	SIMON->AddAnimation(403);//jump right
-	SIMON->AddAnimation(503);//jump left
-	SIMON->AddAnimation(404);//sit right
-	SIMON->AddAnimation(504);//siy left
+	SIMON->AddAnimation(402);       //attack right
+	SIMON->AddAnimation(502);       //attack left
+	SIMON->AddAnimation(403);       //jump right
+	SIMON->AddAnimation(503);       //jump left
+	SIMON->AddAnimation(404);       //sit right
+	SIMON->AddAnimation(504);       //sit left
+	SIMON->AddAnimation(405);       //eat item right
+	SIMON->AddAnimation(505);       //eat item left
 
-    SIMON->SetPosition(50.0f, 0);
-	
+    SIMON->SetPosition(25.0f, 0);
 
+	//declare weapon-animations
 	MS = new CMS();
 	MS->GetSimon(SIMON);
+	MS->SetPosition(-100, -100);
 	MS->AddAnimation(600);
 	MS->AddAnimation(601);
+	MS->AddAnimation(602);
+	MS->AddAnimation(603);
 	
+	dagger = new CDagger();
+    dagger->GetSimon(SIMON);
+	dagger->AddAnimation(610);
+	dagger->AddAnimation(611);
 
-	/*SIMON->SetMS(MS);*/
+	Axe = new CAxe();
+	Axe->GetSimon(SIMON);
+	Axe->AddAnimation(615);
+	
+	//draw map-animations
 	for (int i = 0; i < 4; i++)
 	{
 		CTorch* torch = new CTorch();
 		torch->AddAnimation(1001);
-		torch->SetPosition(150 + i * 150.0f, 130);
-		objects.push_back(torch);
-		if (SIMON->CheckCollision(torch))
-		{
-			torch->SetActive(false);
-		}
+		torch->AddAnimation(612);
+		torch->AddAnimation(613);
+		torch->AddAnimation(614);
+		torch->AddAnimation(611);
+		torch->AddAnimation(616);
+		torch->SetPosition(130 + i * 150.0f, 130);
+	    objects.push_back(torch);
 	}
 	for (int i = 0; i < 100; i++)
 	{
@@ -321,11 +447,14 @@ void LoadResources()
 		brick->AddAnimation(1000);
 		brick->SetPosition(0 + i * 10.0f, 160);
 		objects.push_back(brick);
-		/*brick->SetActive(false);*/
 
 	}
+
+	//push back to list objects
 	objects.push_back(SIMON);
 	objects.push_back(MS);
+	objects.push_back(dagger);
+	objects.push_back(Axe);
 }
 
 /*
@@ -337,7 +466,7 @@ void Update(DWORD dt)
 	// We know that SIMON is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	vector<LPGAMEOBJECT> coObjects;
-	vector<LPGAMEOBJECT> collide;
+	vector<LPGAMEOBJECT> Torch;
 	for (int i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
@@ -399,15 +528,13 @@ void Render()
 		{
 			for (j = 0; j < 24*32; j=j+32)
 				{
-					sprites->Get(entr.front())->Draw(j, i);
+					sprites->Get(entr.front())->Draw(j, i, 255);
 					entr.pop();
 				}
 		}
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();
-
 		
-
 		spriteHandler->End();
 		
 

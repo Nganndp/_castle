@@ -122,6 +122,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Axe.h" />
+    <ClInclude Include="Dagger.h" />
+    <ClInclude Include="HolyWater.h" />
+    <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MS.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />
@@ -133,6 +137,10 @@
     <ClInclude Include="Textures.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Axe.cpp" />
+    <ClCompile Include="Dagger.cpp" />
+    <ClCompile Include="HolyWater.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="MS.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />

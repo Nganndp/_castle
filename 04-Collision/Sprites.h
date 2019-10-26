@@ -18,7 +18,7 @@ class CSprite
 public: 
 	CSprite(int id, int left, int top, int right, int bottom, LPDIRECT3DTEXTURE9 tex);
 
-	void Draw(float x, float y, int alpha = 255);
+	void Draw(float x, float y, int alpha);
 };
 
 typedef CSprite * LPSPRITE;
@@ -69,11 +69,12 @@ public:
 	{
 		return currentFrame;
 	};
-	void SetCurrentFrame()
+	void SetCurrentcFrame(int cf)
 	{
-		this->currentFrame = -1;
+		this->currentFrame = cf;
 	}
-	void Render(float x, float y, int alpha=255);
+	LPANIMATION_FRAME GetFrame(int i) { return frames[i]; };
+	void Render(float x, float y, int alpha);
 };
 
 typedef CAnimation *LPANIMATION;
@@ -87,7 +88,6 @@ class CAnimations
 public:
 	void Add(int id, LPANIMATION ani);
 	LPANIMATION Get(int id);
-
 	static CAnimations * GetInstance();
 };
 

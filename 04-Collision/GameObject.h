@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <d3dx9.h>
 #include <vector>
+#include "MathHelper.h"
 #include "Textures.h"
 #include "Sprites.h"
 
@@ -42,11 +43,12 @@ public:
 
 	float vx;
 	float vy;
-
+	int level = 1;
 	int nx;	 
 
 	int state;
 	boolean active = true;
+	boolean isTouchable;
 	DWORD dt; 
     CTextures* texture;
 	CSprite* sprite;
@@ -55,6 +57,18 @@ public:
 	vector<LPANIMATION> animations;
 
 public: 
+	void SetTouchable(boolean a)
+	{
+		isTouchable = a;
+	}
+	void SetPlusLevel()
+	{
+		this->level++;
+	}
+	int GetLevel()
+	{
+		return level;
+	}
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
@@ -77,11 +91,14 @@ public:
 	void AddAnimation(int aniId);
 
 	CGameObject();
+	bool CheckOverlap(LPGAMEOBJECT coO);
 	bool CheckCollision(CGameObject* object);
+	int GetDirect() { return nx; }
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
+	virtual void SetLevel(int level) { this->level = level; }
 	RECT CGameObject::GetBound()
 	{
 		RECT rect;

@@ -9,7 +9,7 @@ void CBrick::Render()
 {
 	if (active != true)
 		return;
-	animations[0]->Render(x, y);
+	animations[0]->Render(x, y, 255);
 	RenderBoundingBox();
 }
 

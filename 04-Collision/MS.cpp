@@ -1,126 +1,272 @@
 #include "MS.h"
+#include "Game.h"
 #include "Simon.h"
 
 void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
-
-	CGameObject::Update(dt);
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	coEvents.clear();
 
 	CalcPotentialCollisions(coObjects, coEvents);
-	
+
 	if (GetTickCount() - attack_start > MS_ATTACK_TIME)
 	{
 		attack_start = 0;
 		attack = 0;
 	}
-	SetWhipFacing();
+	AdjustMSPos();
 	float min_tx, min_ty, nx = 0, ny;
 
 	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-	// block 
-	x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-	y += min_ty * dy + ny * 0.4f;
-
-	if (nx != 0) vx = 0;
-	if (ny != 0) vy = 0;
-
-	for (UINT i = 0; i < coEventsResult.size(); i++) {
-
-		LPCOLLISIONEVENT e = coEventsResult[i];
-
-		//if (dynamic_cast<FirePilar*>(e->obj))
-		//{
-		//	FirePilar* fire = dynamic_cast<FirePilar*>(e->obj);
-		//	if (e->ny < 0) {
-
-		//	}
-		//	//delete FirePilar here
-		//}
+	vector<LPGAMEOBJECT> tor;
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (dynamic_cast<CTorch*>(coObjects->at(i)))
+			tor.push_back(coObjects->at(i));
 	}
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	for (UINT i = 0; i < tor.size(); i++)
+	{
+		CTorch* torch = dynamic_cast<CTorch*>(tor[i]);
+		if (CheckOverlap(torch))
+		{
+			if (torch->GetState() == TORCH_STATE_NORMAL)
+			{
+				MSUpDropTime++;
+				int a, b, c, d;
+				switch (i)
+				{
+				case 0:
+					srand(time(NULL));
+					a = rand() % 2 + 1;
+					if (MSUpDropTime < 2)
+					{
+						torch->SetState(3);
+					}
+					else   
+						switch (a)
+						{
+						case 1:
+							torch->SetState(4); break;
+						case 2:
+							torch->SetState(5); break;
+						}
+					break;
+				case 1:
+					srand(time(NULL));
+					b = rand() % 2 + 1;
+					if (MSUpDropTime < 2)
+					{
+						torch->SetState(3);
+					}
+					else
+						switch (b)
+						{
+						case 1:
+							torch->SetState(4); break;
+						case 2:
+							torch->SetState(5); break;
+						}
+					break;
+				case 2:
+					srand(time(NULL));
+					c = rand() % 2 + 1;
+					if (MSUpDropTime < 2)
+					{
+						torch->SetState(3);
+					}
+					else
+						switch (c)
+						{
+						case 1:
+							torch->SetState(4); break;
+						case 2:
+							torch->SetState(5); break;
+						}
+					break;
+				case 3: 
+					srand(time(NULL));
+				    d = rand() % 2 + 1;
+					if (MSUpDropTime < 2)
+					{
+						torch->SetState(3);
+					}
+					else
+						switch (d)
+						{
+						case 1:
+							torch->SetState(4); break;
+						case 2:
+							torch->SetState(5); break;
+						}
+					break;
+				}
+			}
+		}
+	}
 }
 
 void CMS::Render() {
-	if (active != true || simon->vx != 0)
-	{
-		return;
-	}
-	if (attack == 0)
-	{
-		active = false;
-	}
-	int ani;
-		if (simon->nx > 0)
+	if (simon->vx != 0)
+		{
+			return;
+		}
+		int ani;
+		if (active == true)
+		{
+			if (state == MS_STATE_ATTACK)
 			{
-				ani = 0;
-			}
-			else 
-				ani = 1; 
-    int alpha = 255;
-	animations[ani]->Render(x, y, alpha);
+				if (attack == 0)
+				{
+					active = false;
+				}
+				if (simon->nx > 0)
+				{
+					ani = 0;
+					if (animations[ani]->GetCurrentFrame() == 3)
+					{
+						animations[ani]->SetCurrentcFrame(-1);
+						SetActive(false);
+					}
+				}
+				else
+					ani = 1;
+				if (animations[ani]->GetCurrentFrame() == 3)
+				{
+					animations[ani]->SetCurrentcFrame(-1);
+					SetActive(false);
+				}
+				int alpha = 255;
+				animations[ani]->Render(x, y, alpha);
 
-	RenderBoundingBox();
+				RenderBoundingBox();
+			}
+			if (state == MS_STATE_ATTACK_2)
+			{
+				if (attack == 0)
+				{
+					active = false;
+				}
+				if (simon->nx > 0)
+				{
+					ani = 2;
+					if (animations[ani]->GetCurrentFrame() == 3)
+					{
+						animations[ani]->SetCurrentcFrame(-1);
+						SetActive(false);
+					}
+				}
+				else
+					ani = 3;
+				if (animations[ani]->GetCurrentFrame() == 3)
+				{
+					animations[ani]->SetCurrentcFrame(-1);
+					SetActive(false);
+				}
+				int alpha = 255;
+				animations[ani]->Render(x, y, alpha);
+
+				RenderBoundingBox();
+			}
+		
+		}
 }
 
 void CMS::SetState(int state) {
 	CGameObject::SetState(state);
-
-	switch (state)
-	{
-	case WHIP_STATE_ATTACK:
-		isAttack = true;
-		break;
-
-	}
-
 }
-void CMS::SetWhipFacing()
+void CMS::AdjustMSPos()
 {
-	if (simon->nx > 0)
+	int ani;
+	if (attack != 0)
+	{
+		if (state == MS_STATE_ATTACK)
 		{
+			if (simon->nx > 0)
+			{
+				ani = 0;
+				if (animations[ani]->GetCurrentFrame() == 0) {
+					x = simon->x - 7;
+					y = simon->y + 2;
+				}
 
-		if (animations[0]->GetCurrentFrame() == 0) {
-			x = simon->x - 7;
-			y = simon->y + 2;
-		}
+				else if (animations[ani]->GetCurrentFrame() == 1) {
+					x = simon->x - 16;
+					y = simon->y;
+				}
 
-		else if (animations[0]->GetCurrentFrame() == 1) {
-			x = simon->x - 16;
-			y = simon->y;
-		}
+				else if (animations[ani]->GetCurrentFrame() == 2) {
+					x = simon->x + 16;
+					y = simon->y + 6;
+				}
+			}
+			else if (simon->nx < 0)
+			{
+				ani = 1;
+				if (animations[ani]->GetCurrentFrame() == 0) {
+					x = simon->x + 16;
+					y = simon->y;
+				}
 
-		else if (animations[0]->GetCurrentFrame() == 2) {
-			x = simon->x + 16;
-			y = simon->y + 6;
+				else if (animations[ani]->GetCurrentFrame() == 1) {
+					x = simon->x + 16;
+					y = simon->y + 6;
+				}
+
+				else if (animations[ani]->GetCurrentFrame() == 2) {
+					x = simon->x - 22;
+					y = simon->y + 6;
+				}
+			}
 		}
-		}
-	else if (simon->nx < 0)
+		if (state == MS_STATE_ATTACK_2)
 		{
-			if (animations[1]->GetCurrentFrame() == 0) {
-				x = simon->x + 18;
-				y = simon->y + 2;
-			}
+			if (simon->nx > 0)
+			{
+				ani = 2;
+				if (animations[ani]->GetCurrentFrame() == 0) {
+					x = simon->x - 7;
+					y = simon->y + 2;
+				}
 
-			else if (animations[1]->GetCurrentFrame() == 1) {
-				x = simon->x + 16;
-				y = simon->y;
-			}
+				else if (animations[ani]->GetCurrentFrame() == 1) {
+					x = simon->x - 16;
+					y = simon->y;
+				}
 
-			else if (animations[1]->GetCurrentFrame() == 2) {
-				x = simon->x - 20;
-				y = simon->y + 6;
+				else if (animations[ani]->GetCurrentFrame() == 2) {
+					x = simon->x + 16;
+					y = simon->y + 6;
+				}
+			}
+			else if (simon->nx < 0)
+			{
+				ani = 3;
+				if (animations[ani]->GetCurrentFrame() == 0) {
+					x = simon->x + 16;
+					y = simon->y;
+				}
+
+				else if (animations[ani]->GetCurrentFrame() == 1) {
+					x = simon->x + 16;
+					y = simon->y + 6;
+				}
+
+				else if (animations[ani]->GetCurrentFrame() == 2) {
+					x = simon->x - 22;
+					y = simon->y + 6;
+				}
 			}
 		}
 	}
+}
 void CMS::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	top = y;
-	left = x;
-	right = x + 22;
-	bottom = y + 10;
-
+	if (active == true)
+	{
+		top = y;
+		left = x;
+		right = x + 22;
+		bottom = y + 10;
+	}
 }
