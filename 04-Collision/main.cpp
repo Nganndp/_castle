@@ -46,8 +46,8 @@
 #define MAIN_WINDOW_TITLE L"04 - Collision"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
-#define SCREEN_WIDTH 450
-#define SCREEN_HEIGHT 230
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 198
 
 #define MAX_FRAME_RATE 120
 
@@ -207,28 +207,35 @@ void LoadResources()
 	textures->Add(ID_TEX_MSUP, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
 	textures->Add(ID_TEX_AXE, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
 	textures->Add(ID_TEX_TORCH, L"textures\\object.png", D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_MISC, L"textures\\brick1.png", D3DCOLOR_XRGB(0, 0, 0));
+	textures->Add(ID_TEX_MISC, L"textures\\brick.png", D3DCOLOR_XRGB(0, 0, 0));
 	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
-	textures->Add(ID_TEX_ENTRANCESTAGE, L"textures\\entrance.png", D3DCOLOR_XRGB(255, 255, 255));
+	textures->Add(ID_TEX_ENTRANCESTAGE, L"textures\\entrance_test.png", D3DCOLOR_XRGB(255, 255, 255));
+	   textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 0, 255));
 	
 	//divide map
 	LPDIRECT3DTEXTURE9 texEntrance = textures->Get(ID_TEX_ENTRANCESTAGE);
-    int l = 0, r = 32;
-	for (int i = 1; i <=20; i++)
+    int l = 0, r = 64;
+	for (int i = 0; i <=11; i++)
 	{
-		sprites->Add(i, l, 0, r, 32, texEntrance);
-		l += 32;
-		r += 32;
+		sprites->Add(i, l, 0, r, 64, texEntrance);
+		l += 64;
+		r += 64;
 	}
-	l = 0;
-	r = 32;
-	for (int i = 21; i <= 38; i++)
+	l = 0, r = 64;
+	for (int i = 12; i <= 23; i++)
 	{
-		sprites->Add(i, l, 32, r, 64, texEntrance);
-		l += 32;
-		r += 32;
+		sprites->Add(i, l, 64, r, 128, texEntrance);
+		l += 64;
+		r += 64;
+	};
+	l = 0, r = 64;
+	for (int i = 24; i <= 35; i++)
+	{
+		sprites->Add(i, l, 128, r, 192, texEntrance);
+		l += 64;
+		r += 64;
 	}
-    textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 0, 255));
+ 
      
 	//read file simon.txt
 	LPDIRECT3DTEXTURE9 texSIMON = textures->Get(ID_TEX_SIMON);
@@ -260,6 +267,7 @@ void LoadResources()
 	sprites->Add(90001, 0, 0, 32, 32, texMisc);
 	LPDIRECT3DTEXTURE9 texTorch = textures->Get(ID_TEX_TORCH);
 	sprites->Add(90002, 47, 25, 64, 56, texTorch);
+	sprites->Add(90003, 74, 25, 91, 56, texTorch);
 	LPDIRECT3DTEXTURE9 texDGR = textures->Get(ID_TEX_DAGGERR);
 	sprites->Add(99999, 176, 39, 194, 49, texDGR);
 	LPDIRECT3DTEXTURE9 texDGL = textures->Get(ID_TEX_DAGGERL);
@@ -390,6 +398,7 @@ void LoadResources()
 
 	ani = new CAnimation(100);		// torch
 	ani->Add(90002);
+	ani->Add(90003);
 	animations->Add(1001, ani);
 
 	//declare simon-animations
@@ -438,14 +447,14 @@ void LoadResources()
 		torch->AddAnimation(614);
 		torch->AddAnimation(611);
 		torch->AddAnimation(616);
-		torch->SetPosition(130 + i * 150.0f, 130);
+		torch->SetPosition(150 + i * 150.0f, 113);
 	    objects.push_back(torch);
 	}
 	for (int i = 0; i < 100; i++)
 	{
 		CBrick* brick = new CBrick();
 		brick->AddAnimation(1000);
-		brick->SetPosition(0 + i * 10.0f, 160);
+		brick->SetPosition(0 + i * 8.0f, 144);
 		objects.push_back(brick);
 
 	}
@@ -477,11 +486,11 @@ void Update(DWORD dt)
 	}
 	// Update camera to follow SIMON
 	float cx, cy;
-	//CGame::GetInstance()->SetCamPos(0.0f, 0.0f /*cy*/);
+
 	SIMON->GetPosition(cx, cy);
 	cx -= SCREEN_WIDTH / 2;
 	cy -= SCREEN_HEIGHT / 2;
-	if (cx < 650/ 2 && cx>0)
+	if (cx < 900/ 2 && cx>0)
 	{
 		CGame::GetInstance()->SetCamPos(cx, 0.0f);///cy
 	}
@@ -506,14 +515,10 @@ void Render()
 		CSprites* sprites = CSprites::GetInstance();
 		int x=0, y=0;
 		int flag = 1;
-		/*sprites->Get(1)->Draw(0,0 );
-		sprites->Get(2)->Draw(0, 32);
-		sprites->Get(3)->Draw(0, 64);*/
-		
-		//for (int i = 1; i <= 38; i++)
-		//{
+
+		//draw map
 		int i, j;
-		ifstream file_entrance("entrance.txt");
+		ifstream file_entrance("entrance_test.txt");
 		int number;
 		queue<int>entr;
 		if (file_entrance.is_open())
@@ -524,9 +529,9 @@ void Render()
 				entr.push(number);
 			}
 		}
-		for (i = 0; i < 6*32; i=i+32)
+		for (i = 0; i < 3*64; i=i+64)
 		{
-			for (j = 0; j < 24*32; j=j+32)
+			for (j = 0; j < 12*64; j=j+64)
 				{
 					sprites->Get(entr.front())->Draw(j, i, 255);
 					entr.pop();

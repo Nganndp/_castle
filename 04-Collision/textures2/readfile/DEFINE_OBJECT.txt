@@ -1,0 +1,53 @@
+type-iteminit-objecttag-x-y
+
+type
+0 CTorch
+1 CBrick
+2 CCandle
+-100 CBrick ToLeft
+100 CBrick ToRight
+
+iteminit
+0 large heart
+1 whipupgrade
+2 dagger
+3 stopwatch
+4 small heart
+5 holy water
+6 cross
+7 axe
+8 double shot
+9 potion
+10 purple money bag
+11 red money bag
+12 chiken
+13 money
+
+objectTag
+0 torch
+1 brick
+2 door
+3 brickscene2
+4 candle
+5 floatingbrick1
+6 floatingbrick2
+7 floatingbrick3
+8 floatingbrick4
+9 brickblockstage2
+10 door2
+11 blackbrickchicken
+12 floatingbrick9
+13 floatingbrick10
+14 brickchicken
+15 bottomstair
+16 topstair
+17 floatingbrick6
+18 floatingbrick5
+19 floatingbrick7
+20 doorfromwater
+21 doortowater
+22 door3
+23 blackbrickmoney
+24 brickmoney
+25 floatingbrick8
+26 floatingbrick11

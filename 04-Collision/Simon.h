@@ -6,7 +6,7 @@
 #include "Brick.h"
 
 #define SIMON_WALKING_SPEED		    0.1f 
-#define SIMON_JUMP_SPEED_Y		    0.5f
+#define SIMON_JUMP_SPEED_Y		    0.3f
 #define SIMON_JUMP_DEFLECT_SPEED    0.2f
 #define SIMON_GRAVITY			    0.002f
 #define SIMON_DIE_DEFLECT_SPEED	    0.5f
@@ -43,7 +43,7 @@
 #define SIMON_IDLE_BBOX_HEIGHT      30
 #define SIMON_SIT_BBOX_HEIGHT       20
 
-#define SIMON_JUMP_TIME             500
+#define SIMON_JUMP_TIME             300
 #define SIMON_ATTACK_TIME           300
 #define SIMON_EAT_TIME              500
 
