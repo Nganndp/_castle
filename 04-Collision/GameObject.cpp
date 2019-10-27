@@ -13,6 +13,7 @@ CGameObject::CGameObject()
 	x = y = 0;
 	vx = vy = 0;
 	nx = 1;	
+	bboxcolor = 0;
 }
 
 void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -124,7 +125,7 @@ void CGameObject::RenderBoundingBox()
 		rect.right = (int)r - (int)l;
 		rect.bottom = (int)b - (int)t;
 
-		CGame::GetInstance()->Draw(x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, 32);
+		CGame::GetInstance()->Draw(x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, bboxcolor);
 	}
 }
 bool CGameObject::CheckOverlap(LPGAMEOBJECT coO)

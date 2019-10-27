@@ -33,10 +33,7 @@ void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			if (torch->GetState() == TORCH_STATE_NORMAL)
 			{
 				MSUpDropTime++;
-				int a, b, c, d;
-				switch (i)
-				{
-				case 0:
+				int a;
 					srand(time(NULL));
 					a = rand() % 2 + 1;
 					if (MSUpDropTime < 2)
@@ -51,56 +48,6 @@ void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 						case 2:
 							torch->SetState(5); break;
 						}
-					break;
-				case 1:
-					srand(time(NULL));
-					b = rand() % 2 + 1;
-					if (MSUpDropTime < 2)
-					{
-						torch->SetState(3);
-					}
-					else
-						switch (b)
-						{
-						case 1:
-							torch->SetState(4); break;
-						case 2:
-							torch->SetState(5); break;
-						}
-					break;
-				case 2:
-					srand(time(NULL));
-					c = rand() % 2 + 1;
-					if (MSUpDropTime < 2)
-					{
-						torch->SetState(3);
-					}
-					else
-						switch (c)
-						{
-						case 1:
-							torch->SetState(4); break;
-						case 2:
-							torch->SetState(5); break;
-						}
-					break;
-				case 3: 
-					srand(time(NULL));
-				    d = rand() % 2 + 1;
-					if (MSUpDropTime < 2)
-					{
-						torch->SetState(3);
-					}
-					else
-						switch (d)
-						{
-						case 1:
-							torch->SetState(4); break;
-						case 2:
-							torch->SetState(5); break;
-						}
-					break;
-				}
 			}
 		}
 	}

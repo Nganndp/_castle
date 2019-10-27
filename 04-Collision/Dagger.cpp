@@ -28,15 +28,14 @@ void CDagger::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			{
 				this->SetPosition(-100, 0);
 				this->SetActive(false);
-				switch (i)
+				int a;
+				srand(time(NULL));
+				a = rand() % 2 + 1;
+				switch (a)
 				{
-				case 0:
-					torch->SetState(3); break;
 				case 1:
-				    torch->SetState(3); break;
-				case 2:	  
 					torch->SetState(2); break;
-				case 3:
+				case 2:
 					torch->SetState(5); break;
 				}
 			}
@@ -52,13 +51,13 @@ void CDagger::AdjustPos()
 {
 	if (simon->nx > 0)
 	{
-			x = simon->x + 16;
-			y = simon->y + 6;
+			x = simon->x;
+			y = simon->y;
 	}
 	else if (simon->nx < 0)
 	{
-			x = simon->x - 32;
-			y = simon->y + 6;
+			x = simon->x;
+			y = simon->y;
 	}
 }
 void CDagger::Render() {

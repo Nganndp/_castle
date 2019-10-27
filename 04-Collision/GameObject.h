@@ -45,6 +45,7 @@ public:
 	float vy;
 	int level = 1;
 	int nx;	 
+	int bboxcolor;
 
 	int state;
 	boolean active = true;
@@ -73,6 +74,10 @@ public:
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
+	void Setbboxcolor() {
+		if (bboxcolor == 80)bboxcolor = 0;
+		else bboxcolor = 80;
+	}
 	virtual void SetActive(boolean a) { active = a; };
 	int GetState() { return this->state; }
 

@@ -6,7 +6,7 @@
 #include "Brick.h"
 
 #define SIMON_WALKING_SPEED		    0.1f 
-#define SIMON_JUMP_SPEED_Y		    0.3f
+#define SIMON_JUMP_SPEED_Y		    0.4f
 #define SIMON_JUMP_DEFLECT_SPEED    0.2f
 #define SIMON_GRAVITY			    0.002f
 #define SIMON_DIE_DEFLECT_SPEED	    0.5f
@@ -43,7 +43,7 @@
 #define SIMON_IDLE_BBOX_HEIGHT      30
 #define SIMON_SIT_BBOX_HEIGHT       20
 
-#define SIMON_JUMP_TIME             300
+#define SIMON_JUMP_TIME             400
 #define SIMON_ATTACK_TIME           300
 #define SIMON_EAT_TIME              500
 
@@ -75,6 +75,26 @@ public:
 	void StandUp();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
+	int GetLevel()
+	{
+		return level;
+	}
+	int GetChangeColorTime()
+	{
+		return changecolor;
+	}
+	int GetAttackTime()
+	{
+		return attack;
+	}
+	boolean GetOnGround()
+	{
+		return onGround;
+	}
+	boolean GetActive() { return active; };
+	boolean GetThrowDagger() { return isThrowDagger; }
+	boolean GetThrowAxe() { return isThrowAxe; }
+
 	void SetState(int state);
 	void SetLevel(int level) {
 		CGameObject::SetLevel(level);
@@ -82,17 +102,6 @@ public:
 	void SetRight(int right) {
 		right = right;
 	};
-	void GetPlusLevel()
-	{
-		this->level++;
-	}
-	int GetLevel()
-	{
-		return level;
-	}
-	boolean GetActive() { return active; };
-	boolean GetThrowDagger() { return isThrowDagger; }
-	boolean GetThrowAxe() { return isThrowAxe; }
 	void SetActive(boolean a) {
 		active = a;
 	}
@@ -105,18 +114,11 @@ public:
 	{
 		onGround = a;
 	}
-	int GetChangeColorTime()
-	{
-		return changecolor;
-	}
-	boolean GetOnGround()
-	{
-		return onGround;
-	}
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
 	void StartAttack() { attack = 1; attack_start = GetTickCount(); }
 	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); }
 	void SetSit(boolean a) { sit= a; };
+	void SetJump(int a) { jump = a; }
 	void CheckCollisionWithGround(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

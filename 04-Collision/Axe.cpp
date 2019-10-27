@@ -48,13 +48,13 @@ void CAxe::AdjustPos()
 {
 	if (simon->nx > 0)
 	{
-		x = simon->x + 16;
-		y = simon->y - 5;
+		x = simon->x;
+		y = simon->y + 5;
 	}
 	else if (simon->nx < 0)
 	{
-		x = simon->x - 16;
-		y = simon->y- 5;
+		x = simon->x;
+		y = simon->y+ 5;
 	}
 }
 void CAxe::GetBoundingBox(float& left, float& top, float& right, float& bottom)

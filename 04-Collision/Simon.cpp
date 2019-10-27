@@ -19,7 +19,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
 
-	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount() - jump_start > SIMON_JUMP_TIME)
 	{
 		jump_start = 0;
@@ -28,10 +27,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		//jumping up
 		if (GetTickCount() - jump_start < (SIMON_JUMP_TIME))
 		{
-			//jump when on ground
 			if (onGround)
 			{
 				vy = -SIMON_JUMP_SPEED_Y;
@@ -190,6 +187,8 @@ void CSimon::Render()
 		}
 	if (jump != 0)
 	{
+		if (state == SIMON_STATE_ATTACK)
+			return;
 		if (nx > 0)
 			ani = SIMON_ANI_JUMP_RIGHT;
 		else ani = SIMON_ANI_JUMP_LEFT;

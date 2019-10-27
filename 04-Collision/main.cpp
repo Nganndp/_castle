@@ -102,8 +102,11 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		{
 			if (SIMON->GetThrowDagger())
 			{
-				dagger->StartAttack();
-				dagger->SetActive(true);
+				if (SIMON->GetAttackTime() == 0)
+				{
+					dagger->StartAttack();
+					dagger->SetActive(true);
+				}
 				dagger->nx = SIMON->nx;
 				MS->SetActive(false);
 				SIMON->SetState(SIMON_STATE_ATTACK);
@@ -111,8 +114,11 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			}
 			else if (SIMON->GetThrowAxe())
 			{
-				Axe->StartAttack();
-				Axe->SetActive(true);
+				if (SIMON->GetAttackTime() == 0)
+				{
+					Axe->StartAttack();
+					Axe->SetActive(true);
+				}
 				Axe->nx = SIMON->nx;
 				MS->SetActive(false);
 				SIMON->SetState(SIMON_STATE_ATTACK);
@@ -127,6 +133,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			MS->SetActive(true);
 			SIMON->SetState(SIMON_STATE_ATTACK);
 			SIMON->StartAttack();
+			SIMON->SetJump(0);
 			if (SIMON->GetLevel() == SIMON_LEVEL_MS_2)
 			{
 				MS->SetState(MS_STATE_ATTACK_2);
@@ -139,6 +146,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			SIMON->SetActive(false);
 		}
 		else SIMON->SetActive(true);
+		break;
+	case DIK_R: 
+		for (int i = 0; i < objects.size(); i++)
+			objects[i]->Setbboxcolor();
 		break;
 	}
 }
@@ -438,7 +449,7 @@ void LoadResources()
 	Axe->AddAnimation(615);
 	
 	//draw map-animations
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		CTorch* torch = new CTorch();
 		torch->AddAnimation(1001);
@@ -447,7 +458,7 @@ void LoadResources()
 		torch->AddAnimation(614);
 		torch->AddAnimation(611);
 		torch->AddAnimation(616);
-		torch->SetPosition(150 + i * 150.0f, 113);
+		torch->SetPosition(100 + i * 120.0f, 113);
 	    objects.push_back(torch);
 	}
 	for (int i = 0; i < 100; i++)
