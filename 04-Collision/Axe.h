@@ -2,8 +2,8 @@
 #include "GameObject.h"
 #include "Simon.h"
 #include "Game.h"
-#define AXE_GRAVITY 0.0002f
-#define AXE_STATE_ATTACK 0
+#include "LoadAnimations.h"
+#include "define.h"
 
 class CAxe :public CGameObject
 {
@@ -15,7 +15,7 @@ private:
 public:
 	CAxe() :CGameObject()
 	{
-		level = 1;
+		LoadAnimations::LoadAnimationFromFile("ani\\Axeani.txt", this);
 		attack = 0;
 
 	}

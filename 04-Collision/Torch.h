@@ -1,23 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include "Brick.h"
-
-#define TORCH_BBOX_WIDTH 16
-#define TORCH_BBOX_HEIGHT 15
-#define TORCH_GRAVITY 0.0002f
-#define TORCH_STATE_NORMAL 0
-#define TORCH_STATE_LHEART 1
-#define TORCH_STATE_SHEART 2
-#define TORCH_STATE_MSUP 3
-#define TORCH_STATE_DAGGER 4
-#define TORCH_STATE_AXE 5
-
-#define TORCH_ANI_NORMAL 0
-#define TORCH_ANI_LHEART 1
-#define TORCH_ANI_SHEART 2
-#define TORCH_ANI_MSUP 3
-#define TORCH_ANI_DAGHER 4
-#define TORCH_ANI_AXE 5
+#include "define.h"
+#include "LoadAnimations.h"
 
 class CTorch : public CGameObject
 {
@@ -30,6 +15,10 @@ class CTorch : public CGameObject
 	int ani = 0;
 
 public: 	
+	CTorch() :CGameObject()
+	{
+		LoadAnimations::LoadAnimationFromFile("ani\\Torchani.txt", this);
+	};
 	boolean GetActive()
 	{
 		return active;

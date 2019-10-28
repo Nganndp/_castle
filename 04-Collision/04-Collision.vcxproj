@@ -126,6 +126,7 @@
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="HolyWater.h" />
+    <ClInclude Include="LoadAnimations.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MS.h" />
     <ClInclude Include="debug.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="define.cpp" />
     <ClCompile Include="HolyWater.cpp" />
+    <ClCompile Include="LoadAnimations.cpp" />
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="MS.cpp" />
     <ClCompile Include="debug.cpp" />

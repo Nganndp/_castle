@@ -1,13 +1,17 @@
 #pragma once
 #include "GameObject.h"
 #include "Simon.h"
-#define BRICK_BBOX_WIDTH 16
-#define BRICK_BBOX_HEIGHT 16
+#include "LoadAnimations.h"
+#include "define.h"
 
 
 class CBrick : public CGameObject
 {
 	public:
+		CBrick() :CGameObject()
+		{
+			LoadAnimations::LoadAnimationFromFile("ani\\Brickani.txt", this);
+		}
 		boolean active = true;
 		void SetActive(boolean a) { active = a; }
 	virtual void Render();

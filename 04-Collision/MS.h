@@ -6,6 +6,7 @@
 #include "Torch.h"
 #include "Game.h"
 #include "Sprites.h"
+#include "LoadAnimations.h"
 #include "define.h"
 class CMS :public CGameObject
 {
@@ -20,6 +21,7 @@ public:
 public:
 	CMS() :CGameObject()
 	{
+		LoadAnimations::LoadAnimationFromFile("ani\\MSani.txt", this);
 		attack = 0;
 		MSUpDropTime = 0;
 

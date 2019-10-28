@@ -195,177 +195,31 @@ void LoadResources()
 	sprites->Load();
 	CAnimations* animations = CAnimations::GetInstance();
 
- 
-   //Animations
-	LPANIMATION ani;
-	//simon
-	ani = new CAnimation(100);	// idle right
-	ani->Add(10001);
-	animations->Add(400, ani);
-	ani = new CAnimation(100);	// idle left
-	ani->Add(10011);
-	animations->Add(401, ani);
-
-	ani = new CAnimation(100);	// walk right
-	ani->Add(10002);
-	ani->Add(10003);
-	animations->Add(500, ani);
-    ani = new CAnimation(100);	//  walk left
-	ani->Add(10012);
-	ani->Add(10013);
-	animations->Add(501, ani);
-
-	ani = new CAnimation(100);	// attack right
-	ani->Add(10004);
-	ani->Add(10005);
-	ani->Add(10006);
-	animations->Add(402, ani);
-	ani = new CAnimation(100);	// attack left
-	ani->Add(10014);
-	ani->Add(10015);
-	ani->Add(10016);
-	animations->Add(502, ani);
-
-	ani = new CAnimation(100);	// jump right
-	ani->Add(10007);
-	animations->Add(403, ani);
-	ani = new CAnimation(100);	// jump right
-	ani->Add(10017);
-	animations->Add(503, ani);
-
-	ani = new CAnimation(100);	// sit right
-	ani->Add(10008);
-	animations->Add(404, ani);
-	ani = new CAnimation(100);	// sit right
-	ani->Add(10018);
-	animations->Add(504, ani);
-
-	ani = new CAnimation(100);	// eat item right
-	ani->Add(30001);
-	ani->Add(30002);
-	ani->Add(30003);
-	ani->Add(30004);
-	animations->Add(405, ani);
-	ani = new CAnimation(100);	// eat item right
-	ani->Add(30011);
-	ani->Add(30012);
-	ani->Add(30013);
-	ani->Add(30014);
-	animations->Add(505, ani);
-	
-	//weapon
-	ani = new CAnimation(100);		//mornig star
-	ani->Add(20001);
-	ani->Add(20002);
-	ani->Add(20003);
-	animations->Add(600, ani);
-	ani = new CAnimation(100);       //left morning starr
-	ani->Add(20011);
-	ani->Add(20012);
-	ani->Add(20013);
-	animations->Add(601, ani);
-	ani = new CAnimation(100);		//mornig star #2
-	ani->Add(20101);
-	ani->Add(20102);
-	ani->Add(20103);
-	animations->Add(602, ani);
-	ani = new CAnimation(100);       //left morning star #2
-	ani->Add(20111);
-	ani->Add(20112);
-	ani->Add(20113);
-	animations->Add(603, ani);
-  
-	ani = new CAnimation(100);		// dagger right
-	ani->Add(99999);
-	animations->Add(610, ani);
-	ani = new CAnimation(100);		// dagger left
-	ani->Add(99998);
-	animations->Add(611, ani);
-
-	ani = new CAnimation(100);		// Axe
-	ani->Add(11000);
-	ani->Add(11001);
-	ani->Add(11002);
-	ani->Add(11003);
-	animations->Add(615, ani);
-
-    //item
-	ani = new CAnimation(100);		// Lheart
-	ani->Add(99997);
-	animations->Add(612, ani);
-	ani = new CAnimation(100);		// Sheart
-	ani->Add(99996);
-	animations->Add(613, ani);
-	ani = new CAnimation(100);		// MS Up
-	ani->Add(99995);
-	animations->Add(614, ani);
-	ani = new CAnimation(100);      // Axe
-	ani->Add(11000);
-	animations->Add(616, ani);
-
-    //map
-	ani = new CAnimation(100);		// brick
-	ani->Add(90001);
-	animations->Add(1000, ani);
-
-	ani = new CAnimation(100);		// torch
-	ani->Add(90002);
-	ani->Add(90003);
-	animations->Add(1001, ani);
-
-	//declare simon-animations
+	//declare simon
 	SIMON = new CSimon();
-
-	SIMON->AddAnimation(400);		// idle right 
-	SIMON->AddAnimation(401);		// idle left 
-    SIMON->AddAnimation(500);		// walk right 
-	SIMON->AddAnimation(501);		// walk left 
-	SIMON->AddAnimation(402);       //attack right
-	SIMON->AddAnimation(502);       //attack left
-	SIMON->AddAnimation(403);       //jump right
-	SIMON->AddAnimation(503);       //jump left
-	SIMON->AddAnimation(404);       //sit right
-	SIMON->AddAnimation(504);       //sit left
-	SIMON->AddAnimation(405);       //eat item right
-	SIMON->AddAnimation(505);       //eat item left
-
     SIMON->SetPosition(25.0f, 0);
 
-	//declare weapon-animations
+	//declare weapon
 	MS = new CMS();
 	MS->GetSimon(SIMON);
 	MS->SetPosition(-100, -100);
-	MS->AddAnimation(600);
-	MS->AddAnimation(601);
-	MS->AddAnimation(602);
-	MS->AddAnimation(603);
 	
 	dagger = new CDagger();
     dagger->GetSimon(SIMON);
-	dagger->AddAnimation(610);
-	dagger->AddAnimation(611);
 
 	Axe = new CAxe();
 	Axe->GetSimon(SIMON);
-	Axe->AddAnimation(615);
 	
-	//draw map-animations
+	//draw map
 	for (int i = 0; i < 5; i++)
 	{
 		CTorch* torch = new CTorch();
-		torch->AddAnimation(1001);
-		torch->AddAnimation(612);
-		torch->AddAnimation(613);
-		torch->AddAnimation(614);
-		torch->AddAnimation(611);
-		torch->AddAnimation(616);
 		torch->SetPosition(100 + i * 120.0f, 113);
 	    objects.push_back(torch);
 	}
 	for (int i = 0; i < 100; i++)
 	{
 		CBrick* brick = new CBrick();
-		brick->AddAnimation(1000);
 		brick->SetPosition(0 + i * 8.0f, 144);
 		objects.push_back(brick);
 
@@ -384,8 +238,6 @@ void LoadResources()
 */
 void Update(DWORD dt)
 {
-	// We know that SIMON is the first object in the list hence we won't add him into the colliable object list
-	// TO-DO: This is a "dirty" way, need a more organized way 
 	vector<LPGAMEOBJECT> coObjects;
 	vector<LPGAMEOBJECT> Torch;
 	for (int i = 0; i < objects.size(); i++)

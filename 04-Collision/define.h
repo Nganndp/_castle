@@ -69,6 +69,28 @@ public:
 #define SIMON_ATTACK_TIME           300
 #define SIMON_EAT_TIME              500
 
+//Map
+	//Torch
+#define TORCH_BBOX_WIDTH 16
+#define TORCH_BBOX_HEIGHT 15
+#define TORCH_GRAVITY 0.0002f
+#define TORCH_STATE_NORMAL 0
+#define TORCH_STATE_LHEART 1
+#define TORCH_STATE_SHEART 2
+#define TORCH_STATE_MSUP 3
+#define TORCH_STATE_DAGGER 4
+#define TORCH_STATE_AXE 5
+
+#define TORCH_ANI_NORMAL 0
+#define TORCH_ANI_LHEART 1
+#define TORCH_ANI_SHEART 2
+#define TORCH_ANI_MSUP 3
+#define TORCH_ANI_DAGHER 4
+#define TORCH_ANI_AXE 5
+	//Brick
+#define BRICK_BBOX_WIDTH 16
+#define BRICK_BBOX_HEIGHT 16
+
 //Wepon
    //Axe
 #define AXE_GRAVITY 0.0002f

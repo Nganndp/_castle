@@ -9,6 +9,7 @@
 #include "Torch.h"
 #include "MS.h"
 #include "Brick.h"
+#include "LoadAnimations.h"
 #include "define.h"
 class CSimon: public CGameObject
 {
@@ -28,6 +29,7 @@ class CSimon: public CGameObject
 public: 
 	CSimon() : CGameObject()
 	{
+		LoadAnimations::LoadAnimationFromFile("ani\\simonani.txt", this);
 		jump = 0;
 		attack = 0;
 		changecolor = 0;

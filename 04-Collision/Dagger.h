@@ -2,6 +2,7 @@
 #include "Simon.h"
 #include "Torch.h"
 #include "Game.h"
+#include "LoadAnimations.h"
 #include "define.h"
 class CDagger :public CGameObject
 {
@@ -17,8 +18,8 @@ public:
 public:
 	CDagger() :CGameObject()
 	{
+		LoadAnimations::LoadAnimationFromFile("ani\\Daggerani.txt", this);
 		attack = 0;
-
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
