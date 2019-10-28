@@ -1,6 +1,4 @@
 #include "MS.h"
-#include "Game.h"
-#include "Simon.h"
 
 void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 

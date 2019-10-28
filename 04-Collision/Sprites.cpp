@@ -1,6 +1,5 @@
 #include "Sprites.h"
-#include "Game.h"
-#include "debug.h"
+
 
 CSprite::CSprite(int id, int left, int top, int right, int bottom, LPDIRECT3DTEXTURE9 tex)
 {
@@ -36,7 +35,58 @@ LPSPRITE CSprites::Get(int id)
 {
 	return sprites[id];
 }
-
+void CSprites::Load()
+{
+	CSprites* sprites = CSprites::GetInstance();
+	CTextures* textures = CTextures::GetInstance();
+	vector<int> numbers;
+	int flag = 0;
+	int number;
+	int arr[6];
+	ifstream file_Simon("sprite.txt");
+	if (file_Simon.is_open())
+	{
+		while (!file_Simon.eof())
+		{
+			while (file_Simon >> number)
+			{
+				arr[flag] = number;
+				flag++;
+				if (flag == 6)
+				{
+					LPDIRECT3DTEXTURE9 tex = textures->Get(arr[0]);
+					sprites->Add(arr[1], arr[2], arr[3], arr[4], arr[5], tex);
+					flag = 0;
+					if (arr[0] == 10)
+					{
+						int l = 0, r = 64;
+						for (int i = 0; i <= 11; i++)
+						{
+							sprites->Add(i, l, 0, r, 64, tex);
+							l += 64;
+							r += 64;
+						}
+						l = 0, r = 64;
+						for (int i = 12; i <= 23; i++)
+						{
+							sprites->Add(i, l, 64, r, 128, tex);
+							l += 64;
+							r += 64;
+						}
+						l = 0, r = 64;
+						for (int i = 24; i <= 35; i++)
+						{
+							sprites->Add(i, l, 128, r, 192, tex);
+							l += 64;
+							r += 64;
+						}
+						flag = 0;
+					}
+				}
+			}
+		}
+	}
+}
 void CAnimation::Add(int spriteId, DWORD time)
 {
 	int t = time;

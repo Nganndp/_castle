@@ -2,10 +2,7 @@
 #include "Simon.h"
 #include "Torch.h"
 #include "Game.h"
-#define DG_ATTACK_TIME 500
-#define DG_FLY_SPEED 5.0f
-#define DG_STATE_ATTACK_RIGHT 0
-#define DG_STATE_ATTACK_LEFT 1
+#include "define.h"
 class CDagger :public CGameObject
 {
 public:

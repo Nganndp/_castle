@@ -1,11 +1,4 @@
-#include <Windows.h>
-
-#include <d3d9.h>
-#include <d3dx9.h>
-
-#include "debug.h"
-#include "Game.h"
-#include "textures.h"
+#include "Textures.h"
 
 CTextures * CTextures::__instance = NULL;
 
@@ -63,6 +56,48 @@ void CTextures::Add(int id, LPCWSTR filePath, D3DCOLOR transparentColor)
 LPDIRECT3DTEXTURE9 CTextures::Get(unsigned int i) 
 {
 	return textures[i];
+}
+wstring s2ws(string s) {
+
+	int len;
+	int slength = (int)s.length() + 1;
+	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+	wchar_t* buf = new wchar_t[len];
+	MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
+	std::wstring r(buf);
+	delete[] buf;
+	return r;
+};
+void CTextures::Load()
+{
+	CTextures* textures = CTextures::GetInstance();
+	const string texture_name_collection[] = { "ID_TEX_SIMON","ID_TEX_DAGGERR","ID_TEX_DAGGERL","ID_TEX_LHEART","ID_TEX_SHEART","ID_TEX_MSUP","ID_TEX_AXE","ID_TEX_TORCH","ID_TEX_MISC","ID_TEX_ENTRANCESTAGE","ID_TEX_BBOX" };
+	const int texture_collection[] = { ID_TEX_SIMON,ID_TEX_DAGGERR,ID_TEX_DAGGERL,ID_TEX_LHEART,ID_TEX_SHEART,ID_TEX_MSUP,ID_TEX_AXE,ID_TEX_TORCH,ID_TEX_MISC,ID_TEX_ENTRANCESTAGE,ID_TEX_BBOX };
+	string idtex;
+	string pathimage;
+	int trans_r;
+	int trans_g;
+	int trans_b;
+
+	ifstream infile;
+	infile.open("textures.txt");
+	if (!infile)
+		return;
+	while (!infile.eof())
+	{
+		infile >> idtex >> pathimage >> trans_r >> trans_g >> trans_b;
+		for (unsigned int i = 0; i <= texture_name_collection->size(); i++)
+		{
+			if (idtex == texture_name_collection[i])
+			{
+				wstring stemp = s2ws(pathimage);
+				LPCWSTR image = stemp.c_str();
+				textures->Add(texture_collection[i], image, D3DCOLOR_XRGB(trans_r, trans_g, trans_b));
+			}
+		}
+
+	}
+	infile.close();
 }
 
 

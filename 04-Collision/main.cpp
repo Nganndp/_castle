@@ -41,28 +41,7 @@
 #include<fstream>
 #include<string>
 #include<queue>
-
-#define WINDOW_CLASS_NAME L"SampleWindow"
-#define MAIN_WINDOW_TITLE L"04 - Collision"
-
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 198
-
-#define MAX_FRAME_RATE 120
-
-#define ID_TEX_SIMON 0
-#define ID_TEX_ENEMY 10
-#define ID_TEX_MISC 20
-#define ID_TEX_TORCH 30
-#define ID_TEX_DAGGERR 40
-#define ID_TEX_DAGGERL 41
-#define ID_TEX_LHEART 42
-#define ID_TEX_SHEART 43
-#define ID_TEX_MSUP 44
-#define ID_TEX_AXE 45
-
-#define ID_TEX_ENTRANCESTAGE 100
+#include "define.h"
 CGame * game;
 
 CSimon* SIMON;
@@ -206,96 +185,18 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 */
 void LoadResources()
 {
+
+	//Textures
 	CTextures* textures = CTextures::GetInstance();
+	textures->Load();
+
+	//Sprites
 	CSprites* sprites = CSprites::GetInstance();
+	sprites->Load();
 	CAnimations* animations = CAnimations::GetInstance();
 
-	textures->Add(ID_TEX_SIMON, L"textures\\Simon.png", D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_DAGGERR, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_DAGGERL, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_LHEART, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_SHEART, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_MSUP, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_AXE, L"textures\\item.png", D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_TORCH, L"textures\\object.png", D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_MISC, L"textures\\brick.png", D3DCOLOR_XRGB(0, 0, 0));
-	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
-	textures->Add(ID_TEX_ENTRANCESTAGE, L"textures\\entrance_test.png", D3DCOLOR_XRGB(255, 255, 255));
-	   textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 0, 255));
-	
-	//divide map
-	LPDIRECT3DTEXTURE9 texEntrance = textures->Get(ID_TEX_ENTRANCESTAGE);
-    int l = 0, r = 64;
-	for (int i = 0; i <=11; i++)
-	{
-		sprites->Add(i, l, 0, r, 64, texEntrance);
-		l += 64;
-		r += 64;
-	}
-	l = 0, r = 64;
-	for (int i = 12; i <= 23; i++)
-	{
-		sprites->Add(i, l, 64, r, 128, texEntrance);
-		l += 64;
-		r += 64;
-	};
-	l = 0, r = 64;
-	for (int i = 24; i <= 35; i++)
-	{
-		sprites->Add(i, l, 128, r, 192, texEntrance);
-		l += 64;
-		r += 64;
-	}
  
-     
-	//read file simon.txt
-	LPDIRECT3DTEXTURE9 texSIMON = textures->Get(ID_TEX_SIMON);
-	vector<int> numbers;
-	
-	int flag = 0;
-	int number;
-	int arr[5];
-	ifstream file_Simon("Simon.txt");
-	if (file_Simon.is_open())
-	{
-		while (!file_Simon.eof())
-		{
-			while (file_Simon >> number)
-			{
-				arr[flag] = number;
-				flag++;
-				if (flag == 5)
-				{
-					sprites->Add(arr[0], arr[1], arr[2], arr[3], arr[4], texSIMON);
-					flag = 0;
-				}
-			}
-		}
-	}
-
-	//add sprite weapon/map
-	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
-	sprites->Add(90001, 0, 0, 32, 32, texMisc);
-	LPDIRECT3DTEXTURE9 texTorch = textures->Get(ID_TEX_TORCH);
-	sprites->Add(90002, 47, 25, 64, 56, texTorch);
-	sprites->Add(90003, 74, 25, 91, 56, texTorch);
-	LPDIRECT3DTEXTURE9 texDGR = textures->Get(ID_TEX_DAGGERR);
-	sprites->Add(99999, 176, 39, 194, 49, texDGR);
-	LPDIRECT3DTEXTURE9 texDGL = textures->Get(ID_TEX_DAGGERL);
-	sprites->Add(99998, 176, 59, 194, 69, texDGL);
-	LPDIRECT3DTEXTURE9 texLheart = textures->Get(ID_TEX_LHEART);
-	sprites->Add(99997,123, 58, 136, 68, texLheart);
-	LPDIRECT3DTEXTURE9 texSheart = textures->Get(ID_TEX_SHEART);
-	sprites->Add(99996, 126, 39, 134, 47, texSheart);
-	LPDIRECT3DTEXTURE9 texMsup = textures->Get(ID_TEX_MSUP);
-	sprites->Add(99995,43, 42, 61, 60, texMsup);
-	LPDIRECT3DTEXTURE9 texAxe = textures->Get(ID_TEX_AXE);
-	sprites->Add(11000, 223, 38,  241, 53, texAxe);
-	sprites->Add(11001, 223, 62 , 241, 77, texAxe);
-	sprites->Add(11002, 223, 88 , 241 ,103, texAxe);
-	sprites->Add(11003, 223, 112, 241, 127, texAxe);
-
-
+   //Animations
 	LPANIMATION ani;
 	//simon
 	ani = new CAnimation(100);	// idle right

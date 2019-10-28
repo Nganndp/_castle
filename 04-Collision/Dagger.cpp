@@ -1,5 +1,4 @@
 #include "Dagger.h"
-#include "Simon.h"
 
 void CDagger::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	

@@ -1,10 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Simon.h"
-#include "Game.h"
-#define HW_GRAVITY 0.0002f
-#define HW_STATE_BOTTLE 0
-#define HW_STATE_FIRE 1
+#include "define.h"
 
 class CHW :public CGameObject
 {

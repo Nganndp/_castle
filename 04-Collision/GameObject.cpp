@@ -1,12 +1,5 @@
-#include <d3dx9.h>
-#include <algorithm>
-
-
-#include "debug.h"
-#include "Textures.h"
-#include "Game.h"
 #include "GameObject.h"
-#include "Sprites.h"
+
 
 CGameObject::CGameObject()
 {

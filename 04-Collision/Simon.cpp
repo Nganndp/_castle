@@ -1,12 +1,4 @@
-#include <algorithm>
-#include<vector>
-#include "debug.h"
-
-#include "SIMON.h"
-#include "Game.h"
-
-
-#include "Torch.h"
+#include "Simon.h"
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {

@@ -1,53 +1,15 @@
 #pragma once
 #include <iostream>
 #include <memory>
+#include<vector>
+#include <algorithm>
 #include "GameObject.h"
+#include "debug.h"
+#include "Game.h"
+#include "Torch.h"
 #include "MS.h"
 #include "Brick.h"
-
-#define SIMON_WALKING_SPEED		    0.1f 
-#define SIMON_JUMP_SPEED_Y		    0.4f
-#define SIMON_JUMP_DEFLECT_SPEED    0.2f
-#define SIMON_GRAVITY			    0.002f
-#define SIMON_DIE_DEFLECT_SPEED	    0.5f
-#define PULL_UP_SIMON_AFTER_SITTING 10.0f
-
-#define SIMON_STATE_IDLE			0
-#define SIMON_STATE_WALKING_RIGHT	100
-#define SIMON_STATE_WALKING_LEFT	200
-#define SIMON_STATE_JUMP			300
-#define SIMON_STATE_DIE				400
-#define SIMON_STATE_ATTACK          500
-#define SIMON_STATE_SIT             600
-#define SIMON_STATE_EAT_ITEM        700
-
-#define SIMON_ANI_IDLE_RIGHT		0
-#define SIMON_ANI_IDLE_LEFT			1
-#define SIMON_ANI_WALKING_RIGHT		2
-#define SIMON_ANI_WALKING_LEFT		3
-#define SIMON_ANI_ATTACK_RIGHT		4
-#define SIMON_ANI_ATTACK_LEFT		5
-#define SIMON_ANI_JUMP_RIGHT        6
-#define SIMON_ANI_JUMP_LEFT         7
-#define SIMON_ANI_SIT_RIGHT         8
-#define SIMON_ANI_SIT_LEFT          9
-#define SIMON_ANI_EAT_RIGHT         10
-#define SIMON_ANI_EAT_LEFT          11
-#define SIMON_ANI_DIE		        99	
-
-#define SIMON_LEVEL_MS_1            0
-#define SIMON_LEVEL_MS_2            1
-#define SIMON_LEVEL_MS_3            2
-
-#define SIMON_IDLE_BBOX_WIDTH       16
-#define SIMON_IDLE_BBOX_HEIGHT      30
-#define SIMON_SIT_BBOX_HEIGHT       20
-
-#define SIMON_JUMP_TIME             400
-#define SIMON_ATTACK_TIME           300
-#define SIMON_EAT_TIME              500
-
-
+#include "define.h"
 class CSimon: public CGameObject
 {
 	int jump;

@@ -1,16 +1,18 @@
 #pragma once
-
 #include <Windows.h>
 #include <d3dx9.h>
 #include <vector>
+#include <algorithm>
+#include "debug.h"
+#include "Game.h"
 #include "MathHelper.h"
 #include "Textures.h"
 #include "Sprites.h"
+#include "define.h"
+
 
 
 using namespace std;
-
-#define ID_TEX_BBOX -100		// special texture to draw object bounding box
 
 class CGameObject; 
 typedef CGameObject * LPGAMEOBJECT;

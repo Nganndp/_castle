@@ -78,6 +78,9 @@
     <ClInclude Include="HolyWater.h">
       <Filter>Header Files\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simon.cpp">
@@ -121,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="HolyWater.cpp">
       <Filter>Source Files\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="define.cpp">
+      <Filter>Source Files\Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

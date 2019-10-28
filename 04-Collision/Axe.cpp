@@ -61,6 +61,6 @@ void CAxe::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
 	top = y;
-	right = x + 9;
+	right = x + 17;
 	bottom = y + 17;
 }

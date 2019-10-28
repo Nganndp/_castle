@@ -6,27 +6,7 @@
 #include "Torch.h"
 #include "Game.h"
 #include "Sprites.h"
-
-#define MS_ATTACK_TIME 300
-
-#define MS_STATE_ATTACK 0
-#define MS_STATE_ATTACK_2 1
-
-#define MS_LEVEL_1 0
-#define MS_LEVEL_2 1
-#define MS_LEVEL_3 2
-
-#define WHIP_ANI_NORMAL_RIGHT	0
-#define WHIP_ANI_NORMAL_LEFT	1
-#define WHIP_ANI_PURPLE_RIGHT	2
-#define WHIP_ANI_PURPLE_LEFT	3
-
-#define WHIP_NORMAL_BOX_WIDTH	15
-#define WHIP_NORMAL_BOX_HEIGHT	15
-
-#define WHIP_LONG_BOX_WIDTH		18
-#define WHIP_LONG_BOX_HEIGHT	15
-
+#include "define.h"
 class CMS :public CGameObject
 {
 public:
