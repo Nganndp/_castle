@@ -8,10 +8,11 @@ void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 
 	CalcPotentialCollisions(coObjects, coEvents);
 
-	if (GetTickCount() - attack_start > MS_ATTACK_TIME)
+	if (GetTickCount() - attack_start > 300)
 	{
-		attack_start = 0;
-		attack = 0;
+		if (active == true)
+			attack_start = 0;
+			attack = 0;
 	}
 	AdjustMSPos();
 	float min_tx, min_ty, nx = 0, ny;
@@ -53,68 +54,68 @@ void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 
 void CMS::Render() {
 	if (simon->vx != 0)
+	{
+		return;
+	}
+	int ani;
+	if (active == true)
+	{
+		if (state == MS_STATE_ATTACK)
 		{
-			return;
-		}
-		int ani;
-		if (active == true)
-		{
-			if (state == MS_STATE_ATTACK)
+			if (attack == 0)
 			{
-				if (attack == 0)
-				{
-					active = false;
-				}
-				if (simon->nx > 0)
-				{
-					ani = 0;
-					if (animations[ani]->GetCurrentFrame() == 3)
-					{
-						animations[ani]->SetCurrentcFrame(-1);
-						SetActive(false);
-					}
-				}
-				else
-					ani = 1;
+				active = false;
+			}
+			if (simon->nx > 0)
+			{
+				ani = 0;
 				if (animations[ani]->GetCurrentFrame() == 3)
 				{
 					animations[ani]->SetCurrentcFrame(-1);
 					SetActive(false);
 				}
-				int alpha = 255;
-				animations[ani]->Render(x, y, alpha);
-
-				RenderBoundingBox();
 			}
-			if (state == MS_STATE_ATTACK_2)
+			else
+				ani = 1;
+			if (animations[ani]->GetCurrentFrame() == 3)
 			{
-				if (attack == 0)
-				{
-					active = false;
-				}
-				if (simon->nx > 0)
-				{
-					ani = 2;
-					if (animations[ani]->GetCurrentFrame() == 3)
-					{
-						animations[ani]->SetCurrentcFrame(-1);
-						SetActive(false);
-					}
-				}
-				else
-					ani = 3;
+				animations[ani]->SetCurrentcFrame(-1);
+				SetActive(false);
+			}
+			int alpha = 255;
+			animations[ani]->Render(x, y, alpha);
+
+			RenderBoundingBox();
+		}
+		if (state == MS_STATE_ATTACK_2)
+		{
+			if (attack == 0)
+			{
+				active = false;
+			}
+			if (simon->nx > 0)
+			{
+				ani = 2;
 				if (animations[ani]->GetCurrentFrame() == 3)
 				{
 					animations[ani]->SetCurrentcFrame(-1);
 					SetActive(false);
 				}
-				int alpha = 255;
+			}
+			else
+				ani = 3;
+			if (animations[ani]->GetCurrentFrame() == 3)
+			{
+				animations[ani]->SetCurrentcFrame(-1);
+				SetActive(false);
+			}
+			int alpha = 255;
 				animations[ani]->Render(x, y, alpha);
 
 				RenderBoundingBox();
-			}
-		
 		}
+
+	}
 }
 
 void CMS::SetState(int state) {
@@ -122,85 +123,84 @@ void CMS::SetState(int state) {
 }
 void CMS::AdjustMSPos()
 {
-	int ani;
 	if (attack != 0)
 	{
-		if (state == MS_STATE_ATTACK)
+		if (attack != 0)
 		{
 			if (simon->nx > 0)
 			{
-				ani = 0;
-				if (animations[ani]->GetCurrentFrame() == 0) {
-					x = simon->x - 7;
-					y = simon->y + 2;
+				if (GetTickCount() - attack_start <= 115) {
+					x = simon->x - 5;
+					y = simon->y + 2.2;
 				}
 
-				else if (animations[ani]->GetCurrentFrame() == 1) {
-					x = simon->x - 16;
-					y = simon->y;
+				else if (GetTickCount() - attack_start <= 225) {
+					x = simon->x;
+					y = simon->y + 1;
 				}
 
-				else if (animations[ani]->GetCurrentFrame() == 2) {
-					x = simon->x + 16;
+				else if (GetTickCount() - attack_start <= 335) {
+					x = simon->x + 25;
 					y = simon->y + 6;
 				}
+				else animations[0]->SetCurrentcFrame(-1);
 			}
 			else if (simon->nx < 0)
 			{
-				ani = 1;
-				if (animations[ani]->GetCurrentFrame() == 0) {
-					x = simon->x + 16;
-					y = simon->y;
+				if (GetTickCount() - attack_start <= 115) {
+					x = simon->x + 22;
+					y = simon->y + 2.2;
 				}
 
-				else if (animations[ani]->GetCurrentFrame() == 1) {
-					x = simon->x + 16;
-					y = simon->y + 6;
+				else if (GetTickCount() - attack_start <= 225) {
+					x = simon->x + 22;
+					y = simon->y + 1;
 				}
 
-				else if (animations[ani]->GetCurrentFrame() == 2) {
+				else if (GetTickCount() - attack_start <= 335) {
 					x = simon->x - 22;
 					y = simon->y + 6;
 				}
+				else animations[1]->SetCurrentcFrame(-1);
 			}
 		}
-		if (state == MS_STATE_ATTACK_2)
+		if (state == MS_STATE_ATTACK_2 && attack != 0)
 		{
 			if (simon->nx > 0)
 			{
-				ani = 2;
-				if (animations[ani]->GetCurrentFrame() == 0) {
+				if (GetTickCount() - attack_start <= 120) {
 					x = simon->x - 7;
-					y = simon->y + 2;
+					y = simon->y + 2.2;
 				}
 
-				else if (animations[ani]->GetCurrentFrame() == 1) {
-					x = simon->x - 16;
-					y = simon->y;
+				else if (GetTickCount() - attack_start <= 230) {
+					x = simon->x - 10;
+					y = simon->y + 1;
 				}
 
-				else if (animations[ani]->GetCurrentFrame() == 2) {
-					x = simon->x + 16;
-					y = simon->y + 6;
+				else if (GetTickCount() - attack_start <= 340) {
+					x = simon->x + 25;
+					y = simon->y + 7;
 				}
+				else animations[2]->SetCurrentcFrame(-1);
 			}
 			else if (simon->nx < 0)
 			{
-				ani = 3;
-				if (animations[ani]->GetCurrentFrame() == 0) {
-					x = simon->x + 16;
-					y = simon->y;
+				if (GetTickCount() - attack_start <= 120) {
+					x = simon->x + 27;
+					y = simon->y + 2.2;
 				}
 
-				else if (animations[ani]->GetCurrentFrame() == 1) {
-					x = simon->x + 16;
-					y = simon->y + 6;
+				else if (GetTickCount() - attack_start <= 230) {
+					x = simon->x + 24;
+					y = simon->y + 1;
 				}
 
-				else if (animations[ani]->GetCurrentFrame() == 2) {
-					x = simon->x - 22;
-					y = simon->y + 6;
+				else if (GetTickCount() - attack_start <= 340) {
+					x = simon->x - 20;
+					y = simon->y + 7;
 				}
+				else animations[3]->SetCurrentcFrame(-1);
 			}
 		}
 	}
@@ -211,7 +211,7 @@ void CMS::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	{
 		top = y;
 		left = x;
-		right = x + 22;
+		right = x + 24;
 		bottom = y + 10;
 	}
 }

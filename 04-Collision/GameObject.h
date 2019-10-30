@@ -39,6 +39,8 @@ public:
 
 	float x; 
 	float y;
+	float tempx;
+	float tempy;
 
 	float dx;	// dx = vx*dt
 	float dy;	// dy = vy*dt

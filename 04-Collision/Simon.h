@@ -21,7 +21,7 @@ class CSimon: public CGameObject
 	bool sit = false;
     bool onGround = true;
 	bool isThrowDagger = false;
-	bool isThrowAxe = true;
+	bool isThrowAxe = false;
 	CGameObject* MS;
 	DWORD jump_start;
 	DWORD attack_start;
@@ -34,7 +34,6 @@ public:
 		attack = 0;
 		changecolor = 0;
 		level = SIMON_LEVEL_MS_1;
-		sit = false;
 	}
 	void StandUp();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
@@ -79,7 +78,12 @@ public:
 		onGround = a;
 	}
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
-	void StartAttack() { attack = 1; attack_start = GetTickCount(); }
+	void StartAttack() { attack = 1; attack_start = GetTickCount();
+	animations[1]->SetCurrentcFrame(-1);
+	animations[0]->SetCurrentcFrame(-1);
+	animations[2]->SetCurrentcFrame(-1);
+	animations[3]->SetCurrentcFrame(-1);
+	}
 	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); }
 	void SetSit(boolean a) { sit= a; };
 	void SetJump(int a) { jump = a; }

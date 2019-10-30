@@ -65,7 +65,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
 	switch (KeyCode)
 	{
-	case DIK_SPACE:
+	case DIK_S:
 		if (SIMON->GetOnGround())
 		{
 			SIMON->SetState(SIMON_STATE_JUMP);
@@ -117,6 +117,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			{
 				MS->SetState(MS_STATE_ATTACK_2);
 			}
+			if (SIMON->GetLevel() == SIMON_LEVEL_MS_3)
+			{
+				MS->SetState(MS_STATE_ATTACK_3);
+			}
         }
 		break;
 	case DIK_Q:
@@ -152,8 +156,8 @@ void CSampleKeyHander::KeyState(BYTE* states)
 	}
 	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN))
 	{
-		SIMON->SetState(SIMON_STATE_WALKING_LEFT);
-		SIMON->SetRight(0);
+			SIMON->SetState(SIMON_STATE_WALKING_LEFT);
+			SIMON->SetRight(0);
 	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
@@ -197,12 +201,11 @@ void LoadResources()
 
 	//declare simon
 	SIMON = new CSimon();
-    SIMON->SetPosition(25.0f, 0);
+    SIMON->SetPosition(10.0f, 113);
 
 	//declare weapon
 	MS = new CMS();
 	MS->GetSimon(SIMON);
-	MS->SetPosition(-100, -100);
 	
 	dagger = new CDagger();
     dagger->GetSimon(SIMON);

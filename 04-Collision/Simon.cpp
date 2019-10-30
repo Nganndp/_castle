@@ -91,7 +91,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						switch (tor->GetState())
 						{
 						case 0:
-							tor->SetTouchable(false); break;
+							tor->SetTouchable(false); 
+							break;
 						case 1:
 							tor->SetTouchable(false);
 							tor->SetActive(false);
@@ -106,11 +107,18 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							StartChangeColor();
 							tor->SetTouchable(false);
 							tor->SetActive(false);
-							tor->SetPosition(-100, 0);
-							this->SetLevel(SIMON_LEVEL_MS_2);
+							tor->SetPosition(-100, 0); 
+							if (this->GetLevel() == SIMON_LEVEL_MS_1)
+							{
+								this->SetLevel(SIMON_LEVEL_MS_2);
+							}
+							else if (this->GetLevel() == SIMON_LEVEL_MS_2)
+							{
+								this->SetLevel(SIMON_LEVEL_MS_3);
+							}
 							break;
 						case 4:
-							StartChangeColor();
+							//StartChangeColor();
 							tor->SetTouchable(false);
 							tor->SetActive(false);
 							tor->SetPosition(-100, 0);
@@ -118,7 +126,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							isThrowAxe = false;
 							break;
 						case 5:
-							StartChangeColor();
+							//StartChangeColor();
 							tor->SetTouchable(false);
 							tor->SetActive(false);
 							tor->SetPosition(-100, 0);
@@ -222,7 +230,6 @@ void CSimon::SetState(int state)
 		break;
 	}
 }
-
 void CSimon::StandUp()
 {
 	y = y - PULL_UP_SIMON_AFTER_SITTING;
@@ -230,13 +237,13 @@ void CSimon::StandUp()
 }
 void CSimon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
+	/*tempx = x - 10;*/
+	left = x - 10;
 	top = y;
-
-	right = x + SIMON_IDLE_BBOX_WIDTH;
+    right = x + SIMON_IDLE_BBOX_WIDTH;
 	bottom = y + SIMON_IDLE_BBOX_HEIGHT;
 
-	if (state == SIMON_STATE_SIT || state == SIMON_STATE_JUMP)
+	if (state == SIMON_STATE_SIT)
 	{
 		right = x + SIMON_IDLE_BBOX_WIDTH;
 		bottom = y + SIMON_SIT_BBOX_HEIGHT;

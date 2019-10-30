@@ -28,9 +28,10 @@ public:
 
 //Simon
 #define SIMON_WALKING_SPEED		    0.1f 
-#define SIMON_JUMP_SPEED_Y		    0.4f
-#define SIMON_JUMP_DEFLECT_SPEED    0.2f
-#define SIMON_GRAVITY			    0.002f
+#define SIMON_JUMP_SPEED_X			0.12f
+#define SIMON_JUMP_SPEED_Y		    0.25f
+#define SIMON_JUMP_DEFLECT_SPEED    0.1f
+#define SIMON_GRAVITY			    0.001f
 #define SIMON_DIE_DEFLECT_SPEED	    0.5f
 #define PULL_UP_SIMON_AFTER_SITTING 10.0f
 
@@ -63,7 +64,7 @@ public:
 
 #define SIMON_IDLE_BBOX_WIDTH       16
 #define SIMON_IDLE_BBOX_HEIGHT      30
-#define SIMON_SIT_BBOX_HEIGHT       20
+#define SIMON_SIT_BBOX_HEIGHT       22
 
 #define SIMON_JUMP_TIME             400
 #define SIMON_ATTACK_TIME           300
@@ -109,15 +110,11 @@ public:
 
 #define MS_STATE_ATTACK 0
 #define MS_STATE_ATTACK_2 1
+#define MS_STATE_ATTACK_3 2
 
 #define MS_LEVEL_1 0
 #define MS_LEVEL_2 1
 #define MS_LEVEL_3 2
-
-#define WHIP_ANI_NORMAL_RIGHT	0
-#define WHIP_ANI_NORMAL_LEFT	1
-#define WHIP_ANI_PURPLE_RIGHT	2
-#define WHIP_ANI_PURPLE_LEFT	3
 
 #define WHIP_NORMAL_BOX_WIDTH	15
 #define WHIP_NORMAL_BOX_HEIGHT	15

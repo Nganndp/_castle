@@ -36,10 +36,10 @@ public:
 	void StartAttack() {
 		attack = 1;
 		attack_start = GetTickCount(); 
-		animations[1]->SetCurrentcFrame(-1);
-		animations[0]->SetCurrentcFrame(-1);
-		animations[2]->SetCurrentcFrame(-1);
-		animations[3]->SetCurrentcFrame(-1);
+		for (int i = 0; i < 4; i++)
+		{
+			animations[i]->SetCurrentcFrame(-1);
+	}
 	}
 	void GetSimon(CGameObject* Simon) {
 		this->simon = Simon; 
