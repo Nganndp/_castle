@@ -118,7 +118,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							}
 							break;
 						case 4:
-							//StartChangeColor();
 							tor->SetTouchable(false);
 							tor->SetActive(false);
 							tor->SetPosition(-100, 0);
@@ -126,7 +125,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							isThrowAxe = false;
 							break;
 						case 5:
-							//StartChangeColor();
 							tor->SetTouchable(false);
 							tor->SetActive(false);
 							tor->SetPosition(-100, 0);
@@ -237,7 +235,6 @@ void CSimon::StandUp()
 }
 void CSimon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	/*tempx = x - 10;*/
 	left = x - 10;
 	top = y;
     right = x + SIMON_IDLE_BBOX_WIDTH;

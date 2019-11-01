@@ -84,7 +84,7 @@ public:
 	animations[2]->SetCurrentcFrame(-1);
 	animations[3]->SetCurrentcFrame(-1);
 	}
-	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); }
+	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); vx = 0; }
 	void SetSit(boolean a) { sit= a; };
 	void SetJump(int a) { jump = a; }
 	void CheckCollisionWithGround(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);

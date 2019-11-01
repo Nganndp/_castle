@@ -36,7 +36,7 @@ public:
 	void StartAttack() {
 		attack = 1;
 		attack_start = GetTickCount(); 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			animations[i]->SetCurrentcFrame(-1);
 	}
