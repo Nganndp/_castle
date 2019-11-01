@@ -152,70 +152,30 @@ void CMS::AdjustMSPos()
 {
 	if (attack != 0)
 	{
-		if (attack != 0)
+		if (state == MS_STATE_ATTACK || MS_STATE_ATTACK_2)
 		{
 			if (simon->nx > 0)
 			{
 				if (GetTickCount() - attack_start <= 120) {
 					x = simon->x - 5;
-					y = simon->y + 2.2;
+					y = simon->y + 3.5;
 				}
 
 				else if (GetTickCount() - attack_start <= 240) {
-					x = simon->x;
+					x = simon->x - 5;
 					y = simon->y + 1;
 				}
 
 				else if (GetTickCount() - attack_start <= 360) {
-					x = simon->x + 25;
-					y = simon->y + 6;
-				}
-				else animations[0]->SetCurrentcFrame(-1);
-			}
-			else if (simon->nx < 0)
-			{
-				if (GetTickCount() - attack_start <= 120) {
-					x = simon->x + 22;
-					y = simon->y + 2.2;
-				}
-
-				else if (GetTickCount() - attack_start <= 240) {
-					x = simon->x + 22;
-					y = simon->y + 1;
-				}
-
-				else if (GetTickCount() - attack_start <= 360) {
-					x = simon->x - 22;
-					y = simon->y + 6;
-				}
-				else animations[1]->SetCurrentcFrame(-1);
-			}
-		}
-		if (state == MS_STATE_ATTACK_2 && attack != 0)
-		{
-			if (simon->nx > 0)
-			{
-				if (GetTickCount() - attack_start <= 120) {
-					x = simon->x - 7;
-					y = simon->y + 2.2;
-				}
-
-				else if (GetTickCount() - attack_start <= 240) {
-					x = simon->x - 10;
-					y = simon->y + 1;
-				}
-
-				else if (GetTickCount() - attack_start <= 360) {
-					x = simon->x + 25;
-					y = simon->y + 7;
-				}
-				else animations[2]->SetCurrentcFrame(-1);
-			}
-			else if (simon->nx < 0)
-			{
-				if (GetTickCount() - attack_start <= 120) {
 					x = simon->x + 27;
-					y = simon->y + 2.2;
+					y = simon->y + 6;
+				}
+			}
+			else if (simon->nx < 0)
+			{
+				if (GetTickCount() - attack_start <= 120) {
+					x = simon->x + 24;
+					y = simon->y + 3.5;
 				}
 
 				else if (GetTickCount() - attack_start <= 240) {
@@ -224,48 +184,45 @@ void CMS::AdjustMSPos()
 				}
 
 				else if (GetTickCount() - attack_start <= 360) {
-					x = simon->x - 20;
-					y = simon->y + 7;
+					x = simon->x - 22;
+					y = simon->y + 6;
 				}
-				else animations[3]->SetCurrentcFrame(-1);
 			}
-			if (state == MS_STATE_ATTACK_3 && attack != 0)
+		}
+		if (state == MS_STATE_ATTACK_3)
+		{
+			if (simon->nx > 0)
 			{
-				if (simon->nx > 0)
-				{
-					if (GetTickCount() - attack_start <= 105) {
-						x = simon->x - 7;
-						y = simon->y + 2.2;
-					}
-
-					else if (GetTickCount() - attack_start <= 210) {
-						x = simon->x - 10;
-						y = simon->y + 1;
-					}
-
-					else if (GetTickCount() - attack_start <= 315) {
-						x = simon->x + 25;
-						y = simon->y + 7;
-					}
-					else animations[4]->SetCurrentcFrame(-1);
+				if (GetTickCount() - attack_start <= 120) {
+					x = simon->x - 5;
+					y = simon->y + 3.5;
 				}
-				else if (simon->nx < 0)
-				{
-					if (GetTickCount() - attack_start <= 120) {
-						x = simon->x + 27;
-						y = simon->y + 2.2;
-					}
 
-					else if (GetTickCount() - attack_start <= 240) {
-						x = simon->x + 24;
-						y = simon->y + 1;
-					}
+				else if (GetTickCount() - attack_start <= 240) {
+					x = simon->x - 5;
+					y = simon->y + 1;
+				}
 
-					else if (GetTickCount() - attack_start <= 360) {
-						x = simon->x - 20;
-						y = simon->y + 7;
-					}
-					else animations[5]->SetCurrentcFrame(-1);
+				else if (GetTickCount() - attack_start <= 360) {
+					x = simon->x + 25;
+					y = simon->y + 6;
+				}
+			}
+			else if (simon->nx < 0)
+			{
+				if (GetTickCount() - attack_start <= 120) {
+					x = simon->x + 24;
+					y = simon->y + 3.5;
+				}
+
+				else if (GetTickCount() - attack_start <= 240) {
+					x = simon->x + 24;
+					y = simon->y + 2;
+				}
+
+				else if (GetTickCount() - attack_start <= 360) {
+					x = simon->x - 28;
+					y = simon->y + 7;
 				}
 			}
 		}
@@ -277,10 +234,13 @@ void CMS::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	{
 		if (state == MS_STATE_ATTACK_3)
 		{
+			if (GetTickCount() - attack_start <= 360)
+			{
 				top = y;
 				left = x;
 				right = x + 40;
 				bottom = y + 10;
+			}
 		}
 		else if (state == MS_STATE_ATTACK || state == MS_STATE_ATTACK_2)
 		{

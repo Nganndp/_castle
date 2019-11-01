@@ -235,7 +235,7 @@ void CSimon::StandUp()
 }
 void CSimon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x - 10;
+	left = x + 10;
 	top = y;
     right = x + SIMON_IDLE_BBOX_WIDTH;
 	bottom = y + SIMON_IDLE_BBOX_HEIGHT;
