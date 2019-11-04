@@ -110,9 +110,17 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			MS->StartAttack();
 			MS->SetState(MS_STATE_ATTACK);
 			MS->SetActive(true);
-			SIMON->SetState(SIMON_STATE_ATTACK);
-			SIMON->StartAttack();
-			SIMON->SetJump(0);
+			if (game->IsKeyDown(DIK_DOWN))
+			{
+				SIMON->SetState(SIMON_STATE_SIT);
+				SIMON->StartSitAttack();
+				SIMON->SetJump(0);
+			}
+			else {
+				SIMON->SetState(SIMON_STATE_ATTACK);
+				SIMON->StartAttack();
+				SIMON->SetJump(0);
+			}
 			if (SIMON->GetLevel() == SIMON_LEVEL_MS_2)
 			{
 				MS->SetState(MS_STATE_ATTACK_2);

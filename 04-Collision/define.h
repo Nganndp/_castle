@@ -43,6 +43,7 @@ public:
 #define SIMON_STATE_ATTACK          500
 #define SIMON_STATE_SIT             600
 #define SIMON_STATE_EAT_ITEM        700
+#define SIMON_STATE_SIT_ATTACK      800
 
 #define SIMON_ANI_IDLE_RIGHT		0
 #define SIMON_ANI_IDLE_LEFT			1
@@ -56,6 +57,8 @@ public:
 #define SIMON_ANI_SIT_LEFT          9
 #define SIMON_ANI_EAT_RIGHT         10
 #define SIMON_ANI_EAT_LEFT          11
+#define SIMON_ANI_SIT_ATTACK_RIGHT  12
+#define SIMON_ANI_SIT_ATTACK_LEFT   13
 #define SIMON_ANI_DIE		        99	
 
 #define SIMON_LEVEL_MS_1            0

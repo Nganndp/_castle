@@ -37,6 +37,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		attack_start = 0;
 		attack = 0;
 	}
+	if (GetTickCount() - sitattack_start > SIMON_ATTACK_TIME)
+	{
+		sitattack_start = 0;
+		sitattack = 0;
+	}
 	if (GetTickCount() - changecolor_start > SIMON_EAT_TIME)
 	{
 		changecolor_start = 0;
@@ -178,11 +183,17 @@ void CSimon::Render()
 		else ani = SIMON_ANI_EAT_LEFT;
 	}
 	if (attack != 0)
-		{
+	{
 			if (nx > 0)
 				ani = SIMON_ANI_ATTACK_RIGHT;
 			else ani = SIMON_ANI_ATTACK_LEFT;
-		}
+	}
+	if (sitattack != 0)
+	{
+		if (nx > 0)
+			ani = SIMON_ANI_SIT_ATTACK_RIGHT;
+		else ani = SIMON_ANI_SIT_ATTACK_LEFT;
+	}
 	if (jump != 0)
 	{
 		if (state == SIMON_STATE_ATTACK)

@@ -15,6 +15,7 @@ class CSimon: public CGameObject
 {
 	int jump;
 	int attack;
+	int sitattack;
 	int right;
 	int changecolor;
 	bool active = true;
@@ -25,6 +26,7 @@ class CSimon: public CGameObject
 	CGameObject* MS;
 	DWORD jump_start;
 	DWORD attack_start;
+	DWORD sitattack_start;
 	DWORD changecolor_start;
 public: 
 	CSimon() : CGameObject()
@@ -32,6 +34,7 @@ public:
 		LoadAnimations::LoadAnimationFromFile("ani\\simonani.txt", this);
 		jump = 0;
 		attack = 0;
+		sitattack = 0;
 		changecolor = 0;
 		level = SIMON_LEVEL_MS_1;
 	}
@@ -79,10 +82,13 @@ public:
 	}
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
 	void StartAttack() { attack = 1; attack_start = GetTickCount();
-	animations[1]->SetCurrentcFrame(-1);
-	animations[0]->SetCurrentcFrame(-1);
-	animations[2]->SetCurrentcFrame(-1);
-	animations[3]->SetCurrentcFrame(-1);
+	animations[4]->SetCurrentcFrame(-1);
+	animations[5]->SetCurrentcFrame(-1);
+	}
+	void StartSitAttack() {
+		sitattack = 1; sitattack_start = GetTickCount();
+		animations[12]->SetCurrentcFrame(-1);
+		animations[13]->SetCurrentcFrame(-1);
 	}
 	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); vx = 0; }
 	void SetSit(boolean a) { sit= a; };
