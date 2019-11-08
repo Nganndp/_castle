@@ -57,31 +57,6 @@ void CSprites::Load()
 					LPDIRECT3DTEXTURE9 tex = textures->Get(arr[0]);
 					sprites->Add(arr[1], arr[2], arr[3], arr[4], arr[5], tex);
 					flag = 0;
-					if (arr[0] == 10)
-					{
-						int l = 0, r = 64;
-						for (int i = 0; i <= 11; i++)
-						{
-							sprites->Add(i, l, 0, r, 64, tex);
-							l += 64;
-							r += 64;
-						}
-						l = 0, r = 64;
-						for (int i = 12; i <= 23; i++)
-						{
-							sprites->Add(i, l, 64, r, 128, tex);
-							l += 64;
-							r += 64;
-						}
-						l = 0, r = 64;
-						for (int i = 24; i <= 35; i++)
-						{
-							sprites->Add(i, l, 128, r, 192, tex);
-							l += 64;
-							r += 64;
-						}
-						flag = 0;
-					}
 				}
 			}
 		}

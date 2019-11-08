@@ -71,8 +71,8 @@ wstring s2ws(string s) {
 void CTextures::Load()
 {
 	CTextures* textures = CTextures::GetInstance();
-	const string texture_name_collection[] = { "ID_TEX_SIMON","ID_TEX_DAGGERR","ID_TEX_DAGGERL","ID_TEX_LHEART","ID_TEX_SHEART","ID_TEX_MSUP","ID_TEX_AXE","ID_TEX_TORCH","ID_TEX_MISC","ID_TEX_ENTRANCESTAGE","ID_TEX_BBOX" };
-	const int texture_collection[] = { ID_TEX_SIMON,ID_TEX_DAGGERR,ID_TEX_DAGGERL,ID_TEX_LHEART,ID_TEX_SHEART,ID_TEX_MSUP,ID_TEX_AXE,ID_TEX_TORCH,ID_TEX_MISC,ID_TEX_ENTRANCESTAGE,ID_TEX_BBOX };
+	const string texture_name_collection[] = { "ID_TEX_SIMON","ID_TEX_DAGGERR","ID_TEX_DAGGERL","ID_TEX_LHEART","ID_TEX_SHEART","ID_TEX_MSUP","ID_TEX_AXE","ID_TEX_TORCH","ID_TEX_MISC","ID_TEX_BBOX" };
+	const int texture_collection[] = { ID_TEX_SIMON,ID_TEX_DAGGERR,ID_TEX_DAGGERL,ID_TEX_LHEART,ID_TEX_SHEART,ID_TEX_MSUP,ID_TEX_AXE,ID_TEX_TORCH,ID_TEX_MISC,ID_TEX_BBOX };
 	string idtex;
 	string pathimage;
 	int trans_r;

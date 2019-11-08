@@ -20,6 +20,7 @@ public:
 	{
 		LoadAnimations::LoadAnimationFromFile("ani\\Daggerani.txt", this);
 		attack = 0;
+
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

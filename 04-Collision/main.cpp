@@ -18,37 +18,7 @@
 
 ================================================================ */
 
-#include <windows.h>
-#include <iostream>
-#include <d3d9.h>
-#include <d3dx9.h>
-#include <cstdlib>
-#include <ctime>
-
-#include "debug.h"
-#include "Game.h"
-#include "GameObject.h"
-#include "Textures.h"
-
-#include "SIMON.h"
-#include "MS.h"
-#include "Torch.h"
-#include "Brick.h"
-#include "Dagger.h"
-#include "Axe.h"
-
-#include<iostream>
-#include<fstream>
-#include<string>
-#include<queue>
-#include "define.h"
-CGame * game;
-
-CSimon* SIMON;
-CMS* MS;
-CDagger* dagger;
-CAxe* Axe;
-vector<LPGAMEOBJECT> objects;
+#include "Util.h"
 
 class CSampleKeyHander : public CKeyEventHandler
 {
@@ -189,12 +159,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-/*
-	Load all game resources
-	In this example: load textures, sprites, animations and SIMON object
-
-	TO-DO: Improve this function by loading texture,sprite,animation,object from file
-*/
 void LoadResources()
 {
 
@@ -205,13 +169,10 @@ void LoadResources()
 	//Sprites
 	CSprites* sprites = CSprites::GetInstance();
 	sprites->Load();
-	CAnimations* animations = CAnimations::GetInstance();
 
-	//declare simon
 	SIMON = new CSimon();
-    SIMON->SetPosition(10.0f, 113);
+    SIMON->SetPosition(10.0f, 112);
 
-	//declare weapon
 	MS = new CMS();
 	MS->GetSimon(SIMON);
 	
@@ -221,20 +182,8 @@ void LoadResources()
 	Axe = new CAxe();
 	Axe->GetSimon(SIMON);
 	
-	//draw map
-	for (int i = 0; i < 5; i++)
-	{
-		CTorch* torch = new CTorch();
-		torch->SetPosition(100 + i * 120.0f, 113);
-	    objects.push_back(torch);
-	}
-	for (int i = 0; i < 100; i++)
-	{
-		CBrick* brick = new CBrick();
-		brick->SetPosition(0 + i * 8.0f, 144);
-		objects.push_back(brick);
-
-	}
+	Tile = new TileMap(L"textures\\entrance_test.png",ID_TEX_ENTRANCESTAGE);
+	DrawObject(1);
 
 	//push back to list objects
 	objects.push_back(SIMON);
@@ -250,10 +199,13 @@ void LoadResources()
 void Update(DWORD dt)
 {
 	vector<LPGAMEOBJECT> coObjects;
-	vector<LPGAMEOBJECT> Torch;
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 0; i < mapobjects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		coObjects.push_back(mapobjects[i]);
+	}
+	for (int i = 0; i < mapobjects.size(); i++)
+	{
+		mapobjects[i]->Update(dt, &coObjects);
 	}
 	for (int i = 0; i < objects.size(); i++)
 	{
@@ -286,35 +238,12 @@ void Render()
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-
-		CSprites* sprites = CSprites::GetInstance();
-		int x=0, y=0;
-		int flag = 1;
-
-		//draw map
-		int i, j;
-		ifstream file_entrance("entrance_test.txt");
-		int number;
-		queue<int>entr;
-		if (file_entrance.is_open())
-		{
-			while (!file_entrance.eof())
-			{
-				file_entrance >> number;
-				entr.push(number);
-			}
-		}
-		for (i = 0; i < 3*64; i=i+64)
-		{
-			for (j = 0; j < 12*64; j=j+64)
-				{
-					sprites->Get(entr.front())->Draw(j, i, 255);
-					entr.pop();
-				}
-		}
+		Tile->LoadTile("entrance_test.txt");
+		Tile->DrawTile();
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();
-		
+		for (int i = 0; i < mapobjects.size(); i++)
+			mapobjects[i]->Render();
 		spriteHandler->End();
 		
 

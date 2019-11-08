@@ -32,7 +32,6 @@ TileMap::TileMap(LPCWSTR picturePath, int id)
 
 void TileMap::LoadTile(const char* filepath)
 {
-	int i, j;
 	ifstream file_entrance(filepath);
 	if (file_entrance.is_open())
 	{

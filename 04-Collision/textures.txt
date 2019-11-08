@@ -7,5 +7,4 @@ ID_TEX_MSUP           textures\\item.png            255 0 255
 ID_TEX_AXE            textures\\item.png            255 0 255
 ID_TEX_TORCH          textures\\object.png          255 0 255
 ID_TEX_MISC           textures\\brick.png             0 0 0
-ID_TEX_ENTRANCESTAGE  textures\\entrance_test.png  255 255 255
 ID_TEX_BBOX           textures\\bbox.png            255 0 255

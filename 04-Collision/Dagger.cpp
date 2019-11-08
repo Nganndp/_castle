@@ -29,13 +29,17 @@ void CDagger::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				this->SetActive(false);
 				int a;
 				srand(time(NULL));
-				a = rand() % 2 + 1;
+				a = rand() % 5 + 1;
 				switch (a)
 				{
 				case 1:
-					torch->SetState(2); break;
 				case 2:
-					torch->SetState(5); break;
+				case 3:
+					torch->SetState(TORCH_STATE_SHEART); break;
+				case 4:
+					torch->SetState(TORCH_STATE_LHEART); break;
+				case 5:
+					torch->SetState(TORCH_STATE_DAGGER); break;
 				}
 			}
 		}
