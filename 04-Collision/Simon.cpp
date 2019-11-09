@@ -15,6 +15,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		jump_start = 0;
 		jump = 0;
+		jumpmove = 0;
 
 	}
 	else
@@ -99,20 +100,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							tor->SetTouchable(false); 
 							break;
 						case 1:
-							tor->SetTouchable(false);
 							tor->SetActive(false);
-							tor->SetPosition(-100, 0);
 							break;
 						case 2:
-							tor->SetTouchable(false);
 							tor->SetActive(false);
-							tor->SetPosition(-100, 0);
 							break;
 						case 3:
 							StartChangeColor();
-							tor->SetTouchable(false);
 							tor->SetActive(false);
-							tor->SetPosition(-100, 0); 
 							if (this->GetLevel() == SIMON_LEVEL_MS_1)
 							{
 								this->SetLevel(SIMON_LEVEL_MS_2);
@@ -123,16 +118,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							}
 							break;
 						case 4:
-							tor->SetTouchable(false);
 							tor->SetActive(false);
-							tor->SetPosition(-100, 0);
 							isThrowDagger = true;
 							isThrowAxe = false;
 							break;
 						case 5:
-							tor->SetTouchable(false);
 							tor->SetActive(false);
-							tor->SetPosition(-100, 0);
 							isThrowAxe = true;
 							isThrowDagger = false;
 							break;
@@ -142,7 +133,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 		}
-	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 void CSimon::Render()
@@ -194,7 +184,7 @@ void CSimon::Render()
 			ani = SIMON_ANI_SIT_ATTACK_RIGHT;
 		else ani = SIMON_ANI_SIT_ATTACK_LEFT;
 	}
-	if (jump != 0)
+	if (jump != 0 || jumpmove !=0)
 	{
 		if (state == SIMON_STATE_ATTACK)
 			return;

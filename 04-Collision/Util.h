@@ -31,15 +31,17 @@ CMS* MS;
 CDagger* dagger;
 CAxe* Axe;
 TileMap* Tile;
+CBrick* brick;
+CTorch* torch;
 vector<LPGAMEOBJECT> mapobjects;
 vector<LPGAMEOBJECT> objects;
 
-void LoadObjectFromFile(string source, int a)
+void LoadObjectFromFile(string source)
 {
 	vector<int> numbers;
 	int flag = 0;
 	int number;
-	int arr[3];
+	int arr[4];
 	ifstream file_objects(source);
 	if (file_objects.is_open())
 	{
@@ -50,27 +52,28 @@ void LoadObjectFromFile(string source, int a)
 				CGameObject* tmp = nullptr;
 				arr[flag] = number;
 				flag++;
-				if (flag == 3)
+				if (flag == 4)
 				{
 					switch (arr[0])
 					{
 					case 0:
-						for (int i = 0; i < a; i++)
-						{
-							tmp = new CBrick();
-							tmp->SetPosition(0 + i * 8.0f, 143);
-							mapobjects.push_back(tmp);
-
-						}
+						brick = new CBrick();
+						brick->SetType(BRICK_TYPE_GROUND);
+						brick->SetMulwidth(arr[3]);
+						brick->SetPosition(arr[1], arr[2]);
+						mapobjects.push_back(brick);
+						break;
 					case 1:
-						tmp = new CTorch();
-						tmp->SetPosition(arr[1], arr[2]);
-						mapobjects.push_back(tmp);
+						torch = new CTorch();
+						torch->SetPosition(arr[1], arr[2]);
+						mapobjects.push_back(torch);
 						break;
 					case 2:
-						tmp = new CBrick();
-						tmp->SetPosition(arr[1], arr[2]);
-						mapobjects.push_back(tmp);
+						brick = new CBrick();
+						brick->SetType(BRICK_TYPE_NORMAL);
+						brick->SetMulwidth(arr[3]);
+						brick->SetPosition(arr[1], arr[2]);
+						mapobjects.push_back(brick);
 						break;
 					}
 
@@ -81,10 +84,10 @@ void LoadObjectFromFile(string source, int a)
 	}
 }
 
-void DrawObject(int a)
+void LoadSceneObject(int a)
 {
 	if (a == 1)
 	{
-		LoadObjectFromFile("Objects\\ObjectsStage1.txt", 95);
+		LoadObjectFromFile("Objects\\ObjectsStage1.txt");
 	}
 }

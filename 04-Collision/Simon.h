@@ -14,6 +14,7 @@
 class CSimon: public CGameObject
 {
 	int jump;
+	int jumpmove;
 	int attack;
 	int sitattack;
 	int right;
@@ -53,6 +54,10 @@ public:
 	{
 		return attack;
 	}
+	int GetJumpTime()
+	{
+		return jump;
+	}
 	boolean GetOnGround()
 	{
 		return onGround;
@@ -81,14 +86,15 @@ public:
 		onGround = a;
 	}
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
+	void StartJumpMove() { jumpmove = 1; jump_start = GetTickCount(); }
 	void StartAttack() { attack = 1; attack_start = GetTickCount();
-	animations[4]->SetCurrentcFrame(-1);
-	animations[5]->SetCurrentcFrame(-1);
+	animations[SIMON_ANI_ATTACK_RIGHT]->SetCurrentcFrame(-1);
+	animations[SIMON_ANI_ATTACK_LEFT]->SetCurrentcFrame(-1);
 	}
 	void StartSitAttack() {
 		sitattack = 1; sitattack_start = GetTickCount();
-		animations[12]->SetCurrentcFrame(-1);
-		animations[13]->SetCurrentcFrame(-1);
+		animations[SIMON_ANI_SIT_ATTACK_RIGHT]->SetCurrentcFrame(-1);
+		animations[SIMON_ANI_SIT_ATTACK_LEFT]->SetCurrentcFrame(-1);
 	}
 	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); vx = 0; }
 	void SetSit(boolean a) { sit= a; };

@@ -7,10 +7,19 @@
 
 class CBrick : public CGameObject
 {
+	int type;
+	int multwidth;
 	public:
 		CBrick() :CGameObject()
 		{
 			LoadAnimations::LoadAnimationFromFile("ani\\Brickani.txt", this);
+		}
+		void SetType(int a)
+		{
+			type = a;
+		}void SetMulwidth(int a)
+		{
+			multwidth = a;
 		}
 		boolean active = true;
 		void SetActive(boolean a) { active = a; }

@@ -39,7 +39,11 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		if (SIMON->GetOnGround())
 		{
 			SIMON->SetState(SIMON_STATE_JUMP);
-			SIMON->StartJump();
+			if (game->IsKeyDown(DIK_RIGHT) || game->IsKeyDown(DIK_LEFT))
+			{
+				SIMON->StartJumpMove();
+			}
+			else SIMON->StartJump();
 		}
 		break;
 	case DIK_A:
@@ -110,7 +114,13 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		break;
 	case DIK_R: 
 		for (int i = 0; i < objects.size(); i++)
+		{
 			objects[i]->Setbboxcolor();
+		}
+		for (int j = 0; j < mapobjects.size(); j++)
+		{
+			mapobjects[j]->Setbboxcolor();
+		}
 		break;
 	}
 }
@@ -127,12 +137,12 @@ void CSampleKeyHander::KeyState(BYTE* states)
 {
 	// disable control key when SIMON die 
 	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
-	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN))
+	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0)
 	{
 		SIMON->SetState(SIMON_STATE_WALKING_RIGHT);
 		SIMON->SetRight(1);
 	}
-	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN))
+	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0)
 	{
 			SIMON->SetState(SIMON_STATE_WALKING_LEFT);
 			SIMON->SetRight(0);
@@ -183,7 +193,7 @@ void LoadResources()
 	Axe->GetSimon(SIMON);
 	
 	Tile = new TileMap(L"textures\\entrance_test.png",ID_TEX_ENTRANCESTAGE);
-	DrawObject(1);
+	LoadSceneObject(1);
 
 	//push back to list objects
 	objects.push_back(SIMON);
@@ -202,6 +212,10 @@ void Update(DWORD dt)
 	for (int i = 0; i < mapobjects.size(); i++)
 	{
 		coObjects.push_back(mapobjects[i]);
+	}
+	for (int i = 0; i < objects.size(); i++)
+	{
+		coObjects.push_back(objects[i]);
 	}
 	for (int i = 0; i < mapobjects.size(); i++)
 	{
@@ -240,10 +254,11 @@ void Render()
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 		Tile->LoadTile("entrance_test.txt");
 		Tile->DrawTile();
-		for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render();
 		for (int i = 0; i < mapobjects.size(); i++)
 			mapobjects[i]->Render();
+		for (int i = 0; i < objects.size(); i++)
+			objects[i]->Render();
+
 		spriteHandler->End();
 		
 

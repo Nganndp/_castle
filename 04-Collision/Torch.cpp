@@ -2,6 +2,10 @@
 
 void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
+	if (active == false)
+	{
+		return;
+	}
 	if (isTouchable)
 	{
 		if (state == 0)
