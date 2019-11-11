@@ -31,7 +31,7 @@ void CAxe::SetState(int state) {
 
 
 }
-void CAxe::Render() {
+void CAxe::Render(Camera *camera) {
 	if (simon->vx != 0)
 	{
 		return;
@@ -39,9 +39,9 @@ void CAxe::Render() {
 	if (active == true)
 	{
 		int alpha = 255;
-		animations[0]->Render(x, y, alpha);
+		animations[0]->Render(camera->transform(x,y), alpha);
 
-		RenderBoundingBox();
+		RenderBoundingBox(camera);
 	}
 }
 void CAxe::AdjustPos()

@@ -6,6 +6,7 @@
 #include "debug.h"
 #include "Game.h"
 #include "MathHelper.h"
+#include "Camera.h"
 #include "Textures.h"
 #include "Sprites.h"
 #include "define.h"
@@ -85,7 +86,7 @@ public:
 	virtual void SetActive(boolean a) { active = a; };
 	int GetState() { return this->state; }
 
-	void RenderBoundingBox();
+	void RenderBoundingBox(Camera * camera);
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
@@ -105,7 +106,7 @@ public:
 	int GetDirect() { return nx; }
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
-	virtual void Render() = 0;
+	virtual void Render(Camera* camera) = 0;
 	virtual void SetState(int state) { this->state = state; }
 	virtual void SetLevel(int level) { this->level = level; }
 	RECT CGameObject::GetBound()

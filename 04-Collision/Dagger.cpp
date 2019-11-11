@@ -63,7 +63,7 @@ void CDagger::AdjustPos()
 			y = simon->y;
 	}
 }
-void CDagger::Render() {
+void CDagger::Render(Camera * camera) {
 	if (simon->vx != 0)
 	{
 		return;
@@ -82,9 +82,9 @@ void CDagger::Render() {
 		else
 			ani = 1;
 		int alpha = 255;
-		animations[ani]->Render(x, y, alpha);
+		animations[ani]->Render(camera->transform(x,y), alpha);
 
-		RenderBoundingBox();
+		RenderBoundingBox(camera);
 	}
 }
 void CDagger::GetBoundingBox(float& left, float& top, float& right, float& bottom)

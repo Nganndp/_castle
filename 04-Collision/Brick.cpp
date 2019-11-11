@@ -1,14 +1,10 @@
 #include "Brick.h"
 
-void CBrick::Render()
+void CBrick::Render(Camera * camera)
 {
 	if (active != true)
 		return;
-	if (type == BRICK_TYPE_NORMAL)
-	{
-		animations[0]->Render(x, y, 255);
-	}
-	RenderBoundingBox();
+	RenderBoundingBox(camera);
 }
 
 void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)

@@ -135,7 +135,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
-void CSimon::Render()
+void CSimon::Render(Camera *camera)
 {
 	if (active != true)
 		return;
@@ -193,9 +193,9 @@ void CSimon::Render()
 		else ani = SIMON_ANI_JUMP_LEFT;
 	}
 	int alpha = 255;
-	animations[ani]->Render(x, y, alpha);
+	animations[ani]->Render(camera->transform(x,y), alpha);
 
-	RenderBoundingBox();
+	RenderBoundingBox(camera);
 }
 
 void CSimon::SetState(int state)

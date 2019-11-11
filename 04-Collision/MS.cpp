@@ -56,7 +56,7 @@ void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 	}
 }
 
-void CMS::Render() {
+void CMS::Render(Camera * camera) {
 	if (simon->vx != 0)
 	{
 		return;
@@ -87,9 +87,9 @@ void CMS::Render() {
 				SetActive(false);
 			}
 			int alpha = 255;
-			animations[ani]->Render(x, y, alpha);
+			animations[ani]->Render(camera->transform(x,y), alpha);
 
-			RenderBoundingBox();
+			RenderBoundingBox(camera);
 		}
 		if (state == MS_STATE_ATTACK_2)
 		{
@@ -114,9 +114,9 @@ void CMS::Render() {
 				SetActive(false);
 			}
 			int alpha = 255;
-				animations[ani]->Render(x, y, alpha);
+				animations[ani]->Render(camera->transform(x,y), alpha);
 
-				RenderBoundingBox();
+				RenderBoundingBox(camera);
 		}
 		if (state == MS_STATE_ATTACK_3)
 		{
@@ -141,9 +141,9 @@ void CMS::Render() {
 				SetActive(false);
 			}
 			int alpha = 255;
-			animations[ani]->Render(x, y, alpha);
+			animations[ani]->Render(camera->transform(x,y), alpha);
 
-			RenderBoundingBox();
+			RenderBoundingBox(camera);
 		}
 
 	}

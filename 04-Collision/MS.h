@@ -27,7 +27,7 @@ public:
 
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
-	virtual void Render();
+	virtual void Render(Camera * camera);
 	void SetState(int state);
 	void SetActive(boolean a)
 	{

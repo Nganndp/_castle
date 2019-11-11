@@ -76,7 +76,7 @@ void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 }
 
-void CTorch::Render()
+void CTorch::Render(Camera * camera)
 {
 	if (active != true)
 		return;
@@ -105,6 +105,6 @@ void CTorch::Render()
 		ani = 5;
 	}
 
-	animations[ani]->Render(x, y, 255);
-		RenderBoundingBox();
+	animations[ani]->Render(camera->transform(x,y), 255);
+		RenderBoundingBox(camera);
 }

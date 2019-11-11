@@ -37,6 +37,12 @@
     <Filter Include="Header Files\Utility">
       <UniqueIdentifier>{70ff75be-69cc-4a52-b0b4-336ba2302e3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{1d436b6a-2c74-4dd8-abd4-b0fcd8cb2fe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene">
+      <UniqueIdentifier>{aca7cda5-bd63-475b-b415-1aa7d906e8de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Simon.h">
@@ -87,7 +93,13 @@
     <ClInclude Include="TileMap.h">
       <Filter>Header Files\Map</Filter>
     </ClInclude>
-    <ClInclude Include="Util.h">
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -142,6 +154,15 @@
     </ClCompile>
     <ClCompile Include="TileMap.cpp">
       <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

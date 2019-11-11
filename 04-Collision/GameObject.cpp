@@ -101,11 +101,11 @@ void CGameObject::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPC
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
-void CGameObject::RenderBoundingBox()
+void CGameObject::RenderBoundingBox(Camera *camera)
 {
 	if (active == true)
 	{
-		D3DXVECTOR3 p(x, y, 0);
+		D3DXVECTOR3 p((int)x, (int)y, 0);
 		RECT rect;
 
 		LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
@@ -118,7 +118,11 @@ void CGameObject::RenderBoundingBox()
 		rect.right = (int)r - (int)l;
 		rect.bottom = (int)b - (int)t;
 
-		CGame::GetInstance()->Draw(x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, bboxcolor);
+
+		D3DXVECTOR2 pos = camera->transform(l, t);
+
+
+		CGame::GetInstance()->Draw(pos.x, pos.y, bbox, rect.left, rect.top, rect.right, rect.bottom, bboxcolor);
 	}
 }
 bool CGameObject::CheckOverlap(LPGAMEOBJECT coO)

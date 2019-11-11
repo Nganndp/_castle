@@ -18,148 +18,9 @@
 
 ================================================================ */
 
-#include "Util.h"
+#include "SceneManager.h"
 
 
-class CSampleKeyHander : public CKeyEventHandler
-{
-	virtual void KeyState(BYTE* states);
-	virtual void OnKeyDown(int KeyCode);
-	virtual void OnKeyUp(int KeyCode);
-};
-
-CSampleKeyHander* keyHandler;
-
-void CSampleKeyHander::OnKeyDown(int KeyCode)
-{
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
-	switch (KeyCode)
-	{
-	case DIK_S:
-		if (SIMON->GetOnGround())
-		{
-			SIMON->SetState(SIMON_STATE_JUMP);
-			if (game->IsKeyDown(DIK_RIGHT) || game->IsKeyDown(DIK_LEFT))
-			{
-				SIMON->StartJumpMove();
-			}
-			else SIMON->StartJump();
-		}
-		break;
-	case DIK_A:
-		if (game->IsKeyDown(DIK_RIGHT) || game->IsKeyDown(DIK_LEFT))
-		{
-			return;
-		}
-		if (game->IsKeyDown(DIK_UP))
-		{
-			if (SIMON->GetThrowDagger())
-			{
-				if (SIMON->GetAttackTime() == 0)
-				{
-					dagger->StartAttack();
-					dagger->SetActive(true);
-				}
-				dagger->nx = SIMON->nx;
-				MS->SetActive(false);
-				SIMON->SetState(SIMON_STATE_ATTACK);
-				SIMON->StartAttack();
-			}
-			else if (SIMON->GetThrowAxe())
-			{
-				if (SIMON->GetAttackTime() == 0)
-				{
-					Axe->StartAttack();
-					Axe->SetActive(true);
-				}
-				Axe->nx = SIMON->nx;
-				MS->SetActive(false);
-				SIMON->SetState(SIMON_STATE_ATTACK);
-				SIMON->StartAttack();
-				
-			}
-		}
-		if (!game->IsKeyDown(DIK_UP))
-		{
-			MS->StartAttack();
-			MS->SetState(MS_STATE_ATTACK);
-			MS->SetActive(true);
-			if (game->IsKeyDown(DIK_DOWN))
-			{
-				SIMON->SetState(SIMON_STATE_SIT);
-				SIMON->StartSitAttack();
-				SIMON->SetJump(0);
-			}
-			else {
-				SIMON->SetState(SIMON_STATE_ATTACK);
-				SIMON->StartAttack();
-				SIMON->SetJump(0);
-			}
-			if (SIMON->GetLevel() == SIMON_LEVEL_MS_2)
-			{
-				MS->SetState(MS_STATE_ATTACK_2);
-			}
-			if (SIMON->GetLevel() == SIMON_LEVEL_MS_3)
-			{
-				MS->SetState(MS_STATE_ATTACK_3);
-			}
-        }
-		break;
-	case DIK_Q:
-		if (SIMON->GetActive() == true)
-		{
-			SIMON->SetActive(false);
-		}
-		else SIMON->SetActive(true);
-		break;
-	case DIK_R: 
-		for (int i = 0; i < objects.size(); i++)
-		{
-			objects[i]->Setbboxcolor();
-		}
-		for (int j = 0; j < mapobjects.size(); j++)
-		{
-			mapobjects[j]->Setbboxcolor();
-		}
-		break;
-	case DIK_W:
-		scene = 2;
-		//Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE);
-		break;
-	}
-}
-
-void CSampleKeyHander::OnKeyUp(int KeyCode)
-{
-	if (KeyCode == 208) {
-		SIMON->StandUp();
-	}
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
-}
-
-void CSampleKeyHander::KeyState(BYTE* states)
-{
-	// disable control key when SIMON die 
-	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
-	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0)
-	{
-		SIMON->SetState(SIMON_STATE_WALKING_RIGHT);
-		SIMON->SetRight(1);
-	}
-	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0)
-	{
-			SIMON->SetState(SIMON_STATE_WALKING_LEFT);
-			SIMON->SetRight(0);
-	}
-	else if (game->IsKeyDown(DIK_DOWN))
-	{
-		SIMON->SetState(SIMON_STATE_SIT);
-		SIMON->SetSit(true);
-	}
-	else
-		SIMON->SetState(SIMON_STATE_IDLE);
-}
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -172,139 +33,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
-}
-
-void LoadResources()
-{
-	//Textures
-	CTextures* textures = CTextures::GetInstance();
-	textures->Load();
-
-	//Sprites
-	CSprites* sprites = CSprites::GetInstance();
-	sprites->Load();
-
-	SIMON = new CSimon();
-	SIMON->SetPosition(10.0f, 112);
-
-	MS = new CMS();
-	MS->GetSimon(SIMON);
-
-	dagger = new CDagger();
-	dagger->GetSimon(SIMON);
-
-	Axe = new CAxe();
-	Axe->GetSimon(SIMON);
-
-
-	//push back to list objects
-	objects.push_back(SIMON);
-	objects.push_back(MS);
-	objects.push_back(dagger);
-	objects.push_back(Axe);
-	
-	if (scene == 1)
-	{
-		
-		Tile = new TileMap(L"textures\\entrance_test.png", ID_TEX_ENTRANCESTAGE);
-	}
-	else if (scene == 2)
-	{
-		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE);
-	}
-	LoadSceneObject(1);
-}
-
-/*
-	Update world status for this frame
-	dt: time period between beginning of last frame and beginning of this frame
-*/
-void Update(DWORD dt)
-{
-	vector<LPGAMEOBJECT> coObjects;
-	for (int i = 0; i < mapobjects.size(); i++)
-	{
-		coObjects.push_back(mapobjects[i]);
-	}
-	for (int i = 0; i < objects.size(); i++)
-	{
-		coObjects.push_back(objects[i]);
-	}
-	for (int i = 0; i < mapobjects.size(); i++)
-	{
-		mapobjects[i]->Update(dt, &coObjects);
-	}
-	if (castle == true)
-	{
-		scene = 2;
-		LoadResources();
-		return;
-	}
-	else if (castle == false)
-	{
-		scene = 1;
-		LoadResources();
-		return;
-	}
-	for (int i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Update(dt, &coObjects);
-	}
-	// Update camera to follow SIMON
-	SIMON->GetPosition(cx, cy);
-	cx -= SCREEN_WIDTH / 2;
-	cy -= SCREEN_HEIGHT / 2;
-	if (castle == true)
-	{
-		if (cx < 2507 && cx>0)
-		{
-			CGame::GetInstance()->SetCamPos(cx, 0);///cy
-		}
-	}
-	else
-		if (cx < 460 && cx>0)
-		{
-			CGame::GetInstance()->SetCamPos(cx, 0);///cy
-		}
-}
-
-/*
-	Render a frame
-*/
-void Render()
-{
-	LPDIRECT3DDEVICE9 d3ddv = game->GetDirect3DDevice();
-	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
-	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
-
-	if (d3ddv->BeginScene())
-	{
-		// Clear back buffer with a color
-		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
-
-		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-		if (castle == false)
-		{
-			Tile->LoadTile("entrance_test.txt");
-		}
-		else if (castle == true)
-		{
-			Tile->LoadTile("castle.txt");
-		}
-		Tile->DrawTile();
-		for (int i = 0; i < mapobjects.size(); i++)
-			mapobjects[i]->Render();
-		for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render();
-
-		spriteHandler->End();
-		
-
-		d3ddv->EndScene();
-	}
-
-	// Display back buffer content to the screen
-	d3ddv->Present(NULL, NULL, NULL, NULL);
 }
 
 HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHeight)
@@ -356,6 +84,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 
 int Run()
 {
+	CGame* game = CGame::GetInstance();
 	MSG msg;
 	int done = 0;
 	DWORD frameStart = GetTickCount();
@@ -383,8 +112,8 @@ int Run()
 
 			game->ProcessKeyboard();
 
-			Update(dt);
-			Render();
+			Scene::GetInstance()->GetCurrentScene()->Update(dt);
+			Scene::GetInstance()->GetCurrentScene()->Render();
 		}
 		else
 			Sleep(tickPerFrame - dt);
@@ -395,15 +124,21 @@ int Run()
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	CGame* game;
+	game = CGame::GetInstance();
+
 	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	game = CGame::GetInstance();
 	game->Init(hWnd);
 
-	keyHandler = new CSampleKeyHander();
-	game->InitKeyboard(keyHandler);
+	//keyHandler = new CSampleKeyHander();
+	game->InitKeyboard();
 
-	LoadResources();
+
+	Scene::GetInstance()->ReplaceScene(new SceneManager());
+
+	Scene::GetInstance()->GetCurrentScene()->LoadResources();
+
 
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 

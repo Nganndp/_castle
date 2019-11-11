@@ -3,6 +3,7 @@
 #include <memory>
 #include<vector>
 #include <algorithm>
+#include "Camera.h"
 #include "GameObject.h"
 #include "debug.h"
 #include "Game.h"
@@ -41,7 +42,7 @@ public:
 	}
 	void StandUp();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
-	virtual void Render();
+	virtual void Render(Camera *camera);
 	int GetLevel()
 	{
 		return level;

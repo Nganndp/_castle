@@ -71,7 +71,10 @@ void CAnimation::Add(int spriteId, DWORD time)
 	LPANIMATION_FRAME frame = new CAnimationFrame(sprite, t);
 	frames.push_back(frame);
 }
-
+void CAnimation::Render(D3DXVECTOR2 pos, int alpha)
+{
+	Render(pos.x, pos.y, alpha);
+}
 void CAnimation::Render(float x, float y, int alpha)
 {
 	alpha = 255;
