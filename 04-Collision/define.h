@@ -10,7 +10,7 @@ public:
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
 #define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 197
+#define SCREEN_HEIGHT 200
 
 #define MAX_FRAME_RATE 120
 
@@ -24,7 +24,9 @@ public:
 #define ID_TEX_MSUP 8
 #define ID_TEX_AXE 9
 #define ID_TEX_ENTRANCESTAGE 10
-#define ID_TEX_BBOX 11		
+#define ID_TEX_CASTLE 11
+#define ID_TEX_UNDERGROUND 12
+#define ID_TEX_BBOX 13	
 
 //Simon
 #define SIMON_WALKING_SPEED		    0.1f 

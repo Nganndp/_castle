@@ -20,6 +20,7 @@
 
 #include "Util.h"
 
+
 class CSampleKeyHander : public CKeyEventHandler
 {
 	virtual void KeyState(BYTE* states);
@@ -122,6 +123,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 			mapobjects[j]->Setbboxcolor();
 		}
 		break;
+	case DIK_W:
+		scene = 2;
+		//Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE);
+		break;
 	}
 }
 
@@ -171,7 +176,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void LoadResources()
 {
-
 	//Textures
 	CTextures* textures = CTextures::GetInstance();
 	textures->Load();
@@ -181,25 +185,34 @@ void LoadResources()
 	sprites->Load();
 
 	SIMON = new CSimon();
-    SIMON->SetPosition(10.0f, 112);
+	SIMON->SetPosition(10.0f, 112);
 
 	MS = new CMS();
 	MS->GetSimon(SIMON);
-	
+
 	dagger = new CDagger();
-    dagger->GetSimon(SIMON);
+	dagger->GetSimon(SIMON);
 
 	Axe = new CAxe();
 	Axe->GetSimon(SIMON);
-	
-	Tile = new TileMap(L"textures\\entrance_test.png",ID_TEX_ENTRANCESTAGE);
-	LoadSceneObject(1);
+
 
 	//push back to list objects
 	objects.push_back(SIMON);
 	objects.push_back(MS);
 	objects.push_back(dagger);
 	objects.push_back(Axe);
+	
+	if (scene == 1)
+	{
+		
+		Tile = new TileMap(L"textures\\entrance_test.png", ID_TEX_ENTRANCESTAGE);
+	}
+	else if (scene == 2)
+	{
+		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE);
+	}
+	LoadSceneObject(1);
 }
 
 /*
@@ -221,20 +234,38 @@ void Update(DWORD dt)
 	{
 		mapobjects[i]->Update(dt, &coObjects);
 	}
+	if (castle == true)
+	{
+		scene = 2;
+		LoadResources();
+		return;
+	}
+	else if (castle == false)
+	{
+		scene = 1;
+		LoadResources();
+		return;
+	}
 	for (int i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
 	// Update camera to follow SIMON
-	float cx, cy;
-
 	SIMON->GetPosition(cx, cy);
 	cx -= SCREEN_WIDTH / 2;
 	cy -= SCREEN_HEIGHT / 2;
-	if (cx < 900/ 2 && cx>0)
+	if (castle == true)
 	{
-		CGame::GetInstance()->SetCamPos(cx, 0.0f);///cy
+		if (cx < 2507 && cx>0)
+		{
+			CGame::GetInstance()->SetCamPos(cx, 0);///cy
+		}
 	}
+	else
+		if (cx < 460 && cx>0)
+		{
+			CGame::GetInstance()->SetCamPos(cx, 0);///cy
+		}
 }
 
 /*
@@ -252,7 +283,14 @@ void Render()
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-		Tile->LoadTile("entrance_test.txt");
+		if (castle == false)
+		{
+			Tile->LoadTile("entrance_test.txt");
+		}
+		else if (castle == true)
+		{
+			Tile->LoadTile("castle.txt");
+		}
 		Tile->DrawTile();
 		for (int i = 0; i < mapobjects.size(); i++)
 			mapobjects[i]->Render();
@@ -364,7 +402,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	keyHandler = new CSampleKeyHander();
 	game->InitKeyboard(keyHandler);
-
 
 	LoadResources();
 

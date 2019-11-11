@@ -35,7 +35,14 @@ CBrick* brick;
 CTorch* torch;
 vector<LPGAMEOBJECT> mapobjects;
 vector<LPGAMEOBJECT> objects;
+bool castle = false;
+int scene = 1;
+float cx, cy;
 
+void LoadSimon()
+{
+	
+}
 void LoadObjectFromFile(string source)
 {
 	vector<int> numbers;
@@ -89,5 +96,9 @@ void LoadSceneObject(int a)
 	if (a == 1)
 	{
 		LoadObjectFromFile("Objects\\ObjectsStage1.txt");
+	}
+	if (a == 2)
+	{
+		LoadObjectFromFile("Objects\\ObjectsStage2.txt");
 	}
 }
