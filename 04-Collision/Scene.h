@@ -21,6 +21,7 @@ public:
 	virtual void LoadResources();
 	virtual void Update(DWORD dt);
 	virtual void Render();
+	virtual void ChangeScene();
 
 	void ReplaceScene(Scene* scene);
 

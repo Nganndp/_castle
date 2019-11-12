@@ -47,7 +47,9 @@ void Scene::Update(DWORD dt)
 void Scene::Render()
 {
 }
-
+void Scene::ChangeScene()
+{
+}
 void Scene::ReplaceScene(Scene* scene)
 {
 	if (mCurrentScene != NULL)

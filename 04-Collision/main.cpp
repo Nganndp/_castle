@@ -114,6 +114,7 @@ int Run()
 
 			Scene::GetInstance()->GetCurrentScene()->Update(dt);
 			Scene::GetInstance()->GetCurrentScene()->Render();
+			
 		}
 		else
 			Sleep(tickPerFrame - dt);
@@ -138,7 +139,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Scene::GetInstance()->ReplaceScene(new SceneManager());
 
 	Scene::GetInstance()->GetCurrentScene()->LoadResources();
-
 
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 

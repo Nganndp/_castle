@@ -124,11 +124,13 @@ void SceneManager::OnKeyDown(int KeyCode)
 		break;
 	case DIK_W:
 		castle = true;
-		//Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE);
 		break;
 	}
 }
-
+void SceneManager::ChangeScene()
+{
+	
+}
 void  SceneManager::OnKeyUp(int KeyCode)
 {
 	if (KeyCode == 208) {
@@ -165,13 +167,15 @@ void SceneManager::LoadResources()
 	if (scene == 1)
 	{
 		SIMON->SetPosition(10.0f, 112);
-		Tile = new TileMap(L"textures\\entrance_test.png", ID_TEX_ENTRANCESTAGE);
+		Tile = new TileMap(L"textures\\entrance.png", ID_TEX_ENTRANCESTAGE, 0, 0);
+		Tile->LoadMap("map\\entrance.csv");
 		LoadSceneObject(1);
 	}
 	else if (scene == 2)
 	{
 		SIMON->SetPosition(10.0f, 75);
-		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE);
+		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE,0,0);
+		Tile->LoadMap("map\\castle.csv");
 		LoadSceneObject(1);
 	}
 }
@@ -184,31 +188,31 @@ void SceneManager::Update(DWORD dt)
 {
 	if (castle == true)
 	{
-		//mapobjects.clear();
+		mapobjects.clear();
 		scene = 2;
 		LoadResources();
+		castle = false;
 		return;
 	}
-	vector<LPGAMEOBJECT> coObjects;
 	for (int i = 0; i < mapobjects.size(); i++)
 	{
-		coObjects.push_back(mapobjects[i]);
-	}
-	for (int i = 0; i < objects.size(); i++)
-	{
-		coObjects.push_back(objects[i]);
-	}
-	for (int i = 0; i < mapobjects.size(); i++)
-	{
-		mapobjects[i]->Update(dt, &coObjects);
+		mapobjects[i]->Update(dt, &mapobjects);
 	}
 
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		objects[i]->Update(dt, &mapobjects);
 	}
+	//SIMON->Update(dt, &mapobjects);
 	// Update camera to follow SIMON
-	camera->SetCamera(SIMON->x - SCREEN_WIDTH / 2, 0);
+	
+	//if (SIMON->x - camera->GetPosition().x <= SCREEN_WIDTH / 2)
+	//{
+	//	camera->SetCamera(0, 0);
+	//}
+	 camera->SetCamera(SIMON->x - SCREEN_WIDTH / 2, 0);
+	 camera->Update(dt, scene);
+	//DebugOut();
 }
 
 /*
@@ -226,15 +230,8 @@ void SceneManager::Render()
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-		if (castle == false)
-		{
-			Tile->LoadTile("entrance_test.txt");
-		}
-		else if (castle == true)
-		{
-			Tile->LoadTile("castle.txt");
-		}
-		Tile->DrawTile();
+	
+		Tile->DrawMap(camera);
 		for (int i = 0; i < mapobjects.size(); i++)
 			mapobjects[i]->Render(camera);
 		for (int i = 0; i < objects.size(); i++)

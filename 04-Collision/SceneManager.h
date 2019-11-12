@@ -39,6 +39,7 @@ public:
 	void Render();
 	void LoadObjectFromFile(string source);
 	void LoadSceneObject(int a);
+	void ChangeScene();
 
 
 	~SceneManager();
