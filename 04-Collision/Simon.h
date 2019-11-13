@@ -23,6 +23,7 @@ class CSimon: public CGameObject
 	int autowalking;
 	bool active = true;
 	bool sit = false;
+	bool jumping = false;
     bool onGround = true;
 	bool isOnStair = false;
 	bool isStairUp = true;
@@ -46,6 +47,7 @@ public:
 		level = SIMON_LEVEL_MS_1;
 	}
 	void StandUp();
+	void SitDown();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render(Camera *camera);
 	int GetLevel()

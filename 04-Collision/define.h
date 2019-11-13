@@ -29,13 +29,13 @@ public:
 #define ID_TEX_BBOX 13	
 
 //Simon
-#define SIMON_WALKING_SPEED		    0.1f 
+#define SIMON_WALKING_SPEED		    0.08f 
 #define SIMON_JUMP_SPEED_X			0.12f
 #define SIMON_JUMP_SPEED_Y		    0.25f
 #define SIMON_JUMP_DEFLECT_SPEED    0.1f
 #define SIMON_GRAVITY			    0.001f
 #define SIMON_DIE_DEFLECT_SPEED	    0.5f
-#define PULL_UP_SIMON_AFTER_SITTING 10.0f
+#define PULL_UP_SIMON_AFTER_SITTING 8
 
 #define SIMON_STATE_IDLE			0
 #define SIMON_STATE_WALKING_RIGHT	100
@@ -77,6 +77,8 @@ public:
 #define SIMON_ANI_UP_STAIR_ATTACK_LEFT  23
 #define SIMON_ANI_DOWN_STAIR_ATTACK_RIGHT 24
 #define SIMON_ANI_DOWN_STAIR_ATTACK_LEFT  25
+#define SIMON_ANI_JUMP_RIGHT             8
+#define SIMON_ANI_SIT_LEFT              9
 #define SIMON_ANI_IS_DAMAGED            100
 #define SIMON_ANI_DIE		            99	
 

@@ -155,12 +155,9 @@ void SceneManager::OnKeyDown(int KeyCode)
 
 void  SceneManager::OnKeyUp(int KeyCode)
 {
-		if (KeyCode == 208) {
-			if (SIMON->GetState() == SIMON_STATE_SIT)
-			{
-				SIMON->StandUp();
-			}
-		}
+	if (KeyCode == 208) {
+		SIMON->StandUp();
+	}
 		DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 }
 
@@ -211,7 +208,7 @@ void SceneManager::LoadResources()
 	camera->SetCamera(SIMON->x - SCREEN_WIDTH / 2, 0);
 	if (scene == 1)
 	{
-		SIMON->SetPosition(10.0f, 155);
+		SIMON->SetPosition(10.0f, 154);
 		Tile = new TileMap(L"textures\\entrance.png", ID_TEX_ENTRANCESTAGE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
 		LoadSceneObject(1);

@@ -297,7 +297,8 @@ void CSimon::SetState(int state)
 		break;
 	case SIMON_STATE_SIT:
 		vx = 0;
-		SetSit(true);
+		if (!sit) SitDown();
+		//SetSit(true);
 		break;
 	case SIMON_STATE_WALKING_UP_STAIR:
 		if (isStairUp == true)
@@ -329,6 +330,10 @@ void CSimon::SetState(int state)
 		break;
 	}
 }
+void CSimon::SitDown() {
+	y += PULL_UP_SIMON_AFTER_SITTING;
+	sit = true;
+}
 void CSimon::StandUp()
 {
 	y = y - PULL_UP_SIMON_AFTER_SITTING;
@@ -338,12 +343,11 @@ void CSimon::GetBoundingBox(float& left, float& top, float& right, float& bottom
 {
 	left = x + 8;
 	top = y;
-    right = left + SIMON_IDLE_BBOX_WIDTH;
+	right = left + SIMON_IDLE_BBOX_WIDTH;
 	bottom = y + SIMON_IDLE_BBOX_HEIGHT;
-
 	if (state == SIMON_STATE_SIT)
 	{
-		right = x + SIMON_IDLE_BBOX_WIDTH;
+		right = left + SIMON_IDLE_BBOX_WIDTH;
 		bottom = y + SIMON_SIT_BBOX_HEIGHT;
 	}
 }
