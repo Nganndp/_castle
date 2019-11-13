@@ -15,7 +15,7 @@ private:
 public:
 	CAxe() :CGameObject()
 	{
-		LoadAnimations::LoadAnimationFromFile("ani\\Axeani.txt", this);
+		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Axeani.txt", this);
 		attack = 0;
 
 	}

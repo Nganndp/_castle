@@ -12,7 +12,7 @@ class CBrick : public CGameObject
 	public:
 		CBrick() :CGameObject()
 		{
-			LoadAnimations::LoadAnimationFromFile("ani\\Brickani.txt", this);
+			LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Brickani.txt", this);
 		}
 		void SetMulwidth(int a)
 		{

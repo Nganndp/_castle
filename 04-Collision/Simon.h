@@ -33,7 +33,7 @@ class CSimon: public CGameObject
 public: 
 	CSimon() : CGameObject()
 	{
-		LoadAnimations::LoadAnimationFromFile("ani\\simonani.txt", this);
+		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\simonani.txt", this);
 		jump = 0;
 		attack = 0;
 		sitattack = 0;

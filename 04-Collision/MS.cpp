@@ -29,7 +29,7 @@ void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 		CTorch* torch = dynamic_cast<CTorch*>(tor[i]);
 		if (CheckOverlap(torch))
 		{
-			if (torch->GetState() == TORCH_STATE_NORMAL)
+			if (torch->GetState() == TORCH_STATE_NORMAL || torch->GetState() == TORCH_STATE_CANDLE)
 			{
 				MSUpDropTime++;
 				int a;
@@ -238,20 +238,26 @@ void CMS::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	{
 		if (state == MS_STATE_ATTACK_3)
 		{
-			if (GetTickCount() - attack_start <= 360)
+			if (GetTickCount() - attack_start >= 240)
 			{
 				top = y;
 				left = x;
 				right = x + 40;
 				bottom = y + 10;
 			}
+
+
+
 		}
 		else if (state == MS_STATE_ATTACK || state == MS_STATE_ATTACK_2)
 		{
-			top = y;
-			left = x;
-			right = x + 24;
-			bottom = y + 10;
+			if (GetTickCount() - attack_start >= 240)
+			{
+				top = y;
+				left = x;
+				right = x + 24;
+				bottom = y + 10;
+			}
 		}
 	}
 }

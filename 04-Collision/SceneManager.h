@@ -60,7 +60,7 @@ public:
 	vector<LPGAMEOBJECT> objects;
 
 	bool castle = false;
-	int scene = 1;
+	int scene;
 	float cx, cy;
 
 };

@@ -43,7 +43,7 @@ void CSprites::Load()
 	int flag = 0;
 	int number;
 	int arr[6];
-	ifstream file_Simon("sprite.txt");
+	ifstream file_Simon("ReadFile\\sprite.txt");
 	if (file_Simon.is_open())
 	{
 		while (!file_Simon.eof())

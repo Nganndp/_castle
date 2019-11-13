@@ -96,16 +96,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						switch (tor->GetState())
 						{
-						case 0:
+						case TORCH_STATE_NORMAL:
+						case TORCH_STATE_CANDLE:
 							tor->SetTouchable(false); 
 							break;
-						case 1:
+						case TORCH_STATE_LHEART:
 							tor->SetActive(false);
 							break;
-						case 2:
+						case TORCH_STATE_SHEART:
 							tor->SetActive(false);
 							break;
-						case 3:
+						case TORCH_STATE_MSUP:
 							StartChangeColor();
 							tor->SetActive(false);
 							if (this->GetLevel() == SIMON_LEVEL_MS_1)
@@ -117,12 +118,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								this->SetLevel(SIMON_LEVEL_MS_3);
 							}
 							break;
-						case 4:
+						case TORCH_STATE_DAGGER:
 							tor->SetActive(false);
 							isThrowDagger = true;
 							isThrowAxe = false;
 							break;
-						case 5:
+						case TORCH_STATE_AXE:
 							tor->SetActive(false);
 							isThrowAxe = true;
 							isThrowDagger = false;
@@ -236,9 +237,9 @@ void CSimon::StandUp()
 }
 void CSimon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x + 10;
+	left = x + 8;
 	top = y;
-    right = x + SIMON_IDLE_BBOX_WIDTH;
+    right = left + SIMON_IDLE_BBOX_WIDTH;
 	bottom = y + SIMON_IDLE_BBOX_HEIGHT;
 
 	if (state == SIMON_STATE_SIT)

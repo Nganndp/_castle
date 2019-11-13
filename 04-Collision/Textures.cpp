@@ -80,7 +80,7 @@ void CTextures::Load()
 	int trans_b;
 
 	ifstream infile;
-	infile.open("textures.txt");
+	infile.open("ReadFile\\textures.txt");
 	if (!infile)
 		return;
 	while (!infile.eof())

@@ -10,7 +10,7 @@ public:
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
 #define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 220
+#define SCREEN_HEIGHT 255
 
 #define MAX_FRAME_RATE 120
 
@@ -76,6 +76,8 @@ public:
 #define SIMON_EAT_TIME              500
 
 //Map
+#define BRICK 0
+#define TORCH 1
 	//Torch
 #define TORCH_BBOX_WIDTH 16
 #define TORCH_BBOX_HEIGHT 15
@@ -86,13 +88,15 @@ public:
 #define TORCH_STATE_MSUP 3
 #define TORCH_STATE_DAGGER 4
 #define TORCH_STATE_AXE 5
+#define TORCH_STATE_CANDLE 6
 
 #define TORCH_ANI_NORMAL 0
 #define TORCH_ANI_LHEART 1
 #define TORCH_ANI_SHEART 2
 #define TORCH_ANI_MSUP 3
-#define TORCH_ANI_DAGHER 4
+#define TORCH_ANI_DAGGER 4
 #define TORCH_ANI_AXE 5
+#define TORCH_ANI_CANDLE 6
 	//Brick
 #define BRICK_BBOX_WIDTH 16
 #define BRICK_BBOX_HEIGHT 16

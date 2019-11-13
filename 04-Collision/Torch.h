@@ -9,15 +9,17 @@ class CTorch : public CGameObject
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
 	virtual void Render(Camera * camera);
+	
 	boolean isTouchable = true;
 	boolean active = true;
 	int state = 0;
 	int ani = 0;
+	int type;
 
 public: 	
 	CTorch() :CGameObject()
 	{
-		LoadAnimations::LoadAnimationFromFile("ani\\Torchani.txt", this);
+		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Torchani.txt", this);
 	};
 	boolean GetActive()
 	{
@@ -38,5 +40,9 @@ public:
 	void SetState(int state)
 	{
 		this->state = state;
+	}
+	void SetType(int a)
+	{
+		type = a;
 	}
 };

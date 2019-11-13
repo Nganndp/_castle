@@ -21,7 +21,7 @@ public:
 public:
 	CMS() :CGameObject()
 	{
-		LoadAnimations::LoadAnimationFromFile("ani\\MSani.txt", this);
+		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\MSani.txt", this);
 		attack = 0;
 		MSUpDropTime = 0;
 

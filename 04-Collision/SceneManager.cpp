@@ -4,6 +4,7 @@ SceneManager::SceneManager()
 {
 	game = CGame::GetInstance();
 	camera = new Camera();
+	scene = 1;
 	//Textures
 	CTextures* textures = CTextures::GetInstance();
 	textures->Load();
@@ -167,16 +168,17 @@ void SceneManager::LoadResources()
 	if (scene == 1)
 	{
 		SIMON->SetPosition(10.0f, 112);
-		Tile = new TileMap(L"textures\\entrance.png", ID_TEX_ENTRANCESTAGE, 0, 0);
-		Tile->LoadMap("map\\entrance.csv");
+		Tile = new TileMap(L"textures\\entrance.png", ID_TEX_ENTRANCESTAGE, 42, 0);
+		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
 		LoadSceneObject(1);
 	}
 	else if (scene == 2)
 	{
-		SIMON->SetPosition(10.0f, 75);
-		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE,0,0);
-		Tile->LoadMap("map\\castle.csv");
-		LoadSceneObject(1);
+		mapobjects.clear();
+		SIMON->SetPosition(10.0f, 128);
+		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE,42,0);
+		Tile->LoadMap("ReadFile\\Map\\castle.txt");
+		LoadSceneObject(2);
 	}
 }
 
@@ -188,7 +190,6 @@ void SceneManager::Update(DWORD dt)
 {
 	if (castle == true)
 	{
-		mapobjects.clear();
 		scene = 2;
 		LoadResources();
 		castle = false;
@@ -203,16 +204,8 @@ void SceneManager::Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &mapobjects);
 	}
-	//SIMON->Update(dt, &mapobjects);
-	// Update camera to follow SIMON
-	
-	//if (SIMON->x - camera->GetPosition().x <= SCREEN_WIDTH / 2)
-	//{
-	//	camera->SetCamera(0, 0);
-	//}
 	 camera->SetCamera(SIMON->x - SCREEN_WIDTH / 2, 0);
 	 camera->Update(dt, scene);
-	//DebugOut();
 }
 
 /*
@@ -266,15 +259,24 @@ void SceneManager::LoadObjectFromFile(string source)
 				{
 					switch (arr[0])
 					{
-					case 0:
+					case BRICK:
 						brick = new CBrick();
 						brick->SetMulwidth(arr[3]);
 						brick->SetPosition(arr[1], arr[2]);
 						mapobjects.push_back(brick);
 						break;
-					case 1:
+					case TORCH:
 						torch = new CTorch();
 						torch->SetPosition(arr[1], arr[2]);
+						switch (arr[3])
+						{
+						case 0:
+							torch->SetState(TORCH_STATE_NORMAL);
+							break;
+						case 1:
+							torch->SetState(TORCH_STATE_CANDLE);
+							break;
+						}
 						mapobjects.push_back(torch);
 						break;
 					}
@@ -290,11 +292,11 @@ void SceneManager::LoadSceneObject(int a)
 {
 	if (a == 1)
 	{
-		LoadObjectFromFile("Objects\\ObjectsStage1.txt");
+		LoadObjectFromFile("ReadFile\\Objects\\ObjectsStage1.txt");
 	}
 	if (a == 2)
 	{
-		LoadObjectFromFile("Objects\\ObjectsStage2.txt");
+		LoadObjectFromFile("ReadFile\\Objects\\ObjectsStage2.txt");
 	}
 }
 SceneManager::~SceneManager()

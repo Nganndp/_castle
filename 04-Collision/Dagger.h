@@ -18,7 +18,7 @@ public:
 public:
 	CDagger() :CGameObject()
 	{
-		LoadAnimations::LoadAnimationFromFile("ani\\Daggerani.txt", this);
+		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Daggerani.txt", this);
 		attack = 0;
 
 	}

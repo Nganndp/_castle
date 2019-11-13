@@ -8,15 +8,15 @@ void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	}
 	if (isTouchable)
 	{
-		if (state == 0)
+		if (state == TORCH_STATE_NORMAL)
 		{
 			left = x;
 			top = y;
 			right = x + 16;
-			bottom = x + 30;
+			bottom = y + 30;
 
 		}
-		else if(state == 3 || state == 5)
+		else if(state == TORCH_STATE_AXE || state == TORCH_STATE_MSUP)
 		{
 			left = x;
 			top = y;
@@ -38,7 +38,7 @@ void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	//CGameObject::Update(dt, coObjects);
 	if (active == true)
 	{
-		if (state != TORCH_STATE_NORMAL)
+		if (state != TORCH_STATE_NORMAL && state != TORCH_STATE_CANDLE)
 		{
 			vy += TORCH_GRAVITY * dt;
 		}
@@ -82,29 +82,32 @@ void CTorch::Render(Camera * camera)
 		return;
 	if (state == TORCH_STATE_NORMAL)
 	{
-		ani = 0;
+		ani = TORCH_ANI_NORMAL;
 	}
-	if (state == 1)
+	if (state == TORCH_STATE_LHEART)
 	{
-		ani = 1;
+		ani = TORCH_ANI_LHEART;
 	}
-	if (state == 2)
+	if (state == TORCH_STATE_SHEART)
 	{
-		ani = 2;
+		ani = TORCH_ANI_SHEART;
 	}
-	if (state == 3)
+	if (state == TORCH_STATE_MSUP)
 	{
-		ani = 3;
+		ani = TORCH_ANI_MSUP;
 	}
-	if (state == 4)
+	if (state == TORCH_STATE_DAGGER)
 	{
-		ani = 4;
+		ani = TORCH_ANI_DAGGER;
 	}
-	if (state == 5)
+	if (state == TORCH_STATE_AXE)
 	{
-		ani = 5;
+		ani = TORCH_ANI_AXE;
 	}
-
+	if (state == TORCH_STATE_CANDLE)
+	{
+		ani = TORCH_ANI_CANDLE;
+	}
 	animations[ani]->Render(camera->transform(x,y), 255);
 		RenderBoundingBox(camera);
 }
