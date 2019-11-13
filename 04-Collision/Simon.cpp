@@ -3,14 +3,17 @@
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
-	vy += SIMON_GRAVITY * dt;
+	if (isOnStair == false)
+	{
+		vy += SIMON_GRAVITY * dt;
+	}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
 	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
-
+	//timer
 	if (GetTickCount() - jump_start > SIMON_JUMP_TIME)
 	{
 		jump_start = 0;
@@ -48,6 +51,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		changecolor_start = 0;
 		changecolor = 0;
 
+	}
+	if (GetTickCount() - autowalking_start > SIMON_AUTO_GO_TIME)
+	{
+		autowalking_start = 0;
+		autowalking = 0;
+
+	}
+	//auto walking 
+	if (autowalking != 0)
+	{
+		x += SIMON_WALKING_SPEED;
 	}
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -153,11 +167,45 @@ void CSimon::Render(Camera *camera)
 	}
 	else if (state == SIMON_STATE_IDLE)
 	{
-		if (vx == 0)
+		if (isOnStair == true)
+		{
+			if (isStairUp == true)
+			{
+				if (nx > 0) ani = SIMON_ANI_UP_STAIR_IDLE_RIGHT;
+				else ani = SIMON_ANI_DOWN_STAIR_IDLE_LEFT;
+			}
+			else if (isStairUp == false)
+			{
+				if (nx > 0) ani = SIMON_ANI_DOWN_STAIR_IDLE_RIGHT;
+				else ani = SIMON_ANI_UP_STAIR_IDLE_LEFT;
+					
+			}
+		}
+		else if (isOnStair == false)
 		{
 			if (nx > 0) ani = SIMON_ANI_IDLE_RIGHT;
-			else ani = SIMON_ANI_IDLE_LEFT;
+				else ani = SIMON_ANI_IDLE_LEFT;
 		}
+	}
+	else if (state == SIMON_STATE_WALKING_UP_STAIR)
+	{
+		if (nx > 0)
+		{
+			ani = SIMON_ANI_WALKING_UP_STAIR_RIGHT;
+		}
+		else ani = SIMON_ANI_WALKING_UP_STAIR_LEFT;
+	}
+	else if (state == SIMON_STATE_WALKING_DOWN_STAIR)
+	{
+		if (nx > 0)
+		{
+			ani = SIMON_ANI_WALKING_DOWN_STAIR_RIGHT;
+		}
+		else ani = SIMON_ANI_WALKING_DOWN_STAIR_LEFT;
+	}
+	else if (state == SIMON_STATE_WALKING_DOWN_STAIR)
+	{
+		ani = SIMON_ANI_WALKING_LEFT;
 	}
 	else if (state == SIMON_STATE_WALKING_RIGHT)
 	{
@@ -175,9 +223,24 @@ void CSimon::Render(Camera *camera)
 	}
 	if (attack != 0)
 	{
+		if (isOnStair == true)
+		{
+			if (isStairUp == true)
+			{
+				if (nx > 0) ani = SIMON_ANI_UP_STAIR_ATTACK_RIGHT;
+				else ani = SIMON_ANI_UP_STAIR_ATTACK_LEFT;
+			}
+			else if (isStairUp == false)
+			{
+				if (nx > 0) ani = SIMON_ANI_DOWN_STAIR_ATTACK_RIGHT;
+				else ani = SIMON_ANI_DOWN_STAIR_ATTACK_LEFT;
+			}
+		}
+		else if (isOnStair == false) {
 			if (nx > 0)
 				ani = SIMON_ANI_ATTACK_RIGHT;
 			else ani = SIMON_ANI_ATTACK_LEFT;
+		}
 	}
 	if (sitattack != 0)
 	{
@@ -193,6 +256,10 @@ void CSimon::Render(Camera *camera)
 			ani = SIMON_ANI_JUMP_RIGHT;
 		else ani = SIMON_ANI_JUMP_LEFT;
 	}
+	if (autowalking != 0)
+	{
+		ani = SIMON_ANI_WALKING_RIGHT;
+	}
 	int alpha = 255;
 	animations[ani]->Render(camera->transform(x,y), alpha);
 
@@ -205,6 +272,13 @@ void CSimon::SetState(int state)
 
 	switch (state)
 	{
+	case SIMON_STATE_IDLE:
+		vx = 0;
+		if (isOnStair)
+		{
+			vy = 0;
+		}
+		break;
 	case SIMON_STATE_WALKING_RIGHT:
 		vx = SIMON_WALKING_SPEED;
 		nx = 1;
@@ -215,9 +289,6 @@ void CSimon::SetState(int state)
 		break;
 	case SIMON_STATE_JUMP:
 		vy = -SIMON_JUMP_SPEED_Y;
-	case SIMON_STATE_IDLE:
-		vx = 0;
-		break;
 	case SIMON_STATE_DIE:
 		vy = -SIMON_DIE_DEFLECT_SPEED;
 		break;
@@ -227,6 +298,34 @@ void CSimon::SetState(int state)
 	case SIMON_STATE_SIT:
 		vx = 0;
 		SetSit(true);
+		break;
+	case SIMON_STATE_WALKING_UP_STAIR:
+		if (isStairUp == true)
+		{
+			nx = 1;
+			vx = SIMON_WALKING_SPEED;
+			vy = -SIMON_WALKING_SPEED;
+		}
+		else if (isStairUp == false)
+		{
+			vx = -SIMON_WALKING_SPEED;
+			vy = -SIMON_WALKING_SPEED;
+			nx = -1;
+		}
+		break;
+	case SIMON_STATE_WALKING_DOWN_STAIR:
+		if (isStairUp == false)
+		{
+			vx = SIMON_WALKING_SPEED;
+			vy = SIMON_WALKING_SPEED;
+			nx = 1;
+		}
+		else if (isStairUp == true)
+		{
+			vx = -SIMON_WALKING_SPEED;
+			vy = SIMON_WALKING_SPEED;
+			nx = -1;
+		}
 		break;
 	}
 }

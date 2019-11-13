@@ -51,6 +51,7 @@ public:
 	int level = 1;
 	int nx;	 
 	int bboxcolor;
+	int type;
 
 	int state;
 	boolean active = true;

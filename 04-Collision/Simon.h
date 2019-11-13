@@ -20,9 +20,12 @@ class CSimon: public CGameObject
 	int sitattack;
 	int right;
 	int changecolor;
+	int autowalking;
 	bool active = true;
 	bool sit = false;
     bool onGround = true;
+	bool isOnStair = false;
+	bool isStairUp = true;
 	bool isThrowDagger = false;
 	bool isThrowAxe = false;
 	CGameObject* MS;
@@ -30,6 +33,7 @@ class CSimon: public CGameObject
 	DWORD attack_start;
 	DWORD sitattack_start;
 	DWORD changecolor_start;
+	DWORD autowalking_start;
 public: 
 	CSimon() : CGameObject()
 	{
@@ -38,6 +42,7 @@ public:
 		attack = 0;
 		sitattack = 0;
 		changecolor = 0;
+		autowalking = 0;
 		level = SIMON_LEVEL_MS_1;
 	}
 	void StandUp();
@@ -59,9 +64,21 @@ public:
 	{
 		return jump;
 	}
+	int GetAutoWalkingTime()
+	{
+		return autowalking;
+	}
 	boolean GetOnGround()
 	{
 		return onGround;
+	}
+	boolean GetOnStair()
+	{
+		return isOnStair;
+	}
+	boolean GetStairUp()
+	{
+		return isStairUp;
 	}
 	boolean GetActive() { return active; };
 	boolean GetThrowDagger() { return isThrowDagger; }
@@ -71,8 +88,11 @@ public:
 	void SetLevel(int level) {
 		CGameObject::SetLevel(level);
 	};
-	void SetRight(int right) {
-		right = right;
+	void SetOnStair(bool a) {
+		isOnStair = a;
+	};
+	void SetStairUp(bool a) {
+		isStairUp = a;
 	};
 	void SetActive(boolean a) {
 		active = a;
@@ -98,6 +118,7 @@ public:
 		animations[SIMON_ANI_SIT_ATTACK_LEFT]->SetCurrentcFrame(-1);
 	}
 	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); vx = 0; }
+	void StartAutoWalking() { autowalking = 1; autowalking_start = GetTickCount(); }
 	void SetSit(boolean a) { sit= a; };
 	void SetJump(int a) { jump = a; }
 	void CheckCollisionWithGround(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);

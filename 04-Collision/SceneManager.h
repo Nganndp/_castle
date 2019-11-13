@@ -20,6 +20,7 @@
 #include "Brick.h"
 #include "Dagger.h"
 #include "Axe.h"
+#include "StageChanger.h"
 
 #include<iostream>
 #include<fstream>
@@ -53,10 +54,12 @@ public:
 	CBrick* brick;
 	CTorch* torch;
 	TileMap* tile;
+	StageChanger* SC;
 	CAnimations* animations;
 	CSprites* sprites;
 	LPANIMATION ani;
 	vector<LPGAMEOBJECT> mapobjects;
+	vector<LPGAMEOBJECT> stagechanger;
 	vector<LPGAMEOBJECT> objects;
 
 	bool castle = false;

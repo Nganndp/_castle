@@ -33,7 +33,7 @@ SceneManager::SceneManager()
 void SceneManager::OnKeyDown(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
+	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0 || SIMON->GetAutoWalkingTime() != 0) return;
 	switch (KeyCode)
 	{
 	case DIK_S:
@@ -118,82 +118,145 @@ void SceneManager::OnKeyDown(int KeyCode)
 		{
 			objects[i]->Setbboxcolor();
 		}
-		for (int j = 0; j < mapobjects.size(); j++)
+		for (int i = 0; i < mapobjects.size(); i++)
 		{
-			mapobjects[j]->Setbboxcolor();
+			mapobjects[i]->Setbboxcolor();
+		}
+		for (int i = 0; i < stagechanger.size(); i++)
+		{
+			stagechanger[i]->Setbboxcolor();
 		}
 		break;
 	case DIK_W:
-		castle = true;
+		SIMON->StartAutoWalking();
 		break;
+	case DIK_T:
+		if (SIMON->GetOnStair() == false)
+		{
+			SIMON->SetOnStair(true);
+		}
+		else if (SIMON->GetOnStair() == true)
+		{
+			SIMON->SetOnStair(false);
+		}
+		return;
+	case DIK_Y:
+		if (SIMON->GetStairUp() == false)
+		{
+			SIMON->SetStairUp(true);
+		}
+		else if (SIMON->GetStairUp() == true)
+		{
+			SIMON->SetStairUp(false);
+		}
+		return;
 	}
 }
-void SceneManager::ChangeScene()
-{
-	
-}
+
 void  SceneManager::OnKeyUp(int KeyCode)
 {
-	if (KeyCode == 208) {
-		SIMON->StandUp();
-	}
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+		if (KeyCode == 208) {
+			if (SIMON->GetState() == SIMON_STATE_SIT)
+			{
+				SIMON->StandUp();
+			}
+		}
+		DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 }
 
 void  SceneManager::KeyState(BYTE* states)
 {
 	// disable control key when SIMON die 
-	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
-	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0)
-	{
-		SIMON->SetState(SIMON_STATE_WALKING_RIGHT);
-		SIMON->SetRight(1);
-	}
-	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0)
-	{
-		SIMON->SetState(SIMON_STATE_WALKING_LEFT);
-		SIMON->SetRight(0);
-	}
-	else if (game->IsKeyDown(DIK_DOWN))
-	{
-		SIMON->SetState(SIMON_STATE_SIT);
-		SIMON->SetSit(true);
-	}
-	else
-		SIMON->SetState(SIMON_STATE_IDLE);
+		if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0 /*|| SIMON->GetAutoWalkingTime() != 0*/) return;
+		if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false)
+		{
+			if(SIMON->GetAutoWalkingTime() == 0)
+			SIMON->SetState(SIMON_STATE_WALKING_RIGHT);
+		}
+		else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false)
+		{
+			if (SIMON->GetAutoWalkingTime() == 0)
+			SIMON->SetState(SIMON_STATE_WALKING_LEFT);
+		}
+		else if (game->IsKeyDown(DIK_DOWN))
+		{
+			if (SIMON->GetAutoWalkingTime() == 0)
+			{
+				if (SIMON->GetOnStair() == false)
+				{
+					SIMON->SetState(SIMON_STATE_SIT);
+					SIMON->SetSit(true);
+				}
+				else if (SIMON->GetOnStair() == true)
+				{
+					SIMON->SetState(SIMON_STATE_WALKING_DOWN_STAIR);
+				}
+			}
+		}
+		else if (game->IsKeyDown(DIK_UP))
+		{
+			if (SIMON->GetAutoWalkingTime() == 0) 
+			{
+				if (SIMON->GetOnStair() == true)
+				{
+					SIMON->SetState(SIMON_STATE_WALKING_UP_STAIR);
+				}
+			}
+		}
+		else
+			SIMON->SetState(SIMON_STATE_IDLE);
 }
 void SceneManager::LoadResources()
 {
 	camera->SetCamera(SIMON->x - SCREEN_WIDTH / 2, 0);
 	if (scene == 1)
 	{
-		SIMON->SetPosition(10.0f, 112);
+		SIMON->SetPosition(10.0f, 155);
 		Tile = new TileMap(L"textures\\entrance.png", ID_TEX_ENTRANCESTAGE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
 		LoadSceneObject(1);
 	}
 	else if (scene == 2)
 	{
+		stagechanger.clear();
 		mapobjects.clear();
-		SIMON->SetPosition(10.0f, 128);
+		SIMON->SetPosition(10.0f, 168);
 		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE,42,0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
 	}
 }
 
+void SceneManager::ChangeScene()
+{
+
+}
 /*
 	Update world status for this frame
 	dt: time period between beginning of last frame and beginning of this frame
 */
 void SceneManager::Update(DWORD dt)
 {
-	if (castle == true)
+	for (int i = 0; i < stagechanger.size(); i++)
 	{
-		scene = 2;
-		LoadResources();
-		castle = false;
-		return;
+		if (stagechanger.at(i)->type == SC_TYPE_CHANGE_SCENE)
+		{
+			if (SIMON->CheckCollision(stagechanger.at(i)))
+			{
+				scene = 2;
+				LoadResources();
+				return;
+			}
+		}
+		else if (stagechanger.at(i)->type == SC_TYPE_AUTO_HELPER)
+		{
+			if (SIMON->CheckCollision(stagechanger.at(i)))
+			{
+				stagechanger.at(i)->SetActive(false);
+				SIMON->StartAutoWalking();
+				return;
+			}
+		}
 	}
 	for (int i = 0; i < mapobjects.size(); i++)
 	{
@@ -229,7 +292,8 @@ void SceneManager::Render()
 			mapobjects[i]->Render(camera);
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render(camera);
-
+		for (int i = 0; i < stagechanger.size(); i++)
+			stagechanger[i]->Render(camera);
 		spriteHandler->End();
 
 
@@ -268,17 +332,14 @@ void SceneManager::LoadObjectFromFile(string source)
 					case TORCH:
 						torch = new CTorch();
 						torch->SetPosition(arr[1], arr[2]);
-						switch (arr[3])
-						{
-						case 0:
-							torch->SetState(TORCH_STATE_NORMAL);
-							break;
-						case 1:
-							torch->SetState(TORCH_STATE_CANDLE);
-							break;
-						}
+						torch->SetState(arr[3]);
 						mapobjects.push_back(torch);
 						break;
+					case STAGECHANGER:
+						SC = new StageChanger();
+						SC->SetPosition(arr[1], arr[2]);
+						SC->SetType(arr[3]);
+						stagechanger.push_back(SC);
 					}
 
 					flag = 0;

@@ -46,22 +46,39 @@ public:
 #define SIMON_STATE_SIT             600
 #define SIMON_STATE_EAT_ITEM        700
 #define SIMON_STATE_SIT_ATTACK      800
+#define SIMON_STATE_ON_STAIR_ATTACK 101
+#define SIMON_STATE_ON_STAIR_IDLE   102
+#define SIMON_STATE_WALKING_UP_STAIR 103
+#define SIMON_STATE_WALKING_DOWN_STAIR 104
 
-#define SIMON_ANI_IDLE_RIGHT		0
-#define SIMON_ANI_IDLE_LEFT			1
-#define SIMON_ANI_WALKING_RIGHT		2
-#define SIMON_ANI_WALKING_LEFT		3
-#define SIMON_ANI_ATTACK_RIGHT		4
-#define SIMON_ANI_ATTACK_LEFT		5
-#define SIMON_ANI_JUMP_RIGHT        6
-#define SIMON_ANI_JUMP_LEFT         7
-#define SIMON_ANI_SIT_RIGHT         8
-#define SIMON_ANI_SIT_LEFT          9
-#define SIMON_ANI_EAT_RIGHT         10
-#define SIMON_ANI_EAT_LEFT          11
-#define SIMON_ANI_SIT_ATTACK_RIGHT  12
-#define SIMON_ANI_SIT_ATTACK_LEFT   13
-#define SIMON_ANI_DIE		        99	
+#define SIMON_ANI_IDLE_RIGHT		    0
+#define SIMON_ANI_IDLE_LEFT			    1
+#define SIMON_ANI_WALKING_RIGHT		    2
+#define SIMON_ANI_WALKING_LEFT		    3
+#define SIMON_ANI_ATTACK_RIGHT		    4
+#define SIMON_ANI_ATTACK_LEFT		    5
+#define SIMON_ANI_JUMP_RIGHT            6
+#define SIMON_ANI_JUMP_LEFT             7
+#define SIMON_ANI_SIT_RIGHT             8
+#define SIMON_ANI_SIT_LEFT              9
+#define SIMON_ANI_EAT_RIGHT             10
+#define SIMON_ANI_EAT_LEFT              11
+#define SIMON_ANI_SIT_ATTACK_RIGHT      12
+#define SIMON_ANI_SIT_ATTACK_LEFT       13
+#define SIMON_ANI_UP_STAIR_IDLE_RIGHT   14
+#define SIMON_ANI_UP_STAIR_IDLE_LEFT    15
+#define SIMON_ANI_DOWN_STAIR_IDLE_RIGHT 16
+#define SIMON_ANI_DOWN_STAIR_IDLE_LEFT  17
+#define SIMON_ANI_WALKING_UP_STAIR_RIGHT 18
+#define SIMON_ANI_WALKING_UP_STAIR_LEFT  19
+#define SIMON_ANI_WALKING_DOWN_STAIR_RIGHT 20
+#define SIMON_ANI_WALKING_DOWN_STAIR_LEFT 21
+#define SIMON_ANI_UP_STAIR_ATTACK_RIGHT 22
+#define SIMON_ANI_UP_STAIR_ATTACK_LEFT  23
+#define SIMON_ANI_DOWN_STAIR_ATTACK_RIGHT 24
+#define SIMON_ANI_DOWN_STAIR_ATTACK_LEFT  25
+#define SIMON_ANI_IS_DAMAGED            100
+#define SIMON_ANI_DIE		            99	
 
 #define SIMON_LEVEL_MS_1            0
 #define SIMON_LEVEL_MS_2            1
@@ -74,10 +91,12 @@ public:
 #define SIMON_JUMP_TIME             400
 #define SIMON_ATTACK_TIME           300
 #define SIMON_EAT_TIME              500
+#define SIMON_AUTO_GO_TIME          2800
 
 //Map
 #define BRICK 0
 #define TORCH 1
+#define STAGECHANGER 10
 	//Torch
 #define TORCH_BBOX_WIDTH 16
 #define TORCH_BBOX_HEIGHT 15
@@ -102,7 +121,14 @@ public:
 #define BRICK_BBOX_HEIGHT 16
 #define BRICK_TYPE_NORMAL 0
 #define BRICK_TYPE_GROUND 1
-
+    //Stage Changer
+#define SC_WIDTH 10
+#define SC_HEIGHT 30
+#define SC_TYPE_CHANGE_SCENE 0
+#define SC_TYPE_DOOR_1 1
+#define SC_TYPE_DOOR_2 2
+#define SC_TYPE_DOOR_BOSS 3
+#define SC_TYPE_AUTO_HELPER 4
 //Wepon
    //Axe
 #define AXE_GRAVITY 0.0002f
