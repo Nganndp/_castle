@@ -85,6 +85,21 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		}
 	}
+	vector<LPGAMEOBJECT> SC;
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (dynamic_cast<StageChanger*>(coObjects->at(i)))
+			SC.push_back(coObjects->at(i));
+	}
+	for (UINT i = 0; i < SC.size(); i++)
+	{
+		StageChanger* stagechanger = dynamic_cast<StageChanger*>(tor[i]);
+		if (CheckOverlap(stagechanger) != true)
+		{
+			stagechanger->SetTouchable(true);
+
+		}
+	}
 		float min_tx, min_ty, nx = 0, ny;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
@@ -100,6 +115,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (nx != 0) vx = 0;
 				if (ny != 0) vy = 0;
 				SetOnGround(true);
+			}
+			else if (dynamic_cast<StageChanger*>(e->obj))
+			{
+				if ((e->obj)->active == true)
+				{
+					StageChanger* SC = dynamic_cast<StageChanger*>(e->obj);
+					if (CheckOverlap(SC) != true)
+					{
+						SC->SetTouchable(false);
+					}
+				}
 			}
 			else if (dynamic_cast<CTorch*>(e->obj))
 			{
@@ -154,9 +180,10 @@ void CSimon::Render(Camera *camera)
 {
 	if (active != true)
 		return;
-	int ani;
-	if (state == SIMON_STATE_DIE)
+	int ani = 0;
+	if (state == SIMON_STATE_DIE) {
 		ani = SIMON_ANI_DIE;
+	}
 	else if (state == SIMON_STATE_SIT)
 	{
 		if (nx > 0)
@@ -260,9 +287,8 @@ void CSimon::Render(Camera *camera)
 	{
 		ani = SIMON_ANI_WALKING_RIGHT;
 	}
-	int alpha = 255;
-	animations[ani]->Render(camera->transform(x,y), alpha);
-
+    int alpha = 255;
+	animations[ani]->Render(camera->transform(x, y), alpha);
 	RenderBoundingBox(camera);
 }
 
@@ -298,7 +324,6 @@ void CSimon::SetState(int state)
 	case SIMON_STATE_SIT:
 		vx = 0;
 		if (!sit) SitDown();
-		//SetSit(true);
 		break;
 	case SIMON_STATE_WALKING_UP_STAIR:
 		if (isStairUp == true)

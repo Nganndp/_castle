@@ -2,17 +2,17 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "define.h"
-
-
-class StageChanger : public CGameObject
+class Stair : public CGameObject
 {
+	boolean isTouchable = true;
 	boolean active = true;
+	int type;
 public:
-	StageChanger() :CGameObject()
+	Stair() :CGameObject()
 	{
-		isTouchable = true;
 	}
-	void SetTouchable(boolean a)
+
+	virtual void SetTouchable(boolean a)
 	{
 		isTouchable = a;
 	}

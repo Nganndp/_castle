@@ -39,7 +39,7 @@ void CAxe::Render(Camera *camera) {
 	if (active == true)
 	{
 		int alpha = 255;
-		animations[0]->Render(camera->transform(x,y), alpha);
+		animations[0]->Render(x,y, alpha);
 
 		RenderBoundingBox(camera);
 	}

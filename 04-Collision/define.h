@@ -31,7 +31,7 @@ public:
 //Simon
 #define SIMON_WALKING_SPEED		    0.08f 
 #define SIMON_JUMP_SPEED_X			0.12f
-#define SIMON_JUMP_SPEED_Y		    0.25f
+#define SIMON_JUMP_SPEED_Y		    0.22f
 #define SIMON_JUMP_DEFLECT_SPEED    0.1f
 #define SIMON_GRAVITY			    0.001f
 #define SIMON_DIE_DEFLECT_SPEED	    0.5f
@@ -77,8 +77,6 @@ public:
 #define SIMON_ANI_UP_STAIR_ATTACK_LEFT  23
 #define SIMON_ANI_DOWN_STAIR_ATTACK_RIGHT 24
 #define SIMON_ANI_DOWN_STAIR_ATTACK_LEFT  25
-#define SIMON_ANI_JUMP_RIGHT             8
-#define SIMON_ANI_SIT_LEFT              9
 #define SIMON_ANI_IS_DAMAGED            100
 #define SIMON_ANI_DIE		            99	
 
@@ -90,7 +88,7 @@ public:
 #define SIMON_IDLE_BBOX_HEIGHT      30
 #define SIMON_SIT_BBOX_HEIGHT       22
 
-#define SIMON_JUMP_TIME             400
+#define SIMON_JUMP_TIME             500
 #define SIMON_ATTACK_TIME           300
 #define SIMON_EAT_TIME              500
 #define SIMON_AUTO_GO_TIME          2800
@@ -98,7 +96,8 @@ public:
 //Map
 #define BRICK 0
 #define TORCH 1
-#define STAGECHANGER 10
+#define STAIR 10
+#define STAGECHANGER 3
 	//Torch
 #define TORCH_BBOX_WIDTH 16
 #define TORCH_BBOX_HEIGHT 15
@@ -131,6 +130,12 @@ public:
 #define SC_TYPE_DOOR_2 2
 #define SC_TYPE_DOOR_BOSS 3
 #define SC_TYPE_AUTO_HELPER 4
+    //Stair
+#define STAIR_WIDTH 10
+#define STAIR_HEIGHT 10
+#define STAIR_TYPE_UP 99
+#define STAIR_TYPE_DOWN 100
+
 //Wepon
    //Axe
 #define AXE_GRAVITY 0.0002f

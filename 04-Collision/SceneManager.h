@@ -21,6 +21,7 @@
 #include "Dagger.h"
 #include "Axe.h"
 #include "StageChanger.h"
+#include "Stair.h"
 
 #include<iostream>
 #include<fstream>
@@ -42,7 +43,6 @@ public:
 	void LoadSceneObject(int a);
 	void ChangeScene();
 
-
 	~SceneManager();
 	CGame* game;
 	Camera* camera;
@@ -55,10 +55,12 @@ public:
 	CTorch* torch;
 	TileMap* tile;
 	StageChanger* SC;
+	Stair* stair;
 	CAnimations* animations;
 	CSprites* sprites;
 	LPANIMATION ani;
 	vector<LPGAMEOBJECT> mapobjects;
+	vector<LPGAMEOBJECT> stairs;
 	vector<LPGAMEOBJECT> stagechanger;
 	vector<LPGAMEOBJECT> objects;
 

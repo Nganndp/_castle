@@ -64,9 +64,9 @@ public:
 	vector<LPANIMATION> animations;
 
 public: 
-	void SetTouchable(boolean a)
+	virtual void SetTouchable(boolean a)
 	{
-		isTouchable = a;
+		this->isTouchable = a;
 	}
 	void SetPlusLevel()
 	{

@@ -6,10 +6,6 @@
 
 class CTorch : public CGameObject
 {
-	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
-	virtual void Render(Camera * camera);
-	
 	boolean isTouchable = true;
 	boolean active = true;
 	int state = 0;
@@ -33,10 +29,7 @@ public:
 	{
 		active = a;
 	}
-	void SetTouchable(boolean a)
-	{
-		isTouchable = a;
-	}
+
 	void SetState(int state)
 	{
 		this->state = state;
@@ -44,5 +37,12 @@ public:
 	void SetType(int a)
 	{
 		type = a;
+	}
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void Render(Camera* camera);
+	virtual void SetTouchable(boolean a)
+	{
+		isTouchable = a;
 	}
 };

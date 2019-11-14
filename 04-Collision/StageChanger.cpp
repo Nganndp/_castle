@@ -8,7 +8,7 @@ void StageChanger::Render(Camera* camera)
 
 void StageChanger::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	if (active != true)
+	if (active != true || isTouchable != true)
 		return;
 	l = x;
 	t = y;

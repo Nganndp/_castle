@@ -105,6 +105,9 @@
     <ClInclude Include="StageChanger.h">
       <Filter>Header Files\Map</Filter>
     </ClInclude>
+    <ClInclude Include="Stair.h">
+      <Filter>Header Files\Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simon.cpp">
@@ -168,6 +171,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StageChanger.cpp">
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Stair.cpp">
       <Filter>Source Files\Map</Filter>
     </ClCompile>
   </ItemGroup>

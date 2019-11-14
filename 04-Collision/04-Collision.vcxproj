@@ -137,6 +137,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="StageChanger.h" />
+    <ClInclude Include="Stair.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Torch.h" />
     <ClInclude Include="Brick.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="StageChanger.cpp" />
+    <ClCompile Include="Stair.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="main.cpp" />

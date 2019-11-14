@@ -2,12 +2,10 @@
 
 void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (active == false)
+	if (active == false || isTouchable != true)
 	{
 		return;
 	}
-	if (isTouchable)
-	{
 		if (state == TORCH_STATE_NORMAL)
 		{
 			left = x;
@@ -16,11 +14,11 @@ void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			bottom = y + 30;
 
 		}
-		else if(state == TORCH_STATE_AXE || state == TORCH_STATE_MSUP)
+		else if (state == TORCH_STATE_AXE || state == TORCH_STATE_MSUP)
 		{
 			left = x;
 			top = y;
-			right = x+15;
+			right = x + 15;
 			bottom = y + 17;
 		}
 		else
@@ -30,7 +28,6 @@ void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			right = x + 15;
 			bottom = y + 10;
 		}
-	}
 }
 
 void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)

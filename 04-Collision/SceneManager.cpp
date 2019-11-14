@@ -126,6 +126,10 @@ void SceneManager::OnKeyDown(int KeyCode)
 		{
 			stagechanger[i]->Setbboxcolor();
 		}
+		for (int i = 0; i < stairs.size(); i++)
+		{
+			stairs[i]->Setbboxcolor();
+		}
 		break;
 	case DIK_W:
 		SIMON->StartAutoWalking();
@@ -156,6 +160,7 @@ void SceneManager::OnKeyDown(int KeyCode)
 void  SceneManager::OnKeyUp(int KeyCode)
 {
 	if (KeyCode == 208) {
+		if (SIMON->GetSit() == true)
 		SIMON->StandUp();
 	}
 		DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
@@ -234,35 +239,71 @@ void SceneManager::ChangeScene()
 */
 void SceneManager::Update(DWORD dt)
 {
+	//change scene-stage
+	vector<LPGAMEOBJECT> inviobjects;
 	for (int i = 0; i < stagechanger.size(); i++)
 	{
-		if (stagechanger.at(i)->type == SC_TYPE_CHANGE_SCENE)
+		if (SIMON->CheckOverlap(stagechanger.at(i)))
 		{
-			if (SIMON->CheckCollision(stagechanger.at(i)))
+			//stagechanger.at(i)->SetTouchable(false);
+			if (stagechanger.at(i)->type == SC_TYPE_CHANGE_SCENE)
 			{
 				scene = 2;
 				LoadResources();
 				return;
 			}
-		}
-		else if (stagechanger.at(i)->type == SC_TYPE_AUTO_HELPER)
-		{
-			if (SIMON->CheckCollision(stagechanger.at(i)))
+			else if (stagechanger.at(i)->type == SC_TYPE_AUTO_HELPER)
 			{
 				stagechanger.at(i)->SetActive(false);
 				SIMON->StartAutoWalking();
 				return;
 			}
+			else if (stagechanger.at(i)->type == STAIR_TYPE_UP)
+			{
+				if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == false)
+				{
+					SIMON->SetOnStair(true);
+					SIMON->SetStairUp(true);
+				}
+				else if (game->IsKeyDown(DIK_DOWN) && SIMON->GetOnStair() == true)
+				{
+					SIMON->SetOnStair(false);
+					SIMON->SetStairUp(false);
+				}
+				return;
+			}
+			else if (stagechanger.at(i)->type == STAIR_TYPE_DOWN)
+			{
+				if (game->IsKeyDown(DIK_DOWN) && SIMON->GetOnStair() == false)
+				{
+					SIMON->SetOnStair(true);
+					SIMON->SetStairUp(true);
+				}
+				else if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == true)
+				{
+					SIMON->SetOnStair(false);
+					SIMON->SetStairUp(false);
+				}
+			}
 		}
+	}
+	//collisons
+	vector<LPGAMEOBJECT> coObjects;
+	for (int i = 0; i < mapobjects.size(); i++)
+	{
+		coObjects.push_back(mapobjects[i]);
+	}
+	for (int i = mapobjects.size(); i < stagechanger.size(); i++)
+	{
+		coObjects.push_back(stagechanger[i]);
 	}
 	for (int i = 0; i < mapobjects.size(); i++)
 	{
 		mapobjects[i]->Update(dt, &mapobjects);
 	}
-
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &mapobjects);
+		objects[i]->Update(dt, &coObjects);
 	}
 	 camera->SetCamera(SIMON->x - SCREEN_WIDTH / 2, 0);
 	 camera->Update(dt, scene);
@@ -291,6 +332,8 @@ void SceneManager::Render()
 			objects[i]->Render(camera);
 		for (int i = 0; i < stagechanger.size(); i++)
 			stagechanger[i]->Render(camera);
+		for (int i = 0; i < stairs.size(); i++)
+			stairs[i]->Render(camera);
 		spriteHandler->End();
 
 
@@ -337,6 +380,7 @@ void SceneManager::LoadObjectFromFile(string source)
 						SC->SetPosition(arr[1], arr[2]);
 						SC->SetType(arr[3]);
 						stagechanger.push_back(SC);
+						break;
 					}
 
 					flag = 0;

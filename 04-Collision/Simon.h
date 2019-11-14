@@ -10,6 +10,7 @@
 #include "Torch.h"
 #include "MS.h"
 #include "Brick.h"
+#include "StageChanger.h"
 #include "LoadAnimations.h"
 #include "define.h"
 class CSimon: public CGameObject
@@ -69,6 +70,10 @@ public:
 	int GetAutoWalkingTime()
 	{
 		return autowalking;
+	}
+	boolean GetSit()
+	{
+		return sit;
 	}
 	boolean GetOnGround()
 	{
