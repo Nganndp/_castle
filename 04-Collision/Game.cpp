@@ -168,7 +168,7 @@ void CGame::ProcessKeyboard()
 		}
 	}
 
-	Scene::GetInstance()->GetCurrentScene()->KeyState((BYTE*)&keyStates);
+	SceneManager::GetInstance()->GetCurrentScene()->KeyState((BYTE*)&keyStates);
 
 
 
@@ -187,9 +187,9 @@ void CGame::ProcessKeyboard()
 		int KeyCode = keyEvents[i].dwOfs;
 		int KeyState = keyEvents[i].dwData;
 		if ((KeyState & 0x80) > 0)
-			Scene::GetInstance()->GetCurrentScene()->OnKeyDown(KeyCode);
+			SceneManager::GetInstance()->GetCurrentScene()->OnKeyDown(KeyCode);
 		else
-			Scene::GetInstance()->GetCurrentScene()->OnKeyUp(KeyCode);
+			SceneManager::GetInstance()->GetCurrentScene()->OnKeyUp(KeyCode);
 	}
 }
 

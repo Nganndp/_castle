@@ -61,7 +61,22 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//auto walking 
 	if (autowalking != 0)
 	{
-		x += SIMON_WALKING_SPEED;
+		if (nx > 0)
+		{
+			x += SIMON_WALKING_STAIR_SPEED;
+			if (isOnStair)
+			{
+				y += -SIMON_WALKING_STAIR_SPEED;
+			}
+		}
+		else if (nx < 0)
+		{
+			x -= SIMON_WALKING_STAIR_SPEED;
+			if (isOnStair)
+			{
+				y += -SIMON_WALKING_STAIR_SPEED;
+			}
+		}
 	}
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -85,18 +100,18 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		}
 	}
-	vector<LPGAMEOBJECT> SC;
+	vector<LPGAMEOBJECT> InvObjects;
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
-		if (dynamic_cast<StageChanger*>(coObjects->at(i)))
-			SC.push_back(coObjects->at(i));
+		if (dynamic_cast<InviObjects*>(coObjects->at(i)))
+			InvObjects.push_back(coObjects->at(i));
 	}
-	for (UINT i = 0; i < SC.size(); i++)
+	for (UINT i = 0; i < InvObjects.size(); i++)
 	{
-		StageChanger* stagechanger = dynamic_cast<StageChanger*>(tor[i]);
-		if (CheckOverlap(stagechanger) != true)
+		InviObjects* InOb = dynamic_cast<InviObjects*>(InvObjects[i]);
+		if (CheckOverlap(InOb) != true)
 		{
-			stagechanger->SetTouchable(true);
+			InOb->SetTouchable(true);
 
 		}
 	}
@@ -116,14 +131,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (ny != 0) vy = 0;
 				SetOnGround(true);
 			}
-			else if (dynamic_cast<StageChanger*>(e->obj))
+			else if (dynamic_cast<InviObjects*>(e->obj))
 			{
 				if ((e->obj)->active == true)
 				{
-					StageChanger* SC = dynamic_cast<StageChanger*>(e->obj);
-					if (CheckOverlap(SC) != true)
+					InviObjects* InOb = dynamic_cast<InviObjects*>(e->obj);
+					if (CheckOverlap(InOb) != true)
 					{
-						SC->SetTouchable(false);
+						InOb->SetTouchable(false);
 					}
 				}
 			}
@@ -286,6 +301,17 @@ void CSimon::Render(Camera *camera)
 	if (autowalking != 0)
 	{
 		ani = SIMON_ANI_WALKING_RIGHT;
+		if (isOnStair)
+		{
+			if (nx > 0)
+			{
+				ani = SIMON_ANI_WALKING_UP_STAIR_RIGHT;
+			}
+			else if (nx < 0)
+			{
+				ani = SIMON_ANI_WALKING_UP_STAIR_LEFT;
+			}
+		}
 	}
     int alpha = 255;
 	animations[ani]->Render(camera->transform(x, y), alpha);
@@ -328,9 +354,9 @@ void CSimon::SetState(int state)
 	case SIMON_STATE_WALKING_UP_STAIR:
 		if (isStairUp == true)
 		{
-			nx = 1;
 			vx = SIMON_WALKING_SPEED;
 			vy = -SIMON_WALKING_SPEED;
+			nx = 1;
 		}
 		else if (isStairUp == false)
 		{

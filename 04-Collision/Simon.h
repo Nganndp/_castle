@@ -10,7 +10,7 @@
 #include "Torch.h"
 #include "MS.h"
 #include "Brick.h"
-#include "StageChanger.h"
+#include "InviObjects.h"
 #include "LoadAnimations.h"
 #include "define.h"
 class CSimon: public CGameObject

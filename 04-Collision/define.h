@@ -30,6 +30,7 @@ public:
 
 //Simon
 #define SIMON_WALKING_SPEED		    0.08f 
+#define	SIMON_WALKING_STAIR_SPEED   0.2f
 #define SIMON_JUMP_SPEED_X			0.12f
 #define SIMON_JUMP_SPEED_Y		    0.22f
 #define SIMON_JUMP_DEFLECT_SPEED    0.1f
@@ -91,7 +92,7 @@ public:
 #define SIMON_JUMP_TIME             500
 #define SIMON_ATTACK_TIME           300
 #define SIMON_EAT_TIME              500
-#define SIMON_AUTO_GO_TIME          2800
+#define SIMON_AUTO_GO_TIME          1200
 
 //Map
 #define BRICK 0
@@ -122,6 +123,8 @@ public:
 #define BRICK_BBOX_HEIGHT 16
 #define BRICK_TYPE_NORMAL 0
 #define BRICK_TYPE_GROUND 1
+
+//Invisible Objects
     //Stage Changer
 #define SC_WIDTH 10
 #define SC_HEIGHT 30
@@ -133,8 +136,10 @@ public:
     //Stair
 #define STAIR_WIDTH 10
 #define STAIR_HEIGHT 10
-#define STAIR_TYPE_UP 99
-#define STAIR_TYPE_DOWN 100
+#define STAIR_TYPE_UP_RIGHT 100
+#define STAIR_TYPE_DOWN_LEFT -100
+#define STAIR_TYPE_UP_LEFT 101
+#define STAIR_TYPE_DOWN_RIGHT -101
 
 //Wepon
    //Axe

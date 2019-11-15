@@ -4,11 +4,11 @@
 #include "define.h"
 
 
-class StageChanger : public CGameObject
+class InviObjects : public CGameObject
 {
 	boolean active = true;
 public:
-	StageChanger() :CGameObject()
+	InviObjects() :CGameObject()
 	{
 		isTouchable = true;
 	}

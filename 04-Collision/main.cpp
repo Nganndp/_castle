@@ -18,7 +18,7 @@
 
 ================================================================ */
 
-#include "SceneManager.h"
+#include "SceneGame.h"
 
 
 
@@ -112,8 +112,8 @@ int Run()
 
 			game->ProcessKeyboard();
 
-			Scene::GetInstance()->GetCurrentScene()->Update(dt);
-			Scene::GetInstance()->GetCurrentScene()->Render();
+			SceneManager::GetInstance()->GetCurrentScene()->Update(dt);
+			SceneManager::GetInstance()->GetCurrentScene()->Render();
 			
 		}
 		else
@@ -136,9 +136,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	game->InitKeyboard();
 
 
-	Scene::GetInstance()->ReplaceScene(new SceneManager());
+	SceneManager::GetInstance()->ReplaceScene(new SceneGame());
 
-	Scene::GetInstance()->GetCurrentScene()->LoadResources();
+	SceneManager::GetInstance()->GetCurrentScene()->LoadResources();
 
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
