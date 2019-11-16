@@ -132,7 +132,7 @@ void SceneGame::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_W:
-		SIMON->StartAutoWalking();
+		SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME*2);
 		break;
 	case DIK_T:
 		if (SIMON->GetOnStair() == false)
@@ -156,8 +156,15 @@ void SceneGame::OnKeyDown(int KeyCode)
 		break;
 	case DIK_2:
 		scene = 2;
+		stage = 1;
 		LoadResources();
+		
 		break;
+	//case DIK_3:
+	//	camera->StartCamMove();
+	//	camera->SetCamMoving(true);
+	//	stage = 2;
+	//	break;
 	}
 }
 
@@ -173,7 +180,7 @@ void  SceneGame::OnKeyUp(int KeyCode)
 void  SceneGame::KeyState(BYTE* states)
 {
 	// disable control key when SIMON die 
-		if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0 /*|| SIMON->GetAutoWalkingTime() != 0*/) return;
+		if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
 		if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false)
 		{
 			if(SIMON->GetAutoWalkingTime() == 0)
@@ -201,6 +208,7 @@ void  SceneGame::KeyState(BYTE* states)
 		}
 		else if (game->IsKeyDown(DIK_UP))
 		{
+
 			if (SIMON->GetAutoWalkingTime() == 0) 
 			{
 				if (SIMON->GetOnStair() == true)
@@ -227,16 +235,11 @@ void SceneGame::LoadResources()
 		stagechanger.clear();
 		mapobjects.clear();
 		//SIMON->SetPosition(10.0f, 168);
-		SIMON->SetPosition(704, 42);
+		SIMON->SetPosition(760, 42);
 		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE,42,0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
 	}
-}
-
-void SceneGame::ChangeScene()
-{
-
 }
 /*
 	Update world status for this frame
@@ -244,7 +247,7 @@ void SceneGame::ChangeScene()
 */
 void SceneGame::Update(DWORD dt)
 {
-	//change scene-stage
+	//Simon collsion with Invisible Objects
 	vector<LPGAMEOBJECT> InvObjects;
 	for (UINT i = 0; i < stagechanger.size(); i++)
 	{
@@ -267,25 +270,55 @@ void SceneGame::Update(DWORD dt)
 			if (InOb->type == SC_TYPE_CHANGE_SCENE)
 			{
 				scene = 2;
+				stage = 1;
 				LoadResources();
-				return;
 			}
 			else if (InOb->type == SC_TYPE_AUTO_HELPER)
 			{
 				InOb->SetActive(false);
-				SIMON->StartAutoWalking();
-				return;
+				SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
 			}
-			else if (InOb->type == STAIR_TYPE_UP_RIGHT)
+			else if (InOb->type == SC_TYPE_DOOR_1)
 			{
-				InOb->SetTouchable(false);
-				if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == false)
+				InOb->SetActive(false);
+				camera->StartCamMove(3000);
+				camera->SetCamMoving(true);
+				if (stage == 1)
 				{
-					SIMON->StartAutoWalking();
+					stage = 2;
+				}
+				else if (stage == 2)
+				{
+					stage = 3;
+				}
+				SimonMove = true;
+			}
+			else if (InOb->type == SC_TYPE_AUTO_CLOSE_DOOR)
+			{
+				InOb->SetActive(false);
+				camera->StartCamMove(1750);
+				camera->SetCamMoving(true);
+				SimonMove = false;
+			}
+			else if (InvObjects.at(i)->type == STAIR_TYPE_UP_RIGHT && !game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT))
+			{
+				InvObjects.at(i)->SetTouchable(false);
+				if (SIMON->x >= InOb->x + 2)
+				{
+					SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
 					SIMON->SetOnStair(true);
 					SIMON->SetStairUp(true);
+					SIMON->nx = 1;
 				}
-				else if (game->IsKeyDown(DIK_DOWN) && SIMON->GetOnStair() == true)
+				if (game->IsKeyDown(DIK_UP))
+				{
+					if (SIMON->x > InOb->x && SIMON->x != InOb->x + 2 || InOb->x-SIMON->x <=5)
+					{
+						SIMON->x = InOb->x + 2;
+					}
+				
+				}
+				else if (game->IsKeyDown(DIK_DOWN) )
 				{
 					SIMON->SetOnStair(false);
 					SIMON->SetStairUp(false);
@@ -296,8 +329,13 @@ void SceneGame::Update(DWORD dt)
 				InOb->SetTouchable(false);
 				if (game->IsKeyDown(DIK_DOWN) && SIMON->GetOnStair() == false)
 				{
+					if (InOb->x - SIMON->x >= 5)
+					{
+						SIMON->x = InOb->x - 12;
+					}
 					SIMON->SetOnStair(true);
 					SIMON->SetStairUp(true);
+					SIMON->nx = -1;
 				}
 				else if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == true)
 				{
@@ -305,16 +343,25 @@ void SceneGame::Update(DWORD dt)
 					SIMON->SetStairUp(false);
 				}
 			}
-			else if (InOb->type == STAIR_TYPE_UP_LEFT)
+			else if (InOb->type == STAIR_TYPE_UP_LEFT && !game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT))
 			{
-				InOb->SetTouchable(false);
-				if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == false)
+				InvObjects.at(i)->SetTouchable(false);
+				if (SIMON->x == InOb->x - 20)
 				{
-					SIMON->StartAutoWalking();
+					SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
 					SIMON->SetOnStair(true);
 					SIMON->SetStairUp(false);
+					SIMON->nx = -1;
 				}
-				else if (game->IsKeyDown(DIK_DOWN) && SIMON->GetOnStair() == true)
+				if (game->IsKeyDown(DIK_UP))
+				{
+					if (SIMON->x < InOb->x && SIMON->x != InOb->x - 20 || SIMON->x -InOb->x  <= 5)
+					{
+						SIMON->x = InOb->x - 20;
+					}
+
+				}
+				else if (game->IsKeyDown(DIK_DOWN))
 				{
 					SIMON->SetOnStair(false);
 					SIMON->SetStairUp(true);
@@ -327,6 +374,7 @@ void SceneGame::Update(DWORD dt)
 				{
 					SIMON->SetOnStair(true);
 					SIMON->SetStairUp(false);
+					SIMON->nx = 1;
 				}
 				else if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == true)
 				{
@@ -336,7 +384,8 @@ void SceneGame::Update(DWORD dt)
 			}
 		}
 	}
-	//collisons
+
+	//push objects to vectors
 	vector<LPGAMEOBJECT> coObjects;
 	for (int i = 0; i < mapobjects.size(); i++)
 	{
@@ -354,8 +403,22 @@ void SceneGame::Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
-	 camera->SetCamera(SIMON->x - SCREEN_WIDTH / 2, 0);
-	 camera->Update(dt, scene);
+
+	//adjust Simon to Camera
+	if (SIMON->x - camera->GetPosition().x <= 90 && SimonMove == true)
+	{
+		SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME * 2);
+	}
+	if (camera->GetCamMove() == 0 && SIMON->nx > 0)
+	{
+		if((SIMON->x+15) - camera->GetPosition().x >= SCREEN_WIDTH/2)
+		camera->SetCamera((SIMON->x+15) - SCREEN_WIDTH / 2, 0);
+	}
+	if (SIMON->nx < 0)
+	{
+		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 0);
+	}
+	 camera->Update(dt, scene, stage);
 }
 
 /*

@@ -133,6 +133,7 @@ public:
 #define SC_TYPE_DOOR_2 2
 #define SC_TYPE_DOOR_BOSS 3
 #define SC_TYPE_AUTO_HELPER 4
+#define SC_TYPE_AUTO_CLOSE_DOOR 5
     //Stair
 #define STAIR_WIDTH 10
 #define STAIR_HEIGHT 10

@@ -9,31 +9,62 @@ Camera::~Camera()
 {
 }
 
-void Camera::Update(DWORD dt, int scene)
+void Camera::Update(DWORD dt, int scene, int stage)
 {
-	if (scene == 1)
+	if (GetTickCount() - cammove_start > cameramovetime)
 	{
-		if (cam_x <= 0)
-		{
-			cam_x = 0;
-		}
-		else
-			if (cam_x >= 770 - 320)
-			{
-				cam_x = 770 - 320;
-			}
+		cammove_start = 0;
+		cammove = 0;
+    }
+	if (cammove != 0)
+	{
+		cam_x += 1;
 	}
-	else if (scene == 2)
+	if (cam_x >= 1535)
 	{
-		if (cam_x <= 0)
+		CamMoving = false;
+	}
+	else if (CamMoving == false)
+	{
+		if (scene == 1)
 		{
-			cam_x = 0;
-		}
-		else
-			if (cam_x >= 2816 - 320)
+			if (cam_x <= 0)
 			{
-				cam_x = 2816 - 320;
+				cam_x = 0;
 			}
+			else
+				if (cam_x >= 770 - SCREEN_WIDTH)
+				{
+					cam_x = 770 - SCREEN_WIDTH;
+				}
+		}
+		else if (scene == 2)
+		{
+			if (stage == 1)
+			{
+				if (cam_x <= 0)
+				{
+					cam_x = 0;
+				}
+				else
+					if (cam_x >= 1550 - SCREEN_WIDTH)
+					{
+						cam_x = 1550 - SCREEN_WIDTH;
+					}
+			}
+			if (stage == 2)
+			{
+				if (cam_x <= 1535)
+				{
+					cam_x = 1535;
+				}
+				else
+					if (cam_x >= 2051 - SCREEN_WIDTH)
+					{
+						cam_x = 2051 - SCREEN_WIDTH;
+					}
+			}
+		}
 	}
 }
 

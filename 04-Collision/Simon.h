@@ -22,6 +22,7 @@ class CSimon: public CGameObject
 	int right;
 	int changecolor;
 	int autowalking;
+	float autowalkingtime;
 	bool active = true;
 	bool sit = false;
 	bool jumping = false;
@@ -30,12 +31,15 @@ class CSimon: public CGameObject
 	bool isStairUp = true;
 	bool isThrowDagger = false;
 	bool isThrowAxe = false;
+	bool autowalkingdoor = false;
+	bool isWalkingAble = true;
 	CGameObject* MS;
 	DWORD jump_start;
 	DWORD attack_start;
 	DWORD sitattack_start;
 	DWORD changecolor_start;
 	DWORD autowalking_start;
+	DWORD autowalkingdoor_start;
 public: 
 	CSimon() : CGameObject()
 	{
@@ -87,6 +91,10 @@ public:
 	{
 		return isStairUp;
 	}
+	boolean GetisWalkingAble()
+	{
+		return isWalkingAble;
+	}
 	boolean GetActive() { return active; };
 	boolean GetThrowDagger() { return isThrowDagger; }
 	boolean GetThrowAxe() { return isThrowAxe; }
@@ -113,6 +121,10 @@ public:
 	{
 		onGround = a;
 	}
+	void SetisWalkingAble(bool a)
+	{
+		isWalkingAble = a;
+	}
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
 	void StartJumpMove() { jumpmove = 1; jump_start = GetTickCount(); }
 	void StartAttack() { attack = 1; attack_start = GetTickCount();
@@ -125,7 +137,7 @@ public:
 		animations[SIMON_ANI_SIT_ATTACK_LEFT]->SetCurrentcFrame(-1);
 	}
 	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); vx = 0; }
-	void StartAutoWalking() { autowalking = 1; autowalking_start = GetTickCount(); }
+	void StartAutoWalking(float a) { autowalking = 1; autowalking_start = GetTickCount(); autowalkingtime = a; }
 	void SetSit(boolean a) { sit= a; };
 	void SetJump(int a) { jump = a; }
 	void CheckCollisionWithGround(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);

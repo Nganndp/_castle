@@ -52,7 +52,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		changecolor = 0;
 
 	}
-	if (GetTickCount() - autowalking_start > SIMON_AUTO_GO_TIME)
+	if (GetTickCount() - autowalking_start > autowalkingtime)
 	{
 		autowalking_start = 0;
 		autowalking = 0;

@@ -41,7 +41,6 @@ public:
 	void Render();
 	void LoadObjectFromFile(string source);
 	void LoadSceneObject(int a);
-	void ChangeScene();
 
 	~SceneGame();
 	CGame* game;
@@ -65,7 +64,9 @@ public:
 	vector<LPGAMEOBJECT> objects;
 
 	bool castle = false;
+	bool SimonMove = false;
 	int scene;
+	int stage;
 	float cx, cy;
 
 };
