@@ -66,25 +66,28 @@ public:
 public: 
 	virtual void SetTouchable(boolean a)
 	{
-		this->isTouchable = a;
+		isTouchable = a;
 	}
-	void SetPlusLevel()
+	virtual void SetActive(boolean a)
 	{
-		this->level++;
+		active = a;
 	}
 	int GetLevel()
 	{
 		return level;
 	}
+	virtual boolean GetActive()
+	{
+		return active;
+	}
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
-	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
+	D3DXVECTOR2 GetPosition() { return D3DXVECTOR2(x, y); }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 	void Setbboxcolor() {
 		if (bboxcolor == 80)bboxcolor = 0;
 		else bboxcolor = 80;
 	}
-	virtual void SetActive(boolean a) { active = a; };
 	int GetState() { return this->state; }
 
 	void RenderBoundingBox(Camera * camera);

@@ -21,7 +21,7 @@
 #include "Dagger.h"
 #include "Axe.h"
 #include "InviObjects.h"
-#include "Stair.h"
+#include "Grid.h"
 
 #include<iostream>
 #include<fstream>
@@ -54,7 +54,7 @@ public:
 	CTorch* torch;
 	TileMap* tile;
 	InviObjects* InOb;
-	Stair* stair;
+	Grid* grid;
 	CAnimations* animations;
 	CSprites* sprites;
 	LPANIMATION ani;
@@ -62,6 +62,8 @@ public:
 	vector<LPGAMEOBJECT> stairs;
 	vector<LPGAMEOBJECT> stagechanger;
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> coObjects;
+	vector<LPGAMEOBJECT> ObjectsFromGrid;
 
 	bool castle = false;
 	bool SimonMove = false;

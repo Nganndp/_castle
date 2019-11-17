@@ -29,14 +29,6 @@ public:
 		throw_start = GetTickCount();
 		AdjustPos();
 	}
-	bool GetActive()
-	{
-		return active;
-	}
-	void SetActive(boolean a)
-	{
-		active = a;
-	}
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
 

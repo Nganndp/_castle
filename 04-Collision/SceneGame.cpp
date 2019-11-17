@@ -222,23 +222,41 @@ void  SceneGame::KeyState(BYTE* states)
 }
 void SceneGame::LoadResources()
 {
-	camera->SetCamera(SIMON->x - SCREEN_WIDTH / 2, 0);
+	camera->SetCamera(SIMON->GetPosition().x - SCREEN_WIDTH / 2, 0);
+	//grid = new Grid();
+
 	if (scene == 1)
 	{
 		SIMON->SetPosition(10.0f, 154);
 		Tile = new TileMap(L"textures\\entrance.png", ID_TEX_ENTRANCESTAGE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
 		LoadSceneObject(1);
+		//for (UINT i = 0; i < mapobjects.size(); i++)
+		//{
+		//	grid->InsertIntoGrid(mapobjects.at(i));
+		//}
+		//for (UINT i = 0; i < stagechanger.size(); i++)  //list torch/candle
+		//{
+		//	grid->InsertIntoGrid(stagechanger.at(i));
+		//}
 	}
 	else if (scene == 2)
 	{
 		stagechanger.clear();
 		mapobjects.clear();
 		//SIMON->SetPosition(10.0f, 168);
-		SIMON->SetPosition(760, 42);
+		SIMON->SetPosition(1470, 42);
 		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE,42,0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
+		//for (UINT i = 0; i < mapobjects.size(); i++)
+		//{
+		//	grid->InsertIntoGrid(mapobjects.at(i));
+		//}
+		//for (UINT i = 0; i < stagechanger.size(); i++)  
+		//{
+		//	grid->InsertIntoGrid(stagechanger.at(i));
+		//}
 	}
 }
 /*
@@ -300,23 +318,37 @@ void SceneGame::Update(DWORD dt)
 				camera->SetCamMoving(true);
 				SimonMove = false;
 			}
-			else if (InvObjects.at(i)->type == STAIR_TYPE_UP_RIGHT && !game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT))
+			else if (InOb->type == STAIR_TYPE_RIGHT_UP_HELPER)
+			{
+				if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == false)
+				{
+					SIMON->SetState(SIMON_STATE_WALKING_LEFT);
+				}
+			}
+			else if (InOb->type == STAIR_TYPE_LEFT_UP_HELPER)
+			{
+				if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == false)
+				{
+					SIMON->SetState(SIMON_STATE_WALKING_RIGHT);
+				}
+			}
+			else if (InvObjects.at(i)->type == STAIR_TYPE_UP_RIGHT)
 			{
 				InvObjects.at(i)->SetTouchable(false);
-				if (SIMON->x >= InOb->x + 2)
-				{
-					SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
-					SIMON->SetOnStair(true);
-					SIMON->SetStairUp(true);
-					SIMON->nx = 1;
-				}
 				if (game->IsKeyDown(DIK_UP))
 				{
-					if (SIMON->x > InOb->x && SIMON->x != InOb->x + 2 || InOb->x-SIMON->x <=5)
+					if (SIMON->GetPosition().x > InOb->x && SIMON->GetPosition().x != InOb->x + 2 || InOb->x-SIMON->GetPosition().x <=5)
 					{
 						SIMON->x = InOb->x + 2;
 					}
-				
+					if (SIMON->GetPosition().x >= InOb->x + 2)
+					{
+						SIMON->SetState(SIMON_STATE_WALKING_UP_STAIR);
+						SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
+						SIMON->SetOnStair(true);
+						SIMON->SetStairUp(true);
+						SIMON->nx = 1;
+					}
 				}
 				else if (game->IsKeyDown(DIK_DOWN) )
 				{
@@ -327,39 +359,44 @@ void SceneGame::Update(DWORD dt)
 			else if (InOb->type == STAIR_TYPE_DOWN_LEFT)
 			{
 				InOb->SetTouchable(false);
-				if (game->IsKeyDown(DIK_DOWN) && SIMON->GetOnStair() == false)
+				if (game->IsKeyDown(DIK_DOWN))
 				{
-					if (InOb->x - SIMON->x >= 5)
+					if (SIMON->GetPosition().x >= InOb->x -14 && SIMON->GetPosition().x <= InOb->x - 7)
 					{
-						SIMON->x = InOb->x - 12;
+						SIMON->x = InOb->x - 14;
 					}
-					SIMON->SetOnStair(true);
-					SIMON->SetStairUp(true);
-					SIMON->nx = -1;
+					if (SIMON->GetPosition().x == InOb->x - 14)
+					{
+						SIMON->SetState(SIMON_STATE_WALKING_DOWN_STAIR);
+						//SIMON->StartAutoWalking(100);
+						SIMON->SetOnStair(true);
+						SIMON->SetStairUp(true);
+						SIMON->nx = -1;
+					}
 				}
-				else if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == true)
+				else if (game->IsKeyDown(DIK_UP))
 				{
 					SIMON->SetOnStair(false);
 					SIMON->SetStairUp(false);
 				}
 			}
-			else if (InOb->type == STAIR_TYPE_UP_LEFT && !game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_LEFT))
+			else if (InOb->type == STAIR_TYPE_UP_LEFT)
 			{
 				InvObjects.at(i)->SetTouchable(false);
-				if (SIMON->x == InOb->x - 20)
-				{
-					SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
-					SIMON->SetOnStair(true);
-					SIMON->SetStairUp(false);
-					SIMON->nx = -1;
-				}
+				
 				if (game->IsKeyDown(DIK_UP))
 				{
-					if (SIMON->x < InOb->x && SIMON->x != InOb->x - 20 || SIMON->x -InOb->x  <= 5)
+					if (SIMON->GetPosition().x < InOb->x && SIMON->GetPosition().x != InOb->x - 20 || SIMON->GetPosition().x -InOb->x  >=15)
 					{
 						SIMON->x = InOb->x - 20;
 					}
-
+					if (SIMON->GetPosition().x == InOb->x - 20)
+					{
+						SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
+						SIMON->SetOnStair(true);
+						SIMON->SetStairUp(false);
+						SIMON->nx = -1;
+					}
 				}
 				else if (game->IsKeyDown(DIK_DOWN))
 				{
@@ -386,7 +423,13 @@ void SceneGame::Update(DWORD dt)
 	}
 
 	//push objects to vectors
-	vector<LPGAMEOBJECT> coObjects;
+	//grid->GetListCollisionFromGrid(camera, ObjectsFromGrid);
+	//mapobjects.clear();
+	//stagechanger.clear();
+	//for (int i = 0; i < ObjectsFromGrid.size(); i++)
+	//{
+	//	coObjects.push_back(ObjectsFromGrid[i]);
+	//}
 	for (int i = 0; i < mapobjects.size(); i++)
 	{
 		coObjects.push_back(mapobjects[i]);
@@ -403,20 +446,19 @@ void SceneGame::Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
-
 	//adjust Simon to Camera
-	if (SIMON->x - camera->GetPosition().x <= 90 && SimonMove == true)
+	if (SIMON->GetPosition().x - camera->GetPosition().x <= 90 && SimonMove == true)
 	{
 		SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME * 2);
 	}
 	if (camera->GetCamMove() == 0 && SIMON->nx > 0)
 	{
-		if((SIMON->x+15) - camera->GetPosition().x >= SCREEN_WIDTH/2)
-		camera->SetCamera((SIMON->x+15) - SCREEN_WIDTH / 2, 0);
+		if((SIMON->GetPosition().x+15) - camera->GetPosition().x >= SCREEN_WIDTH/2)
+		camera->SetCamera((SIMON->GetPosition().x+15) - SCREEN_WIDTH / 2, 0);
 	}
 	if (SIMON->nx < 0)
 	{
-		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 0);
+		camera->SetCamera((SIMON->GetPosition().x + 15) - SCREEN_WIDTH / 2, 0);
 	}
 	 camera->Update(dt, scene, stage);
 }
@@ -444,8 +486,6 @@ void SceneGame::Render()
 			objects[i]->Render(camera);
 		for (int i = 0; i < stagechanger.size(); i++)
 			stagechanger[i]->Render(camera);
-		for (int i = 0; i < stairs.size(); i++)
-			stairs[i]->Render(camera);
 		spriteHandler->End();
 
 

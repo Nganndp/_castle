@@ -32,7 +32,6 @@ class CSimon: public CGameObject
 	bool isThrowDagger = false;
 	bool isThrowAxe = false;
 	bool autowalkingdoor = false;
-	bool isWalkingAble = true;
 	CGameObject* MS;
 	DWORD jump_start;
 	DWORD attack_start;
@@ -91,10 +90,6 @@ public:
 	{
 		return isStairUp;
 	}
-	boolean GetisWalkingAble()
-	{
-		return isWalkingAble;
-	}
 	boolean GetActive() { return active; };
 	boolean GetThrowDagger() { return isThrowDagger; }
 	boolean GetThrowAxe() { return isThrowAxe; }
@@ -120,10 +115,6 @@ public:
 	void SetOnGround(boolean a)
 	{
 		onGround = a;
-	}
-	void SetisWalkingAble(bool a)
-	{
-		isWalkingAble = a;
 	}
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
 	void StartJumpMove() { jumpmove = 1; jump_start = GetTickCount(); }

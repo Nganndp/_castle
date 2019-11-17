@@ -127,6 +127,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="LoadAnimations.h" />
     <ClInclude Include="MathHelper.h" />
@@ -137,7 +138,6 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="InviObjects.h" />
-    <ClInclude Include="Stair.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Torch.h" />
     <ClInclude Include="Brick.h" />
@@ -150,6 +150,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="define.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="LoadAnimations.cpp" />
     <ClCompile Include="MathHelper.cpp" />
@@ -160,7 +161,6 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="InviObjects.cpp" />
-    <ClCompile Include="Stair.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="main.cpp" />

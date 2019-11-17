@@ -61,20 +61,22 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//auto walking 
 	if (autowalking != 0)
 	{
+		vx = 0;
+		vy = 0;
 		if (nx > 0)
 		{
-			x += SIMON_WALKING_STAIR_SPEED;
+			x += SIMON_AUTO_WALKING_STAIR_SPEED;
 			if (isOnStair)
 			{
-				y += -SIMON_WALKING_STAIR_SPEED;
+				y += -SIMON_AUTO_WALKING_STAIR_SPEED;
 			}
 		}
 		else if (nx < 0)
 		{
-			x -= SIMON_WALKING_STAIR_SPEED;
+			x -= SIMON_AUTO_WALKING_STAIR_SPEED;
 			if (isOnStair)
 			{
-				y += -SIMON_WALKING_STAIR_SPEED;
+				y += -SIMON_AUTO_WALKING_STAIR_SPEED;
 			}
 		}
 	}
@@ -353,17 +355,17 @@ void CSimon::SetState(int state)
 		break;
 	case SIMON_STATE_WALKING_UP_STAIR:
 		if (isStairUp == true)
-		{
-			vx = SIMON_WALKING_SPEED;
-			vy = -SIMON_WALKING_SPEED;
-			nx = 1;
-		}
+			{
+				vx = SIMON_WALKING_SPEED;
+				vy = -SIMON_WALKING_SPEED;
+				nx = 1;
+			}
 		else if (isStairUp == false)
-		{
-			vx = -SIMON_WALKING_SPEED;
-			vy = -SIMON_WALKING_SPEED;
-			nx = -1;
-		}
+			{
+				vx = -SIMON_WALKING_SPEED;
+				vy = -SIMON_WALKING_SPEED;
+				nx = -1;
+			}
 		break;
 	case SIMON_STATE_WALKING_DOWN_STAIR:
 		if (isStairUp == false)

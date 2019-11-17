@@ -6,8 +6,6 @@
 
 class CTorch : public CGameObject
 {
-	boolean isTouchable = true;
-	boolean active = true;
 	int state = 0;
 	int ani = 0;
 	int type;
@@ -17,19 +15,10 @@ public:
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Torchani.txt", this);
 	};
-	boolean GetActive()
-	{
-		return active;
-	}
 	int GetState()
 	{
 		return state;
 	}
-	void SetActive(boolean a)
-	{
-		active = a;
-	}
-
 	void SetState(int state)
 	{
 		this->state = state;
@@ -41,8 +30,4 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render(Camera* camera);
-	virtual void SetTouchable(boolean a)
-	{
-		isTouchable = a;
-	}
 };

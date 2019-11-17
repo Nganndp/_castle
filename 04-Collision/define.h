@@ -10,7 +10,7 @@ public:
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
 #define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 255
+#define SCREEN_HEIGHT 240
 
 #define MAX_FRAME_RATE 120
 
@@ -29,8 +29,8 @@ public:
 #define ID_TEX_BBOX 13	
 
 //Simon
-#define SIMON_WALKING_SPEED		    0.08f 
-#define	SIMON_WALKING_STAIR_SPEED   0.2f
+#define SIMON_WALKING_SPEED		    0.07f 
+#define	SIMON_AUTO_WALKING_STAIR_SPEED   0.2f
 #define SIMON_JUMP_SPEED_X			0.12f
 #define SIMON_JUMP_SPEED_Y		    0.22f
 #define SIMON_JUMP_DEFLECT_SPEED    0.1f
@@ -125,9 +125,9 @@ public:
 #define BRICK_TYPE_GROUND 1
 
 //Invisible Objects
+#define INVI_WIDTH 10
+#define INVI_HEIGHT 10
     //Stage Changer
-#define SC_WIDTH 10
-#define SC_HEIGHT 30
 #define SC_TYPE_CHANGE_SCENE 0
 #define SC_TYPE_DOOR_1 1
 #define SC_TYPE_DOOR_2 2
@@ -135,8 +135,8 @@ public:
 #define SC_TYPE_AUTO_HELPER 4
 #define SC_TYPE_AUTO_CLOSE_DOOR 5
     //Stair
-#define STAIR_WIDTH 10
-#define STAIR_HEIGHT 10
+#define STAIR_TYPE_RIGHT_UP_HELPER 99
+#define STAIR_TYPE_LEFT_UP_HELPER -99
 #define STAIR_TYPE_UP_RIGHT 100
 #define STAIR_TYPE_DOWN_LEFT -100
 #define STAIR_TYPE_UP_LEFT 101
