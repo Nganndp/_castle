@@ -62,7 +62,6 @@ public:
 	vector<LPGAMEOBJECT> stairs;
 	vector<LPGAMEOBJECT> stagechanger;
 	vector<LPGAMEOBJECT> objects;
-	vector<LPGAMEOBJECT> coObjects;
 	vector<LPGAMEOBJECT> ObjectsFromGrid;
 
 	bool castle = false;

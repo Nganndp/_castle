@@ -203,7 +203,7 @@ void CMS::AdjustMSPos()
 				}
 
 				else if (GetTickCount() - attack_start <= 240) {
-					x = simon->x - 5;
+					x = simon->x - 6;
 					y = simon->y + 1;
 				}
 

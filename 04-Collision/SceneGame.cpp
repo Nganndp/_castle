@@ -82,18 +82,19 @@ void SceneGame::OnKeyDown(int KeyCode)
 		}
 		if (!game->IsKeyDown(DIK_UP))
 		{
-			MS->StartAttack();
 			MS->SetState(MS_STATE_ATTACK);
 			MS->SetActive(true);
 			if (game->IsKeyDown(DIK_DOWN))
 			{
 				SIMON->SetState(SIMON_STATE_SIT);
 				SIMON->StartSitAttack();
+				MS->StartAttack();
 				SIMON->SetJump(0);
 			}
 			else {
 				SIMON->SetState(SIMON_STATE_ATTACK);
 				SIMON->StartAttack();
+				MS->StartAttack();
 				SIMON->SetJump(0);
 			}
 			if (SIMON->GetLevel() == SIMON_LEVEL_MS_2)
@@ -430,6 +431,7 @@ void SceneGame::Update(DWORD dt)
 	//{
 	//	coObjects.push_back(ObjectsFromGrid[i]);
 	//}
+	vector<LPGAMEOBJECT> coObjects;
 	for (int i = 0; i < mapobjects.size(); i++)
 	{
 		coObjects.push_back(mapobjects[i]);
