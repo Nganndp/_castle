@@ -42,7 +42,7 @@ void Grid::GetListCollisionFromGrid(Camera * Camera, vector<CGameObject*>& listC
 
 
 
-	for (int j = 0; j <= SCREEN_HEIGHT / CELL_HEIGHT; j++)
+	for (int j = 0; j <= (SCREEN_HEIGHT-15) / CELL_HEIGHT; j++)
 	{
 		for (int i = 0; i <= SCREEN_WIDTH / CELL_WIDTH; i++)
 		{

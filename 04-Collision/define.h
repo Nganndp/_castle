@@ -10,7 +10,7 @@ public:
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
 #define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
+#define SCREEN_HEIGHT 255
 
 #define MAX_FRAME_RATE 120
 
@@ -98,7 +98,7 @@ public:
 #define BRICK 0
 #define TORCH 1
 #define STAGECHANGER 3
-#define TORCH_TYPE 100
+#define TORCH_TYPE 10
 	//Torch
 #define TORCH_BBOX_WIDTH 16
 #define TORCH_BBOX_HEIGHT 15
@@ -128,7 +128,7 @@ public:
 #define INVI_WIDTH 10
 #define INVI_HEIGHT 10
 	//Stage Changer
-#define SC_TYPE_CHANGE_SCENE 0
+#define SC_TYPE_CHANGE_SCENE 6
 #define SC_TYPE_DOOR_1 1
 #define SC_TYPE_DOOR_2 2
 #define SC_TYPE_DOOR_BOSS 3
