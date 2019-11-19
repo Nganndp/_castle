@@ -5,15 +5,15 @@ CGameObject::CGameObject()
 {
 	x = y = 0;
 	vx = vy = 0;
-	nx = 1;	
+	nx = 1;
 	bboxcolor = 0;
 }
 
-void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	this->dt = dt;
-	dx = vx*dt;
-	dy = vy*dt;
+	dx = vx * dt;
+	dy = vy * dt;
 }
 
 /*
@@ -31,8 +31,8 @@ LPCOLLISIONEVENT CGameObject::SweptAABBEx(LPGAMEOBJECT coO)
 	float svx, svy;
 	coO->GetSpeed(svx, svy);
 
-	float sdx = svx*dt;
-	float sdy = svy*dt;
+	float sdx = svx * dt;
+	float sdy = svy * dt;
 
 	float dx = this->dx - sdx;
 	float dy = this->dy - sdy;
@@ -46,19 +46,19 @@ LPCOLLISIONEVENT CGameObject::SweptAABBEx(LPGAMEOBJECT coO)
 		t, nx, ny
 	);
 
-	CCollisionEvent * e = new CCollisionEvent(t, nx, ny, coO);
+	CCollisionEvent* e = new CCollisionEvent(t, nx, ny, coO);
 	return e;
 }
 
 /*
-	Calculate potential collisions with the list of colliable objects 
-	
+	Calculate potential collisions with the list of colliable objects
+
 	coObjects: the list of colliable objects
 	coEvents: list of potential collisions
 */
 void CGameObject::CalcPotentialCollisions(
-	vector<LPGAMEOBJECT> *coObjects, 
-	vector<LPCOLLISIONEVENT> &coEvents)
+	vector<LPGAMEOBJECT>* coObjects,
+	vector<LPCOLLISIONEVENT>& coEvents)
 {
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
@@ -101,7 +101,7 @@ void CGameObject::FilterCollision(vector<LPCOLLISIONEVENT>& coEvents, vector<LPC
 	if (min_iy >= 0) coEventsResult.push_back(coEvents[min_iy]);
 }
 
-void CGameObject::RenderBoundingBox(Camera *camera)
+void CGameObject::RenderBoundingBox(Camera* camera)
 {
 	if (active == true)
 	{
@@ -127,8 +127,8 @@ void CGameObject::RenderBoundingBox(Camera *camera)
 }
 bool CGameObject::CheckOverlap(LPGAMEOBJECT coO)
 {
-	float sl, st, sr, sb;		
-	float ml, mt, mr, mb;		
+	float sl, st, sr, sb;
+	float ml, mt, mr, mb;
 	coO->GetBoundingBox(sl, st, sr, sb);
 	GetBoundingBox(ml, mt, mr, mb);
 	if ((MathHelper::getsign(sl - mr) != MathHelper::getsign(sr - ml)) &&

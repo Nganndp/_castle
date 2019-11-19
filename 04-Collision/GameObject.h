@@ -15,18 +15,18 @@
 
 using namespace std;
 
-class CGameObject; 
-typedef CGameObject * LPGAMEOBJECT;
+class CGameObject;
+typedef CGameObject* LPGAMEOBJECT;
 
 struct CCollisionEvent;
-typedef CCollisionEvent * LPCOLLISIONEVENT;
+typedef CCollisionEvent* LPCOLLISIONEVENT;
 struct CCollisionEvent
 {
 	LPGAMEOBJECT obj;
 	float t, nx, ny;
 	CCollisionEvent(float t, float nx, float ny, LPGAMEOBJECT obj = NULL) { this->t = t; this->nx = nx; this->ny = ny; this->obj = obj; }
 
-	static bool compare(const LPCOLLISIONEVENT &a, LPCOLLISIONEVENT &b)
+	static bool compare(const LPCOLLISIONEVENT& a, LPCOLLISIONEVENT& b)
 	{
 		return a->t < b->t;
 	}
@@ -38,7 +38,7 @@ class CGameObject
 {
 public:
 
-	float x; 
+	float x;
 	float y;
 	float tempx;
 	float tempy;
@@ -49,21 +49,22 @@ public:
 	float vx;
 	float vy;
 	int level = 1;
-	int nx;	 
+	int nx;
 	int bboxcolor;
-	int type;
+
 
 	int state;
 	boolean active = true;
 	boolean isTouchable;
-	DWORD dt; 
-    CTextures* texture;
+	DWORD dt;
+	CTextures* texture;
 	CSprite* sprite;
 	CAnimation* animation;
 
 	vector<LPANIMATION> animations;
 
-public: 
+public:
+	int type;
 	virtual void SetTouchable(boolean a)
 	{
 		isTouchable = a;
@@ -83,24 +84,24 @@ public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	D3DXVECTOR2 GetPosition() { return D3DXVECTOR2(x, y); }
-	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
+	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
 	void Setbboxcolor() {
 		if (bboxcolor == 80)bboxcolor = 0;
 		else bboxcolor = 80;
 	}
 	int GetState() { return this->state; }
 
-	void RenderBoundingBox(Camera * camera);
+	void RenderBoundingBox(Camera* camera);
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
+	void CalcPotentialCollisions(vector<LPGAMEOBJECT>* coObjects, vector<LPCOLLISIONEVENT>& coEvents);
 	void FilterCollision(
-		vector<LPCOLLISIONEVENT> &coEvents, 
-		vector<LPCOLLISIONEVENT> &coEventsResult, 
-		float &min_tx, 
-		float &min_ty, 
-		float &nx, 
-		float &ny);
+		vector<LPCOLLISIONEVENT>& coEvents,
+		vector<LPCOLLISIONEVENT>& coEventsResult,
+		float& min_tx,
+		float& min_ty,
+		float& nx,
+		float& ny);
 
 	void AddAnimation(int aniId);
 
@@ -108,12 +109,12 @@ public:
 	bool CheckOverlap(LPGAMEOBJECT coO);
 	bool CheckCollision(CGameObject* object);
 	int GetDirect() { return nx; }
-	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render(Camera* camera) = 0;
 	virtual void SetState(int state) { this->state = state; }
 	virtual void SetLevel(int level) { this->level = level; }
-	RECT CGameObject::GetBound()
+	virtual RECT GetBound()
 	{
 		RECT rect;
 		float l, t, r, b;

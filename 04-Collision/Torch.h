@@ -8,12 +8,13 @@ class CTorch : public CGameObject
 {
 	int state = 0;
 	int ani = 0;
-	int type;
+    bool isTouchable = true;
+public:
 
-public: 	
 	CTorch() :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Torchani.txt", this);
+		type = TORCH_TYPE;
 	};
 	int GetState()
 	{
@@ -26,6 +27,21 @@ public:
 	void SetType(int a)
 	{
 		type = a;
+	}
+	void SetTouchable(bool a)
+	{
+		isTouchable = a;
+	}
+	RECT GetBound()
+	{
+		RECT rect;
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		rect.left = l;
+		rect.top = t;
+		rect.right = r;
+		rect.bottom = b;
+		return rect;
 	}
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

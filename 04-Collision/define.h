@@ -4,7 +4,7 @@ using namespace std;
 class header
 {
 public:
-//main
+	//main
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"04 - Collision"
 
@@ -97,8 +97,8 @@ public:
 //Map
 #define BRICK 0
 #define TORCH 1
-#define STAIR 10
 #define STAGECHANGER 3
+#define TORCH_TYPE 100
 	//Torch
 #define TORCH_BBOX_WIDTH 16
 #define TORCH_BBOX_HEIGHT 15
@@ -127,14 +127,14 @@ public:
 //Invisible Objects
 #define INVI_WIDTH 10
 #define INVI_HEIGHT 10
-    //Stage Changer
+	//Stage Changer
 #define SC_TYPE_CHANGE_SCENE 0
 #define SC_TYPE_DOOR_1 1
 #define SC_TYPE_DOOR_2 2
 #define SC_TYPE_DOOR_BOSS 3
 #define SC_TYPE_AUTO_HELPER 4
 #define SC_TYPE_AUTO_CLOSE_DOOR 5
-    //Stair
+	//Stair
 #define STAIR_TYPE_RIGHT_UP_HELPER 99
 #define STAIR_TYPE_LEFT_UP_HELPER -99
 #define STAIR_TYPE_UP_RIGHT 100
