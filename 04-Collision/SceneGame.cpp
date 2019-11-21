@@ -33,7 +33,7 @@ SceneGame::SceneGame()
 void SceneGame::OnKeyDown(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0 || SIMON->GetAutoWalkingTime() != 0) return;
+	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0 || SIMON->GetAutoWalkingTime() != 0 || camera->GetCamMove() == true) return;
 	switch (KeyCode)
 	{
 	case DIK_S:
@@ -182,17 +182,17 @@ void  SceneGame::KeyState(BYTE* states)
 {
 	// disable control key when SIMON die 
 	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
-	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false)
+	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false && camera->GetCamMove() == false)
 	{
 		if (SIMON->GetAutoWalkingTime() == 0)
 			SIMON->SetState(SIMON_STATE_WALKING_RIGHT);
 	}
-	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false)
+	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false && camera->GetCamMove() == false)
 	{
 		if (SIMON->GetAutoWalkingTime() == 0)
 			SIMON->SetState(SIMON_STATE_WALKING_LEFT);
 	}
-	else if (game->IsKeyDown(DIK_DOWN))
+	else if (game->IsKeyDown(DIK_DOWN) && camera->GetCamMove() == false)
 	{
 		if (SIMON->GetAutoWalkingTime() == 0)
 		{
@@ -207,7 +207,7 @@ void  SceneGame::KeyState(BYTE* states)
 			}
 		}
 	}
-	else if (game->IsKeyDown(DIK_UP))
+	else if (game->IsKeyDown(DIK_UP) && camera->GetCamMove() == false)
 	{
 
 		if (SIMON->GetAutoWalkingTime() == 0)
@@ -246,7 +246,7 @@ void SceneGame::LoadResources()
 		stagechanger.clear();
 		mapobjects.clear();
 		//SIMON->SetPosition(10.0f, 168);
-		SIMON->SetPosition(969, 42);
+		SIMON->SetPosition(1470, 42);
 		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
@@ -301,14 +301,6 @@ void SceneGame::Update(DWORD dt)
 	{
 		if (dynamic_cast<InviObjects*>(stagechanger.at(i)))
 			InvObjects.push_back(stagechanger.at(i));
-	}
-	for (UINT i = 0; i < InvObjects.size(); i++)
-	{
-		InviObjects* InOb = dynamic_cast<InviObjects*>(InvObjects[i]);
-		if (SIMON->CheckOverlap(InOb) != true)
-		{
-			InOb->SetTouchable(true);
-		}
 	}
 	for (int i = 0; i < InvObjects.size(); i++)
 	{
@@ -391,7 +383,7 @@ void SceneGame::Update(DWORD dt)
 				InOb->SetTouchable(false);
 				if (game->IsKeyDown(DIK_DOWN))
 				{
-					if (SIMON->x >= InOb->x - 14)
+					if (SIMON->x >= InOb->x - 14 || SIMON->x < InOb->x - 14 && SIMON->GetOnStair() == false)
 					{
 						SIMON->x = InOb->x - 14;
 					}
@@ -439,7 +431,7 @@ void SceneGame::Update(DWORD dt)
 				InOb->SetTouchable(false);
 				if (game->IsKeyDown(DIK_DOWN) && SIMON->GetOnStair() == false)
 				{
-					if (SIMON->x >= InOb->x - 7)
+					if (SIMON->x >= InOb->x - 7 || SIMON->x < InOb->x - 7 && SIMON->GetOnStair() == false)
 					{
 						SIMON->x = InOb->x - 7;
 					}
@@ -473,6 +465,31 @@ void SceneGame::Update(DWORD dt)
 		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 0);
 	}
 	camera->Update(dt, scene, stage);
+	//adjust Simon to map
+	if (scene == 1)
+	{
+		if (SIMON->x < 0)
+			SIMON->x = 0;
+		if (SIMON->x > 750)
+			SIMON->x = 750;
+	}
+	if (scene == 2)
+	{
+		if (stage == 1)
+		{
+			if (SIMON->x < 0)
+				SIMON->x = 0;
+			if (SIMON->x > 1502)
+				SIMON->x = 1502;
+		}
+		if (stage == 2)
+		{
+			if (SIMON->x < 1530)
+				SIMON->x = 1530;
+			if (SIMON->x > 2014)
+				SIMON->x = 2014;
+		}
+	}
 }
 
 /*

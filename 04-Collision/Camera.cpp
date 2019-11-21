@@ -20,7 +20,7 @@ void Camera::Update(DWORD dt, int scene, int stage)
 	{
 		cam_x += 1;
 	}
-	if (cam_x >= 1535)
+	if (cam_x >= 1535 && stage == 2)
 	{
 		CamMoving = false;
 	}

@@ -29,10 +29,10 @@ public:
 #define ID_TEX_BBOX 13	
 
 //Simon
-#define SIMON_WALKING_SPEED		    0.07f 
+#define SIMON_WALKING_SPEED		    0.05f 
 #define	SIMON_AUTO_WALKING_STAIR_SPEED   0.2f
 #define SIMON_JUMP_SPEED_X			0.12f
-#define SIMON_JUMP_SPEED_Y		    0.22f
+#define SIMON_JUMP_SPEED_Y		    0.20f
 #define SIMON_JUMP_DEFLECT_SPEED    0.1f
 #define SIMON_GRAVITY			    0.001f
 #define SIMON_DIE_DEFLECT_SPEED	    0.5f
@@ -89,7 +89,7 @@ public:
 #define SIMON_IDLE_BBOX_HEIGHT      30
 #define SIMON_SIT_BBOX_HEIGHT       22
 
-#define SIMON_JUMP_TIME             500
+#define SIMON_JUMP_TIME             450
 #define SIMON_ATTACK_TIME           300
 #define SIMON_EAT_TIME              500
 #define SIMON_AUTO_GO_TIME          1200

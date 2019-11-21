@@ -23,17 +23,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		if (GetTickCount() - jump_start < (SIMON_JUMP_TIME))
+		if (GetTickCount() - jump_start < SIMON_JUMP_TIME)
 		{
 			if (onGround)
 			{
 				vy = -SIMON_JUMP_SPEED_Y;
 				onGround = false;
 			}
-			else
-			{
-				vx = 0;
-			}
+			//else
+			//{
+			//	vx = 0;
+			//}
 		}
 	}
 	if (GetTickCount() - attack_start > SIMON_ATTACK_TIME)
@@ -132,6 +132,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (nx != 0) vx = 0;
 				if (ny != 0) vy = 0;
 				SetOnGround(true);
+				jump = 0;
 			}
 			else if (dynamic_cast<InviObjects*>(e->obj))
 			{
