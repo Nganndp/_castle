@@ -172,7 +172,7 @@ void CMS::AdjustMSPos()
 
 				else if (GetTickCount() - attack_start <= 360) {
 					x = simon->x + 27;
-					y = simon->y + 6;
+					y = simon->y + 7;
 				}
 			}
 			else if (simon->nx < 0)
@@ -189,7 +189,7 @@ void CMS::AdjustMSPos()
 
 				else if (GetTickCount() - attack_start <= 360) {
 					x = simon->x - 22;
-					y = simon->y + 6;
+					y = simon->y + 7;
 				}
 			}
 		}
@@ -209,7 +209,7 @@ void CMS::AdjustMSPos()
 
 				else if (GetTickCount() - attack_start <= 360) {
 					x = simon->x + 25;
-					y = simon->y + 6;
+					y = simon->y + 7;
 				}
 			}
 			else if (simon->nx < 0)

@@ -17,8 +17,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (GetTickCount() - jump_start > SIMON_JUMP_TIME)
 	{
 		jump_start = 0;
-		jump = 0;
-		jumpmove = 0;
+		//jump = 0;
+		//jumpmove = 0;
 
 	}
 	else
@@ -30,10 +30,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				vy = -SIMON_JUMP_SPEED_Y;
 				onGround = false;
 			}
-			//else
-			//{
-			//	vx = 0;
-			//}
 		}
 	}
 	if (GetTickCount() - attack_start > SIMON_ATTACK_TIME)
@@ -102,21 +98,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		}
 	}
-	vector<LPGAMEOBJECT> InvObjects;
-	for (UINT i = 0; i < coObjects->size(); i++)
-	{
-		if (dynamic_cast<InviObjects*>(coObjects->at(i)))
-			InvObjects.push_back(coObjects->at(i));
-	}
-	for (UINT i = 0; i < InvObjects.size(); i++)
-	{
-		InviObjects* InOb = dynamic_cast<InviObjects*>(InvObjects[i]);
-		if (CheckOverlap(InOb) != true)
-		{
-			InOb->SetTouchable(true);
-
-		}
-	}
 		float min_tx, min_ty, nx = 0, ny;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
@@ -132,7 +113,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (nx != 0) vx = 0;
 				if (ny != 0) vy = 0;
 				SetOnGround(true);
-				jump = 0;
+				if (e->ny < 0)
+				{
+					jump = 0;
+					jumpmove = 0;
+				}
+				jump_start = 10000;
+				
 			}
 			else if (dynamic_cast<InviObjects*>(e->obj))
 			{

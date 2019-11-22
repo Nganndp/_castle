@@ -295,12 +295,22 @@ void SceneGame::Update(DWORD dt)
 	{
 		objects[i]->Update(dt, &mapobjects);
 	}
+
 	//Simon collsion with Invisible Objects
 	vector<LPGAMEOBJECT> InvObjects;
 	for (UINT i = 0; i < stagechanger.size(); i++)
 	{
 		if (dynamic_cast<InviObjects*>(stagechanger.at(i)))
 			InvObjects.push_back(stagechanger.at(i));
+	}
+	for (UINT i = 0; i < InvObjects.size(); i++)
+	{
+		InviObjects* InOb = dynamic_cast<InviObjects*>(InvObjects[i]);
+		if (SIMON->CheckOverlap(InOb) != true)
+		{
+			InOb->SetTouchable(true);
+
+		}
 	}
 	for (int i = 0; i < InvObjects.size(); i++)
 	{
@@ -466,28 +476,31 @@ void SceneGame::Update(DWORD dt)
 	}
 	camera->Update(dt, scene, stage);
 	//adjust Simon to map
-	if (scene == 1)
+	if (camera->GetCamMoving() == false)
 	{
-		if (SIMON->x < 0)
-			SIMON->x = 0;
-		if (SIMON->x > 750)
-			SIMON->x = 750;
-	}
-	if (scene == 2)
-	{
-		if (stage == 1)
+		if (scene == 1)
 		{
 			if (SIMON->x < 0)
 				SIMON->x = 0;
-			if (SIMON->x > 1502)
-				SIMON->x = 1502;
+			if (SIMON->x > 750)
+				SIMON->x = 750;
 		}
-		if (stage == 2)
+		if (scene == 2)
 		{
-			if (SIMON->x < 1530)
-				SIMON->x = 1530;
-			if (SIMON->x > 2014)
-				SIMON->x = 2014;
+			if (stage == 1)
+			{
+				if (SIMON->x < 0)
+					SIMON->x = 0;
+				if (SIMON->x > 1502)
+					SIMON->x = 1502;
+			}
+			if (stage == 2)
+			{
+				if (SIMON->x < 1530)
+					SIMON->x = 1530;
+				if (SIMON->x > 2014)
+					SIMON->x = 2014;
+			}
 		}
 	}
 }
