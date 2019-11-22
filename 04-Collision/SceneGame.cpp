@@ -161,11 +161,10 @@ void SceneGame::OnKeyDown(int KeyCode)
 		LoadResources();
 
 		break;
-		//case DIK_3:
-		//	camera->StartCamMove();
-		//	camera->SetCamMoving(true);
-		//	stage = 2;
-		//	break;
+		case DIK_3:
+			stage = 4;
+			break;
+		
 	}
 }
 
@@ -229,7 +228,7 @@ void SceneGame::LoadResources()
 	if (scene == 1)
 	{
 		SIMON->SetPosition(10.0f, 154);
-		Tile = new TileMap(L"textures\\entrance.png", ID_TEX_ENTRANCESTAGE, 42, 0);
+		Tile = new TileMap(L"textures\\entrance_tilemap.png", ID_TEX_ENTRANCESTAGE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
 		LoadSceneObject(1);
 		for (UINT i = 0; i < mapobjects.size(); i++)
@@ -247,7 +246,7 @@ void SceneGame::LoadResources()
 		mapobjects.clear();
 		//SIMON->SetPosition(10.0f, 168);
 		SIMON->SetPosition(1470, 42);
-		Tile = new TileMap(L"textures\\castle.png", ID_TEX_CASTLE, 42, 0);
+		Tile = new TileMap(L"textures\\castle_tilemap.png", ID_TEX_CASTLE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
 		for (UINT i = 0; i < mapobjects.size(); i++)
@@ -473,6 +472,10 @@ void SceneGame::Update(DWORD dt)
 	if (SIMON->nx < 0)
 	{
 		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 0);
+	}
+	if (stage == 4)
+	{
+		camera->SetCamera(1578, 207);
 	}
 	camera->Update(dt, scene, stage);
 	//adjust Simon to map

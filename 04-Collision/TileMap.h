@@ -22,7 +22,7 @@ public:
 	~TileMap();
 
 private:
-	int listTile[50][200];
+	int listTile[200][200];
 	int id;
 	int width, height;
 	int colTileset, rowTileset;
