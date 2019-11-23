@@ -9,6 +9,7 @@
 class CBrick : public CGameObject
 {
 	int multwidth;
+	boolean active = true;
 	public:
 		CBrick() :CGameObject()
 		{
@@ -19,7 +20,7 @@ class CBrick : public CGameObject
 		{
 			multwidth = a;
 		}
-		boolean active = true;
+		
 		void SetActive(boolean a) { active = a; }
 	virtual void Render(Camera*camera);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);

@@ -162,9 +162,19 @@ void SceneGame::OnKeyDown(int KeyCode)
 
 		break;
 		case DIK_3:
-			stage = 4;
+			stage = 3;
+			SIMON->SetPosition(1931, 212);
+			SIMON->SetOnStair(true);
+			SIMON->SetStairUp(false);
 			break;
-		
+		case DIK_4:
+			stage = 2;
+			//SIMON->SetPosition(1574, 183);
+			SIMON->SetPosition(1901, 190);
+			SIMON->SetOnStair(true);
+			SIMON->SetStairUp(false);
+			SIMON->nx = -1;
+			break;
 	}
 }
 
@@ -327,7 +337,7 @@ void SceneGame::Update(DWORD dt)
 				InOb->SetActive(false);
 				SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
 			}
-			else if (InOb->type == SC_TYPE_DOOR_1)
+			else if (InOb->type == SC_TYPE_DOOR)
 			{
 				InOb->SetActive(false);
 				camera->StartCamMove(3000);
@@ -341,6 +351,19 @@ void SceneGame::Update(DWORD dt)
 					stage = 3;
 				}
 				SimonMove = true;
+			}
+			else if (InOb->type == SC_TYPE_UNDER_GROUND)
+			{
+				if (stage == 2)
+				{
+					stage = 3;
+					SIMON->SetPosition(1611, 212);
+				}
+				else if (stage == 3)
+				{
+					stage = 2;
+					SIMON->SetPosition(1581, 190);
+				}
 			}
 			else if (InOb->type == SC_TYPE_AUTO_CLOSE_DOOR)
 			{
@@ -406,6 +429,10 @@ void SceneGame::Update(DWORD dt)
 				}
 				else if (game->IsKeyDown(DIK_UP))
 				{
+					if (SIMON->y + SIMON_IDLE_BBOX_HEIGHT > InOb->y + INVI_HEIGHT)
+					{
+						SIMON->y = InOb->y + INVI_HEIGHT*2 - SIMON_IDLE_BBOX_HEIGHT;
+					}
 					SIMON->SetOnStair(false);
 					SIMON->SetStairUp(false);
 				}
@@ -452,6 +479,10 @@ void SceneGame::Update(DWORD dt)
 				}
 				else if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == true)
 				{
+					if (SIMON->y + SIMON_IDLE_BBOX_HEIGHT > InOb->y + INVI_HEIGHT)
+					{
+						SIMON->y = InOb->y + INVI_HEIGHT * 2 - SIMON_IDLE_BBOX_HEIGHT;
+					}
 					SIMON->SetOnStair(false);
 					SIMON->SetStairUp(true);
 				}
@@ -473,11 +504,12 @@ void SceneGame::Update(DWORD dt)
 	{
 		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 0);
 	}
-	if (stage == 4)
+	if (stage == 3)
 	{
-		camera->SetCamera(1578, 207);
+		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 207);
 	}
 	camera->Update(dt, scene, stage);
+
 	//adjust Simon to map
 	if (camera->GetCamMoving() == false)
 	{
@@ -503,6 +535,13 @@ void SceneGame::Update(DWORD dt)
 					SIMON->x = 1530;
 				if (SIMON->x > 2014)
 					SIMON->x = 2014;
+			}
+			if (stage == 3)
+			{
+				if (SIMON->x < 1570)
+					SIMON->x = 1570;
+				if (SIMON->x > 2082)
+					SIMON->x = 2082;
 			}
 		}
 	}

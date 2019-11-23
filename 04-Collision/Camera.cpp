@@ -64,6 +64,18 @@ void Camera::Update(DWORD dt, int scene, int stage)
 						cam_x = 2051 - SCREEN_WIDTH;
 					}
 			}
+			if (stage == 3)
+			{
+				if (cam_x <= 1579)
+				{
+					cam_x = 1579;
+				}
+				else
+					if (cam_x >= 2091 - SCREEN_WIDTH)
+					{
+						cam_x = 2091 - SCREEN_WIDTH;
+					}
+			}
 		}
 	}
 }

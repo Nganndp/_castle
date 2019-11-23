@@ -9,6 +9,7 @@ void CBrick::Render(Camera * camera)
 
 void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+	
 	l = x;
 	t = y;
 	b = y + BRICK_BBOX_HEIGHT;

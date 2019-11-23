@@ -17,8 +17,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (GetTickCount() - jump_start > SIMON_JUMP_TIME)
 	{
 		jump_start = 0;
-		//jump = 0;
-		//jumpmove = 0;
 
 	}
 	else
@@ -106,7 +104,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CBrick*>(e->obj))
 			{
-				// block 
 				x += min_tx * dx + nx * 0.4;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 				y += min_ty * dy + ny * 0.4f;
 
@@ -119,7 +116,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					jumpmove = 0;
 				}
 				jump_start = 10000;
-				
 			}
 			else if (dynamic_cast<InviObjects*>(e->obj))
 			{
