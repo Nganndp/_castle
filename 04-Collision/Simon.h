@@ -22,6 +22,7 @@ class CSimon: public CGameObject
 	int right;
 	int changecolor;
 	int autowalking;
+	int alpha;
 	float autowalkingtime;
 	bool active = true;
 	bool sit = false;
@@ -31,7 +32,10 @@ class CSimon: public CGameObject
 	bool isStairUp = true;
 	bool isThrowDagger = false;
 	bool isThrowAxe = false;
+	bool isThrowHolyWater = false;
 	bool autowalkingdoor = false;
+	bool isEatCross;
+	bool isEatClock;
 	CGameObject* MS;
 	DWORD jump_start;
 	DWORD attack_start;
@@ -48,6 +52,7 @@ public:
 		sitattack = 0;
 		changecolor = 0;
 		autowalking = 0;
+		alpha = 255;
 		level = SIMON_LEVEL_MS_1;
 	}
 	void StandUp();
@@ -74,6 +79,10 @@ public:
 	{
 		return autowalking;
 	}
+	int GetAlpha()
+	{
+		return alpha;
+	}
 	boolean GetSit()
 	{
 		return sit;
@@ -90,10 +99,18 @@ public:
 	{
 		return isStairUp;
 	}
+	boolean GetEatCross()
+	{
+		return isEatCross;
+	}
+	boolean GetEatClock()
+	{
+		return isEatClock;
+	}
 	boolean GetActive() { return active; };
 	boolean GetThrowDagger() { return isThrowDagger; }
 	boolean GetThrowAxe() { return isThrowAxe; }
-
+	boolean GetThrowolyWater() { return isThrowHolyWater; }
 	void SetState(int state);
 	void SetLevel(int level) {
 		CGameObject::SetLevel(level);
@@ -115,6 +132,28 @@ public:
 	void SetOnGround(boolean a)
 	{
 		onGround = a;
+	}
+	void SetAlpha(int a)
+	{
+		alpha = a;
+	}
+	void SetEatCross(bool a) {
+		isEatCross = a;
+	}
+	void SetEatClock(bool a) {
+		isEatClock = a;
+	}
+	void SetThrowDagger(bool a)
+	{
+		isThrowDagger = a;
+	}
+	void SetThrowAxe(bool a)
+	{
+		isThrowAxe = a;
+	}
+	void SetThrowHolyWater(bool a)
+	{
+		isThrowHolyWater = a;
 	}
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
 	void StartJumpMove() { jumpmove = 1; jump_start = GetTickCount(); }

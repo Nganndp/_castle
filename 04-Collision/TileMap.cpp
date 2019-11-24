@@ -5,7 +5,7 @@ TileMap::TileMap(LPCWSTR picturePath, int id, int translate_y, int translate_x)
     this->translate_y = translate_y;
 	this->translate_x = translate_x;
 
-	textures->Add(id, picturePath, D3DCOLOR_XRGB(255, 255, 255));
+	textures->Add(id, picturePath, D3DCOLOR_XRGB(alpha,alpha,alpha));
 	LPDIRECT3DTEXTURE9 tex = textures->Get(this->id);
 	if (id == ID_TEX_ENTRANCESTAGE)
 	{
@@ -82,6 +82,10 @@ void TileMap::DrawMap(Camera*camera)
             sprites->Get(index)->Draw(pos_x, pos_y, 255);
 		}
 	}
+
+}
+void TileMap::Update()
+{
 
 }
 TileMap::~TileMap()

@@ -8,3 +8,4 @@ ID_TEX_AXE            textures\\item.png            255 0 255
 ID_TEX_TORCH          textures\\object.png          255 0 255
 ID_TEX_MISC           textures\\object.png          255 0 255
 ID_TEX_BBOX           textures\\bbox.png            255 0 255
+ID_TEX_ENEMY          textures\\enemy.png            255 0 255

@@ -127,6 +127,8 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Ghoul.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="LoadAnimations.h" />
@@ -144,12 +146,15 @@
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Axe.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="define.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Ghoul.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="LoadAnimations.cpp" />
@@ -168,6 +173,7 @@
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -77,7 +77,7 @@ void CAnimation::Render(D3DXVECTOR2 pos, int alpha)
 }
 void CAnimation::Render(float x, float y, int alpha)
 {
-	alpha = 255;
+	//alpha = 255;
 	DWORD now = GetTickCount();
 	if (currentFrame == -1) 
 	{

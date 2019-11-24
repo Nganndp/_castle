@@ -22,6 +22,7 @@
 #include "Axe.h"
 #include "InviObjects.h"
 #include "Grid.h"
+#include "Ghoul.h"
 
 #include<iostream>
 #include<fstream>
@@ -52,6 +53,7 @@ public:
 	TileMap* Tile;
 	CBrick* brick;
 	CTorch* torch;
+	CGhoul* ghoul;
 	TileMap* tile;
 	InviObjects* InOb;
 	Grid* grid;
@@ -59,16 +61,20 @@ public:
 	CSprites* sprites;
 	LPANIMATION ani;
 	vector<LPGAMEOBJECT> mapobjects;
-	vector<LPGAMEOBJECT> stairs;
 	vector<LPGAMEOBJECT> stagechanger;
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> ObjectsFromGrid;
-
+	vector<LPGAMEOBJECT> enemy;
+	vector<LPGAMEOBJECT> bricks;
 	bool castle = false;
 	bool SimonMove = false;
 	int scene;
 	int stage;
 	float cx, cy;
+	DWORD timerChangeColor;
+	bool isChangeColor;
+	bool isGrey;
+	int countChangeColor;
 
 };
 

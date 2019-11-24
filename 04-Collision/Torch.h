@@ -14,7 +14,7 @@ public:
 	CTorch() :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Torchani.txt", this);
-		type = TORCH_TYPE;
+		type = TORCH;
 	};
 	int GetState()
 	{

@@ -105,6 +105,30 @@ void CTorch::Render(Camera * camera)
 	{
 		ani = TORCH_ANI_CANDLE;
 	}
+	if (state == TORCH_STATE_HOLYWATER)
+	{
+		ani = TORCH_ANI_HOLYWATER;
+	}
+	if (state == TORCH_STATE_CROSS)
+	{
+		ani = TORCH_ANI_CROSS;
+	}
+	if (state == TORCH_STATE_CLOCK)
+	{
+		ani = TORCH_ANI_CLOCK;
+	}	
+	if (state == TORCH_STATE_MONEY1)
+	{
+		ani = TORCH_ANI_MONEY1;
+	}
+	if (state == TORCH_STATE_MONEY2)
+	{
+		ani = TORCH_ANI_MONEY2;
+	}
+	if (state == TORCH_STATE_MONEY3)
+	{
+		ani = TORCH_ANI_MONEY3;
+	}
 	animations[ani]->Render(camera->transform(x,y), 255);
 		RenderBoundingBox(camera);
 }

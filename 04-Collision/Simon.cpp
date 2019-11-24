@@ -90,7 +90,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	for (UINT i = 0; i < tor.size(); i++)
 	{
 		CTorch* torch = dynamic_cast<CTorch*>(tor[i]);
-		if (CheckOverlap(torch) != true)
+		if (CheckCollision(torch) != true)
 		{
 			torch->SetTouchable(true);
 
@@ -122,7 +122,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if ((e->obj)->active == true)
 				{
 					InviObjects* InOb = dynamic_cast<InviObjects*>(e->obj);
-					if (CheckOverlap(InOb) != true)
+					if (CheckCollision(InOb) != true)
 					{
 						InOb->SetTouchable(false);
 					}
@@ -147,6 +147,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						case TORCH_STATE_SHEART:
 							tor->SetActive(false);
 							break;
+						case TORCH_STATE_CROSS:
+							tor->SetActive(false);
+							isEatCross = true;
+							break;
+						case TORCH_STATE_MONEY1:
+							tor->SetActive(false);
 						case TORCH_STATE_MSUP:
 							StartChangeColor();
 							tor->SetActive(false);
@@ -163,11 +169,19 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							tor->SetActive(false);
 							isThrowDagger = true;
 							isThrowAxe = false;
+							isThrowHolyWater = false;
 							break;
 						case TORCH_STATE_AXE:
 							tor->SetActive(false);
 							isThrowAxe = true;
 							isThrowDagger = false;
+							isThrowHolyWater = false;
+							break;
+						case TORCH_STATE_HOLYWATER:
+							tor->SetActive(false);
+							isThrowAxe = false;
+							isThrowDagger = false;
+							isThrowHolyWater = true;
 							break;
 						}
 					}
@@ -299,7 +313,6 @@ void CSimon::Render(Camera *camera)
 			}
 		}
 	}
-    int alpha = 255;
 	animations[ani]->Render(camera->transform(x, y), alpha);
 	RenderBoundingBox(camera);
 }

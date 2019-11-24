@@ -127,10 +127,6 @@ void SceneGame::OnKeyDown(int KeyCode)
 		{
 			stagechanger[i]->Setbboxcolor();
 		}
-		for (int i = 0; i < stairs.size(); i++)
-		{
-			stairs[i]->Setbboxcolor();
-		}
 		break;
 	case DIK_W:
 		SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME * 2);
@@ -158,6 +154,7 @@ void SceneGame::OnKeyDown(int KeyCode)
 	case DIK_2:
 		scene = 2;
 		stage = 1;
+	
 		LoadResources();
 
 		break;
@@ -174,6 +171,10 @@ void SceneGame::OnKeyDown(int KeyCode)
 			SIMON->SetOnStair(true);
 			SIMON->SetStairUp(false);
 			SIMON->nx = -1;
+			break;
+		case DIK_5:
+			SIMON->SetEatCross(true);
+			//isChangeColor = true;
 			break;
 	}
 }
@@ -290,7 +291,7 @@ void SceneGame::Update(DWORD dt)
 
 	for (int i = 0; i < coObjects.size(); i++)
 	{
-		if(coObjects.at(i)->type == TORCH_TYPE || coObjects.at(i)->type == BRICK)
+		if(coObjects.at(i)->type == TORCH || coObjects.at(i)->type == BRICK)
 		mapobjects.push_back(coObjects[i]);
 		else {
 			stagechanger.push_back(coObjects[i]);
@@ -545,6 +546,32 @@ void SceneGame::Update(DWORD dt)
 			}
 		}
 	}
+
+	//Item that effect the scene
+	if (SIMON->GetEatCross() == true)
+	{
+		isChangeColor = true;
+		SIMON->SetEatCross(false);
+	}
+	if (isChangeColor)
+	{
+		if (timerChangeColor < 90)
+		{
+			isGrey = true;
+			timerChangeColor += dt;
+		}
+		else
+		{
+			isGrey = false;
+			timerChangeColor = 0;
+			countChangeColor++;
+		}
+		if (countChangeColor >= 7)
+		{
+			isChangeColor = false;
+			countChangeColor = 0;
+		}
+	}
 }
 
 /*
@@ -559,6 +586,9 @@ void SceneGame::Render()
 	if (d3ddv->BeginScene())
 	{
 		// Clear back buffer with a color
+		if (isGrey)
+			d3ddv->ColorFill(bb, NULL, D3DCOLOR_XRGB(128, 128, 128));
+		else
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);

@@ -34,7 +34,7 @@ void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				MSUpDropTime++;
 				int a;
 					srand(time(NULL));
-					a = rand() % 5 + 1;
+					a = rand() % 30 + 1;
 					if (MSUpDropTime < 3)
 					{
 						torch->SetState(3);
@@ -45,11 +45,39 @@ void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 						case 1:
 						case 2:
 						case 3:
-							torch->SetState(TORCH_STATE_SHEART); break;
 						case 4:
-							torch->SetState(TORCH_STATE_LHEART); break;
 						case 5:
+						case 6:
+						case 7:
+						case 8:
+						case 9:
+						case 10:
+						case 11:
+						case 12:
+						case 13:
+						case 14:
+						case 15:
+						case 16:
+						case 17:
+						case 18:
+						case 19:
+						case 20:
+						case 21:
+						case 22:
+						case 23:
+						case 24:
+						case 25:
+							torch->SetState(TORCH_STATE_SHEART); break;
+						case 26:
+							torch->SetState(TORCH_STATE_LHEART); break;
+						case 27:
 							torch->SetState(TORCH_STATE_DAGGER); break;
+						case 28:
+							torch->SetState(TORCH_STATE_HOLYWATER); break;
+						case 29:
+							torch->SetState(TORCH_STATE_CROSS); break;
+						case 30:
+							torch->SetState(TORCH_STATE_AXE); break;
 						}
 			}
 		}

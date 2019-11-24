@@ -79,7 +79,7 @@ public:
 	}
 	LPANIMATION_FRAME GetFrame(int i) { return frames[i]; };
 	void Render(float x, float y, int alpha);
-	void Render(D3DXVECTOR2 pos, int alpha = 255);
+	void Render(D3DXVECTOR2 pos, int alpha);
 };
 
 typedef CAnimation *LPANIMATION;

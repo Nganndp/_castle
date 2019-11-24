@@ -15,10 +15,14 @@ public:
 	CGame *game = CGame::GetInstance();
 	CTextures * textures = CTextures::GetInstance();
 	CSprites* sprites = CSprites::GetInstance();
-
+	void SetAlpha(int a)
+	{
+		alpha = a;
+	}
 	void LoadMap(const char* filepath);
 	void DrawMap(Camera* camera);
-
+	void StartChangeColor() { color = 1; color_start = GetTickCount(); }
+	void Update();
 	~TileMap();
 
 private:
@@ -28,5 +32,8 @@ private:
 	int colTileset, rowTileset;
 	float remain_x, remain_y;
 	int translate_y, translate_x;
+	int alpha = 0;
+	int color = 1;
+	DWORD color_start;
 };
 
