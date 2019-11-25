@@ -17,8 +17,9 @@ public:
 	int attackStart;
 	boolean active = false;
 	int level;
-	int MSUpDropTime;
+	
 public:
+	int MSUpDropTime;
 	CMS() :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\MSani.txt", this);
@@ -26,6 +27,7 @@ public:
 		MSUpDropTime = 0;
 
 	}
+
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render(Camera * camera);
 	void SetState(int state);

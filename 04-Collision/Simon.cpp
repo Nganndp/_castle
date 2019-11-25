@@ -117,17 +117,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				jump_start = 10000;
 			}
-			else if (dynamic_cast<InviObjects*>(e->obj))
-			{
-				if ((e->obj)->active == true)
-				{
-					InviObjects* InOb = dynamic_cast<InviObjects*>(e->obj);
-					if (CheckCollision(InOb) != true)
-					{
-						InOb->SetTouchable(false);
-					}
-				}
-			}
 			else if (dynamic_cast<CTorch*>(e->obj))
 			{
 				if ((e->obj)->active == true)

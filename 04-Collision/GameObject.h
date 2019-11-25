@@ -56,6 +56,7 @@ public:
 	int state;
 	boolean active = true;
 	boolean isTouchable;
+	bool isDie;
 	DWORD dt;
 	CTextures* texture;
 	CSprite* sprite;
@@ -80,6 +81,10 @@ public:
 	virtual boolean GetActive()
 	{
 		return active;
+	}
+	void SetDie(bool a)
+	{
+		isDie = a;
 	}
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }

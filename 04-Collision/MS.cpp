@@ -37,7 +37,7 @@ void CMS::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 					a = rand() % 30 + 1;
 					if (MSUpDropTime < 3)
 					{
-						torch->SetState(3);
+						torch->SetState(TORCH_STATE_MSUP);
 					}
 					else   
 						switch (a)

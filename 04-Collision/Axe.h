@@ -8,7 +8,7 @@
 class CAxe :public CGameObject
 {
 private:
-	boolean active;
+	boolean active = false;
 	CGameObject* simon;
 	int attack;
 	DWORD throw_start;

@@ -11,6 +11,7 @@ public:
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 255
+#define SPAWN_DELAY_TIMER 15000
 
 #define MAX_FRAME_RATE 120
 
@@ -154,14 +155,18 @@ public:
 #define STAIR_TYPE_DOWN_LEFT -100
 #define STAIR_TYPE_UP_LEFT 101
 #define STAIR_TYPE_DOWN_RIGHT -101
-
+    //Enemy Spawner
+#define GHOUL_SPAWNER 50
+#define BAT_SPAWNER 51
+#define FISHERMAN_SPAWNER 52
 //Wepon
    //Axe
-#define AXE_GRAVITY 0.0002f
+#define AXE_GRAVITY  0.007f; 
+#define AXE_FLY_SPEED 0.005f
 #define AXE_STATE_ATTACK 0
 	//Dagger
 #define DG_ATTACK_TIME 500
-#define DG_FLY_SPEED 5.0f
+#define DG_FLY_SPEED 0.2f
 #define DG_STATE_ATTACK_RIGHT 0
 #define DG_STATE_ATTACK_LEFT 1
 	//Holy Water
@@ -186,6 +191,11 @@ public:
 #define WHIP_LONG_BOX_HEIGHT	15
 
 //Enemy
+#define GHOUL 0
+#define PANTHER 1
+#define BAT 2
+#define FISHMAN 3
+
 //Ghoul
 #define GHOUL_STATE_WALKING 0
 #define GHOUL_STATE_DIE 1
@@ -197,7 +207,7 @@ public:
 #define GHOUL_ANI_WALKING_RIGHT 2
 #define GHOUL_ANI_WALKING_LEFT 3
 #define GHOUL_ANI_DIE 4
-#define GHOUL_ANI_SHEART 4
+#define GHOUL_ANI_SHEART 5
 
 };
 

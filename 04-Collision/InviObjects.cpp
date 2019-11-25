@@ -14,9 +14,9 @@ void InviObjects::GetBoundingBox(float& l, float& t, float& r, float& b)
 	t = y;
 	b = y + INVI_HEIGHT;
 	r = x + INVI_WIDTH;
-	/*if (type == STAIR_TYPE_UP_LEFT)
+	/*if (type == SC_TYPE_UNDER_GROUND)
 	{
-		r = x + (INVI_WIDTH/2);
+		r = x + (INVI_WIDTH*2);
 	}*/
 }
 

@@ -42,7 +42,7 @@ public:
 	void Render();
 	void LoadObjectFromFile(string source);
 	void LoadSceneObject(int a);
-
+	void SpawnDelayStart() { spawndelay = 1;  spawndelaytimer_start = GetTickCount(); }
 	~SceneGame();
 	CGame* game;
 	Camera* camera;
@@ -62,16 +62,19 @@ public:
 	LPANIMATION ani;
 	vector<LPGAMEOBJECT> mapobjects;
 	vector<LPGAMEOBJECT> stagechanger;
-	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> simon;
 	vector<LPGAMEOBJECT> ObjectsFromGrid;
 	vector<LPGAMEOBJECT> enemy;
 	vector<LPGAMEOBJECT> bricks;
+	
 	bool castle = false;
 	bool SimonMove = false;
 	int scene;
 	int stage;
+	int spawndelay = 0;
 	float cx, cy;
 	DWORD timerChangeColor;
+	DWORD spawndelaytimer_start;
 	bool isChangeColor;
 	bool isGrey;
 	int countChangeColor;

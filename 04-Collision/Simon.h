@@ -31,7 +31,7 @@ class CSimon: public CGameObject
 	bool isOnStair = false;
 	bool isStairUp = true;
 	bool isThrowDagger = false;
-	bool isThrowAxe = false;
+	bool isThrowAxe = true;
 	bool isThrowHolyWater = false;
 	bool autowalkingdoor = false;
 	bool isEatCross;

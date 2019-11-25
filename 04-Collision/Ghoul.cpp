@@ -10,10 +10,14 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (active == false)
 		return;
-
+	if (isDie == true)
+	{
+		StartDieTime();
+		isDie = false;
+	}
 	CGameObject::Update(dt, coObjects);
 	
-	vy += 0.015f*dt;
+	vy += TORCH_GRAVITY*dt;
 
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -54,17 +58,34 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		dietime_start = 0;
 		die = 0;
+		
 	}
-
-	if (nx > 0)
-		vx = 0.052f;
-	else
-		vx = -0.052f;
-
-	if (x >= 1520 && x <= 1530 && nx > 0) //Simon đụng tường phải của màn 0 thì quay lại
+	if (state != GHOUL_STATE_WALKING && die == 0)
 	{
-		nx = -1;
-		x = 1505;
+		state = GHOUL_STATE_SHEART;
+    }
+	if (state == GHOUL_STATE_WALKING)
+	{
+		if (isStop)
+			return;
+		if (nx > 0)
+			vx = 0.052f;
+		else
+			vx = -0.052f;
+	}
+}
+
+void CGhoul::SetState(int state)
+{
+	CGameObject::SetState(state);
+
+	switch (state)
+	{
+	case GHOUL_STATE_DIE:
+	case GHOUL_STATE_SHEART:
+	case GHOUL_STATE_IDLE:
+		vx = 0;
+		break;
 	}
 }
 
@@ -82,6 +103,10 @@ void CGhoul::Render(Camera * camera)
 		}
 		else ani = GHOUL_ANI_WALKING_LEFT;
 	 }
+	 else if (state == GHOUL_STATE_SHEART)
+	 {
+		 ani = GHOUL_ANI_SHEART;
+	 }
 	 if (die != 0)
 	 {
 		 ani = GHOUL_ANI_DIE;
@@ -96,4 +121,9 @@ void CGhoul::GetBoundingBox(float & left, float & top, float & right, float & bo
 		top = y;
 		right = x + 16;
 		bottom = y + 32;
+		if (state == GHOUL_STATE_SHEART)
+		{
+			right = x + 9;
+			bottom = y + 9;
+		}
 }

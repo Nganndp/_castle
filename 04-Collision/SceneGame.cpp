@@ -24,11 +24,11 @@ SceneGame::SceneGame()
 	Axe = new CAxe();
 	Axe->GetSimon(SIMON);
 
-	//push back to list objects
-	objects.push_back(SIMON);
-	objects.push_back(MS);
-	objects.push_back(dagger);
-	objects.push_back(Axe);
+	//push back to list simon
+	simon.push_back(SIMON);
+	simon.push_back(MS);
+	simon.push_back(dagger);
+    simon.push_back(Axe);
 }
 void SceneGame::OnKeyDown(int KeyCode)
 {
@@ -115,9 +115,9 @@ void SceneGame::OnKeyDown(int KeyCode)
 		else SIMON->SetActive(true);
 		break;
 	case DIK_R:
-		for (int i = 0; i < objects.size(); i++)
+		for (int i = 0; i < simon.size(); i++)
 		{
-			objects[i]->Setbboxcolor();
+			simon[i]->Setbboxcolor();
 		}
 		for (int i = 0; i < mapobjects.size(); i++)
 		{
@@ -127,6 +127,7 @@ void SceneGame::OnKeyDown(int KeyCode)
 		{
 			stagechanger[i]->Setbboxcolor();
 		}
+		//ghoul->Setbboxcolor();
 		break;
 	case DIK_W:
 		SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME * 2);
@@ -239,6 +240,8 @@ void SceneGame::LoadResources()
 	if (scene == 1)
 	{
 		SIMON->SetPosition(10.0f, 154);
+		//ghoul->SetPosition(150, 154);
+		//ghoul->nx = -1;
 		Tile = new TileMap(L"textures\\entrance_tilemap.png", ID_TEX_ENTRANCESTAGE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
 		LoadSceneObject(1);
@@ -246,7 +249,7 @@ void SceneGame::LoadResources()
 		{
 			grid->InsertIntoGrid(mapobjects.at(i));
 		}
-		for (UINT i = 0; i < stagechanger.size(); i++)  //list invisible objects
+		for (UINT i = 0; i < stagechanger.size(); i++)  //list invisible simon
 		{
 			grid->InsertIntoGrid(stagechanger.at(i));
 		}
@@ -279,7 +282,7 @@ void SceneGame::LoadResources()
 */
 void SceneGame::Update(DWORD dt)
 {
-	//
+	//Update Objects
 	vector<LPGAMEOBJECT> coObjects;
 	grid->GetListCollisionFromGrid(camera, ObjectsFromGrid);
 	mapobjects.clear();
@@ -293,6 +296,8 @@ void SceneGame::Update(DWORD dt)
 	{
 		if(coObjects.at(i)->type == TORCH || coObjects.at(i)->type == BRICK)
 		mapobjects.push_back(coObjects[i]);
+		if (coObjects.at(i)->type == BRICK)
+			bricks.push_back(coObjects[i]);
 		else {
 			stagechanger.push_back(coObjects[i]);
 		}
@@ -301,9 +306,13 @@ void SceneGame::Update(DWORD dt)
 	{
 		mapobjects[i]->Update(dt, &mapobjects);
 	}
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 0; i < simon.size(); i++)
 	{
-		objects[i]->Update(dt, &mapobjects);
+		simon[i]->Update(dt, &mapobjects);
+	}
+	for (int i = 0; i < enemy.size(); i++)
+	{
+		enemy[i]->Update(dt, &bricks);
 	}
 
 	//Simon collsion with Invisible Objects
@@ -316,7 +325,7 @@ void SceneGame::Update(DWORD dt)
 	for (UINT i = 0; i < InvObjects.size(); i++)
 	{
 		InviObjects* InOb = dynamic_cast<InviObjects*>(InvObjects[i]);
-		if (SIMON->CheckOverlap(InOb) != true)
+		if (SIMON->CheckCollision(InOb) != true)
 		{
 			InOb->SetTouchable(true);
 
@@ -325,7 +334,7 @@ void SceneGame::Update(DWORD dt)
 	for (int i = 0; i < InvObjects.size(); i++)
 	{
 		InviObjects* InOb = dynamic_cast<InviObjects*>(InvObjects[i]);
-		if (SIMON->CheckOverlap(InOb))
+		if (SIMON->CheckCollision(InOb))
 		{
 			if (InOb->type == SC_TYPE_CHANGE_SCENE)
 			{
@@ -372,6 +381,31 @@ void SceneGame::Update(DWORD dt)
 				camera->StartCamMove(1750);
 				camera->SetCamMoving(true);
 				SimonMove = false;
+			}
+			else if (InOb->type = GHOUL_SPAWNER)
+			{
+				if (spawndelay == 0)
+				{
+					int a;
+					srand(time(NULL));
+					a = rand() % 4 + 1;
+					for (int i = 0; i < a; i++)
+					{
+						ghoul = new CGhoul();
+						ghoul->nx = 1;
+						ghoul->SetPosition(camera->GetPosition().x - 20 - i * 18, 150);
+						enemy.push_back(ghoul);
+					}
+					for (int i = 0; i < (4 - a); i++)
+					{
+						ghoul = new CGhoul();
+						ghoul->nx = -1;
+						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 18, 150);
+						enemy.push_back(ghoul);
+					}
+					SpawnDelayStart();
+				}
+				
 			}
 			else if (InOb->type == STAIR_TYPE_RIGHT_UP_HELPER)
 			{
@@ -491,6 +525,41 @@ void SceneGame::Update(DWORD dt)
 		}
 	}
 
+	//Simon Collision with enemy
+	for (int i = 0; i < enemy.size(); i++)
+	{
+		if (SIMON->CheckCollision(enemy.at(i)))
+		{
+			if (enemy.at(i)->type == GHOUL)
+			{
+				if (enemy.at(i)->GetState() == GHOUL_STATE_WALKING)
+				{
+					SIMON->StartJump();
+				}
+				else if (enemy.at(i)->GetState() == GHOUL_STATE_SHEART)
+				{
+					enemy.erase(enemy.begin() + i);
+				}
+			}
+		}
+	}
+
+	//Weapon collision with enemy
+	for (int i = 0; i < enemy.size(); i++)
+	{
+		if (MS->CheckCollision(enemy.at(i))|| dagger->CheckCollision(enemy.at(i)) || Axe->CheckCollision(enemy.at(i)))
+		{
+			enemy.at(i)->isDie = true;
+            if (enemy.at(i)->type == GHOUL)
+			{
+				if (enemy.at(i)->GetState() == GHOUL_STATE_WALKING)
+					enemy.at(i)->SetState(GHOUL_STATE_DIE);
+				//enemy.erase(enemy.begin() + i);
+			}
+		}
+	}
+
+
 	//adjust Simon to Camera
 	if (SIMON->x - camera->GetPosition().x <= 100 && SimonMove == true)
 	{
@@ -547,7 +616,47 @@ void SceneGame::Update(DWORD dt)
 		}
 	}
 
-	//Item that effect the scene
+	//Enemy to camera
+	for (int i = 0; i < enemy.size(); i++)
+	{
+		if (enemy.at(i)->type == GHOUL)
+		{
+			if (enemy.at(i)->x < camera->GetPosition().x - 20 && enemy.at(i)->nx < 0)
+			{
+				enemy.erase(enemy.begin() + i);
+			}
+			else if (enemy.at(i)->x > camera->GetPosition().x + SCREEN_WIDTH && enemy.at(i)->nx > 0)
+			{
+				enemy.erase(enemy.begin() + i);
+			}
+		}
+	}
+
+	//Adjust enemy to map
+	for (int i = 0; i < enemy.size(); i++)
+	{
+		if (enemy.at(i)->type == GHOUL)
+		{
+			if (stage == 1)
+			{
+				if (enemy.at(i)->x >= 1502 && enemy.at(i)->nx > 0)
+				{
+					enemy.at(i)->nx = -1;
+				}
+			}
+			else if (stage == 4)
+			{
+
+			}
+		}
+	}
+
+	//functiions that affect the scene
+	if (GetTickCount() - spawndelaytimer_start > SPAWN_DELAY_TIMER)
+	{
+		spawndelaytimer_start = 0;
+		spawndelay = 0;
+    }
 	if (SIMON->GetEatCross() == true)
 	{
 		isChangeColor = true;
@@ -594,21 +703,18 @@ void SceneGame::Render()
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 		Tile->DrawMap(camera);
-
-		//for (int i = 0; i < coObjects.size(); i++)
-		//	coObjects[i]->Render(camera);
 		for (int i = 0; i < mapobjects.size(); i++)
-		{
 			mapobjects[i]->Render(camera);
-		}
-		for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render(camera);
 		for (int i = 0; i < stagechanger.size(); i++)
 			stagechanger[i]->Render(camera);
+		for (int i = 0; i < enemy.size(); i++)
+			enemy[i]->Render(camera);
+		for (int i = 0; i < simon.size(); i++)
+			simon[i]->Render(camera);
+		//SIMON->Render(camera);
+		//ghoul->Render(camera);
 		spriteHandler->End();
-
-
-		d3ddv->EndScene();
+        d3ddv->EndScene();
 	}
 
 	// Display back buffer content to the screen
