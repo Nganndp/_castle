@@ -10,11 +10,6 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (active == false)
 		return;
-	if (isDie == true)
-	{
-		StartDieTime();
-		isDie = false;
-	}
 	CGameObject::Update(dt, coObjects);
 	
 	vy += TORCH_GRAVITY*dt;
@@ -58,7 +53,6 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		dietime_start = 0;
 		die = 0;
-		
 	}
 	if (state != GHOUL_STATE_WALKING && die == 0)
 	{

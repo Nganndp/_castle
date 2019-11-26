@@ -1,21 +1,16 @@
 #include "Dagger.h"
 
-void CDagger::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CDagger::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) 
 {
-//if (active != true)
-//{
-//	return;
-//}
 	if (active == true)
 	{
-		CGameObject::Update(dt);
-
 		if (GetTickCount() - attack_start > SIMON_ATTACK_TIME + 300)
-			{
-				attack_start = 0;
-				active = false;
-				waiting = false;
-			}
+		{
+			attack_start = 0;
+			waiting = false;
+		}
+		vx = nx * DG_FLY_SPEED;
+		x += vx;
 		vector<LPGAMEOBJECT> tor;
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
@@ -27,7 +22,7 @@ void CDagger::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CTorch* torch = dynamic_cast<CTorch*>(tor[i]);
 			if (CheckCollision(torch))
 			{
-				active = false;
+				SetActive(false);
 				int a;
 				srand(time(NULL));
 				a = rand() % 5 + 1;
@@ -55,41 +50,36 @@ void CDagger::AdjustPos()
 {
 	if (simon->nx > 0)
 	{
-			x = simon->x;
-			y = simon->y+5;
+		x = simon->x;
+		y = simon->y;
 	}
 	else if (simon->nx < 0)
 	{
-			x = simon->x;
-			y = simon->y+5;
+		x = simon->x;
+		y = simon->y;
 	}
 }
-void CDagger::Render(Camera * camera) {
+void CDagger::Render(Camera* camera)
+{
 	int ani;
 	if (active == true)
 	{
-		if (attack == 0)
-		{
-			active = false;
-		}
-		if (nx > 0)
+		if (simon->nx > 0)
 		{
 			ani = 0;
 		}
 		else
 			ani = 1;
 		int alpha = 255;
-		animations[ani]->Render(camera->transform(x,y), alpha);
+		animations[ani]->Render(camera->transform(x, y), alpha);
 
 		RenderBoundingBox(camera);
 	}
 }
 void CDagger::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (active == false)
-		return;
 	top = y;
-		left = x;
-		right = x + 17;
-		bottom = y + 10;
+	left = x;
+	right = x + 17;
+	bottom = y + 10;
 }

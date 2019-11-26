@@ -6,8 +6,8 @@
 class CGhoul:public CGameObject
 {
 	bool isStop = false;
-	int die = 0;
-	DWORD dietime_start;
+	//int die = 0;
+	//DWORD dietime_start;
 public:
 	CGhoul():CGameObject()
 	{
@@ -25,7 +25,7 @@ public:
 	void SetState(int state);
 	void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
 	void Render(Camera* camera);
-	void StartDieTime() { die = 1; dietime_start = GetTickCount(); }
+
 	RECT GetBound()
 	{
 		RECT rect;

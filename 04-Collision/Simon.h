@@ -36,7 +36,6 @@ class CSimon: public CGameObject
 	bool autowalkingdoor = false;
 	bool isEatCross;
 	bool isEatClock;
-	CGameObject* MS;
 	DWORD jump_start;
 	DWORD attack_start;
 	DWORD sitattack_start;
@@ -53,7 +52,7 @@ public:
 		changecolor = 0;
 		autowalking = 0;
 		alpha = 255;
-		level = SIMON_LEVEL_MS_1;
+		level = SIMON_LEVEL_MS_3;
 	}
 	void StandUp();
 	void SitDown();
@@ -123,11 +122,6 @@ public:
 	};
 	void SetActive(boolean a) {
 		active = a;
-	}
-	void SetMS(CGameObject* MS)
-	{
-		this->MS = MS;
-
 	}
 	void SetOnGround(boolean a)
 	{

@@ -13,25 +13,20 @@ public:
 	CGameObject* simon;
 	DWORD attack_start;
 	int attackStart;
-	boolean active = false;
-	boolean waiting = false;
+	bool waiting = false;
 public:
 	CDagger() :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Daggerani.txt", this);
 		attack = 0;
+		active = false;
 
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
-    void Render(Camera * camera);
+	void Render(Camera* camera);
 	void SetState(int state);
-	void SetActive(boolean a)
-	{
-		active = a;
-	}
 	void AdjustPos();
 	void StartAttack() {
-		active = true;
 		waiting = true;
 		attack_start = GetTickCount();
 		AdjustPos();

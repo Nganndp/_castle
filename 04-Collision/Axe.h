@@ -8,7 +8,6 @@
 class CAxe :public CGameObject
 {
 private:
-	boolean active = false;
 	CGameObject* simon;
 	int attack;
 	DWORD throw_start;
@@ -17,17 +16,18 @@ public:
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Axeani.txt", this);
 		attack = 0;
+		active = false;
 
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render(Camera * camera);
 	void GetSimon(CGameObject* Simon) {
-		this->simon = Simon;
+		simon = Simon;
+		nx = Simon->nx;
 	}
 	void SetState(int state);
 	void AdjustPos();
 	void StartAttack() {
-		active = true;
 		throw_start = GetTickCount();
 		AdjustPos();
 	}

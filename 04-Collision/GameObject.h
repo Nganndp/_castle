@@ -51,7 +51,8 @@ public:
 	int level = 1;
 	int nx;
 	int bboxcolor;
-
+	int die = 0;
+	DWORD dietime_start;
 
 	int state;
 	boolean active = true;
@@ -86,6 +87,7 @@ public:
 	{
 		isDie = a;
 	}
+	void StartDieTime() { die = 1; dietime_start = GetTickCount(); }
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	D3DXVECTOR2 GetPosition() { return D3DXVECTOR2(x, y); }

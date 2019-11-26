@@ -8,15 +8,15 @@ void CAxe::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 	}
 
 	CGameObject::Update(dt);
-
-	vx = nx * AXE_FLY_SPEED * dt;
+	vx = nx * AXE_FLY_SPEED;
 	vy += AXE_GRAVITY; 
-	//y += dy;
+	y += dy;
 	x += dx;
 
 	if (GetTickCount() - throw_start < 500)
 	{
 		vy = -0.0093f * dt;
+		//active = false;
 	}
 }
 
@@ -36,12 +36,12 @@ void CAxe::Render(Camera *camera) {
 }
 void CAxe::AdjustPos()
 {
-	if (nx > 0)
+	if (simon->nx > 0)
 	{
 		x = simon->x- 10;
 		y = simon->y - 10;
 	}
-	else if (nx < 0)
+	else if (simon->nx < 0)
 	{
 		x = simon->x + 10;
 		y = simon->y - 10;

@@ -166,7 +166,7 @@ public:
 #define AXE_STATE_ATTACK 0
 	//Dagger
 #define DG_ATTACK_TIME 500
-#define DG_FLY_SPEED 0.2f
+#define DG_FLY_SPEED 3.0f
 #define DG_STATE_ATTACK_RIGHT 0
 #define DG_STATE_ATTACK_LEFT 1
 	//Holy Water
@@ -191,10 +191,10 @@ public:
 #define WHIP_LONG_BOX_HEIGHT	15
 
 //Enemy
-#define GHOUL 0
-#define PANTHER 1
-#define BAT 2
-#define FISHMAN 3
+#define GHOUL 2000
+#define PANTHER 2001
+#define BAT 2002
+#define FISHMAN 2003
 
 //Ghoul
 #define GHOUL_STATE_WALKING 0

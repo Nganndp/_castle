@@ -26,7 +26,7 @@ SceneGame::SceneGame()
 
 	//push back to list simon
 	simon.push_back(SIMON);
-	simon.push_back(MS);
+	//simon.push_back(MS);
 	simon.push_back(dagger);
     simon.push_back(Axe);
 }
@@ -56,24 +56,18 @@ void SceneGame::OnKeyDown(int KeyCode)
 		{
 			if (SIMON->GetThrowDagger())
 			{
-				if (SIMON->GetAttackTime() == 0)
-				{
-					dagger->StartAttack();
-					dagger->SetActive(true);
-				}
+				dagger->StartAttack();
 				dagger->nx = SIMON->nx;
+				dagger->SetActive(true);
 				MS->SetActive(false);
 				SIMON->SetState(SIMON_STATE_ATTACK);
 				SIMON->StartAttack();
 			}
 			else if (SIMON->GetThrowAxe())
 			{
-				if (SIMON->GetAttackTime() == 0)
-				{
-					Axe->StartAttack();
-					Axe->SetActive(true);
-				}
+				Axe->StartAttack();
 				Axe->nx = SIMON->nx;
+				Axe->SetActive(true);
 				MS->SetActive(false);
 				SIMON->SetState(SIMON_STATE_ATTACK);
 				SIMON->StartAttack();
@@ -259,7 +253,7 @@ void SceneGame::LoadResources()
 		stagechanger.clear();
 		mapobjects.clear();
 		//SIMON->SetPosition(10.0f, 168);
-		SIMON->SetPosition(1470, 42);
+		SIMON->SetPosition(645, 168);
 		Tile = new TileMap(L"textures\\castle_tilemap.png", ID_TEX_CASTLE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
@@ -314,7 +308,7 @@ void SceneGame::Update(DWORD dt)
 	{
 		enemy[i]->Update(dt, &bricks);
 	}
-
+	MS->Update(dt, &mapobjects);
 	//Simon collsion with Invisible Objects
 	vector<LPGAMEOBJECT> InvObjects;
 	for (UINT i = 0; i < stagechanger.size(); i++)
@@ -382,10 +376,11 @@ void SceneGame::Update(DWORD dt)
 				camera->SetCamMoving(true);
 				SimonMove = false;
 			}
-			else if (InOb->type = GHOUL_SPAWNER)
+			else if (InOb->type == GHOUL_SPAWNER)
 			{
 				if (spawndelay == 0)
 				{
+					
 					int a;
 					srand(time(NULL));
 					a = rand() % 4 + 1;
@@ -393,14 +388,14 @@ void SceneGame::Update(DWORD dt)
 					{
 						ghoul = new CGhoul();
 						ghoul->nx = 1;
-						ghoul->SetPosition(camera->GetPosition().x - 20 - i * 18, 150);
+						ghoul->SetPosition(camera->GetPosition().x - 20 - i * 20, 170);
 						enemy.push_back(ghoul);
 					}
 					for (int i = 0; i < (4 - a); i++)
 					{
 						ghoul = new CGhoul();
 						ghoul->nx = -1;
-						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 18, 150);
+						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 20, 170);
 						enemy.push_back(ghoul);
 					}
 					SpawnDelayStart();
@@ -466,7 +461,7 @@ void SceneGame::Update(DWORD dt)
 				{
 					if (SIMON->y + SIMON_IDLE_BBOX_HEIGHT > InOb->y + INVI_HEIGHT)
 					{
-						SIMON->y = InOb->y + INVI_HEIGHT*2 - SIMON_IDLE_BBOX_HEIGHT;
+						SIMON->y = InOb->y + 1+ INVI_HEIGHT*2 - SIMON_IDLE_BBOX_HEIGHT;
 					}
 					SIMON->SetOnStair(false);
 					SIMON->SetStairUp(false);
@@ -480,9 +475,9 @@ void SceneGame::Update(DWORD dt)
 				{
 					if(InOb->x - SIMON->x >= 20)
 					{
-						SIMON->x = InOb->x - 23;
+						SIMON->x = InOb->x - 23.5;
 					}
-					if (SIMON->x <= InOb->x - 23)
+					if (SIMON->x <= InOb->x - 23.5)
 					{
 						SIMON->SetState(SIMON_STATE_WALKING_UP_STAIR);
 						SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
@@ -534,7 +529,7 @@ void SceneGame::Update(DWORD dt)
 			{
 				if (enemy.at(i)->GetState() == GHOUL_STATE_WALKING)
 				{
-					SIMON->StartJump();
+					//SIMON->StartJump();
 				}
 				else if (enemy.at(i)->GetState() == GHOUL_STATE_SHEART)
 				{
@@ -547,13 +542,17 @@ void SceneGame::Update(DWORD dt)
 	//Weapon collision with enemy
 	for (int i = 0; i < enemy.size(); i++)
 	{
-		if (MS->CheckCollision(enemy.at(i))|| dagger->CheckCollision(enemy.at(i)) || Axe->CheckCollision(enemy.at(i)))
+		if (MS->CheckCollision(enemy.at(i))|| dagger->CheckCollision(enemy.at(i)) && dagger->active == true|| Axe->CheckCollision(enemy.at(i)) && Axe->active == true)
 		{
-			enemy.at(i)->isDie = true;
+			dagger->SetActive(false);
             if (enemy.at(i)->type == GHOUL)
 			{
 				if (enemy.at(i)->GetState() == GHOUL_STATE_WALKING)
+				{
+					enemy.at(i)->StartDieTime();
 					enemy.at(i)->SetState(GHOUL_STATE_DIE);
+				}
+				//enemy.clear();
 				//enemy.erase(enemy.begin() + i);
 			}
 		}
@@ -576,7 +575,7 @@ void SceneGame::Update(DWORD dt)
 	}
 	if (stage == 3)
 	{
-		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 207);
+		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 212);
 	}
 	camera->Update(dt, scene, stage);
 
@@ -711,8 +710,7 @@ void SceneGame::Render()
 			enemy[i]->Render(camera);
 		for (int i = 0; i < simon.size(); i++)
 			simon[i]->Render(camera);
-		//SIMON->Render(camera);
-		//ghoul->Render(camera);
+		MS->Render(camera);
 		spriteHandler->End();
         d3ddv->EndScene();
 	}
