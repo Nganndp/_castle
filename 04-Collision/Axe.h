@@ -23,7 +23,7 @@ public:
 	virtual void Render(Camera * camera);
 	void GetSimon(CGameObject* Simon) {
 		simon = Simon;
-		//nx = Simon->nx;
+		nx = Simon->nx;
 	}
 	void SetState(int state);
 	void AdjustPos();

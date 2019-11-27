@@ -11,7 +11,7 @@ public:
 	CGhoul():CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Ghoulani.txt", this);
-		state = GHOUL_STATE_WALKING;
+		state = ENEMY_STATE_MOVING;
 		type = GHOUL;
 		active = true;
 	};

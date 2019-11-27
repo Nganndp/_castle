@@ -48,6 +48,10 @@ public:
 
 	float vx;
 	float vy;
+
+	float FirstX;
+	float FirstY;
+
 	int level = 1;
 	int nx;
 	int bboxcolor;
@@ -55,8 +59,9 @@ public:
 	DWORD dietime_start;
 
 	int state;
-	boolean active = true;
-	boolean isTouchable;
+	bool active = true;
+	bool isTouchable;
+	bool isOnGround;
 	bool isDie;
 	DWORD dt;
 	CTextures* texture;

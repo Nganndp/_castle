@@ -10,17 +10,42 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (active == false)
 		return;
+	CGameObject::Update(dt, coObjects);
+	if (state == ENEMY_STATE_SHEART)
+	{
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
 
+		coEvents.clear();
+
+		CalcPotentialCollisions(coObjects, coEvents);
+		float min_tx, min_ty, nx = 0, ny;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+		// block 
+		y += min_ty * dy + ny * 0.2f;
+
+		// block 
+		if (nx != 1)
+			x += min_tx * dx + nx * 0.2f;;
+
+		if (nx == 1)  
+			x += dx;
+		if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
+		if (ny != 0) vy = 0;
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	}
 	if (GetTickCount() - dietime_start > 200)
 	{
 		dietime_start = 0;
 		die = 0;
 	}
-	if (state != BAT_STATE_FLYING && die == 0)
+	if (state != ENEMY_STATE_MOVING && die == 0)
 	{
-		state = BAT_STATE_SHEART;
+		state = ENEMY_STATE_SHEART;
 	}
-	if (state == BAT_STATE_FLYING)
+	if (state == ENEMY_STATE_MOVING)
 	{
 		if (isStop)
 			return;
@@ -30,15 +55,33 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			x -= dx;
 
 		y += dy;
-	}
-	if (vy < 0 && y < FirstY)
-	{
-		y = FirstY; vy = -vy;
-	}
+		if (vy < 0 && y < FirstY)
+		{
+			y = FirstY; vy = -vy;
+		}
 
-	if (vy > 0 && y > FirstY + 20)
+		if (vy > 0 && y > FirstY + 20)
+		{
+			y = FirstY + 20; vy = -vy;
+		}
+	}
+	if (state == ENEMY_STATE_SHEART)
 	{
-		y = FirstY + 20; vy = -vy;
+		if (isOnGround == false)
+		{
+			if (vx < 0 && x < FirstX)
+			{
+				x = FirstX; vx = -vx;
+			}
+
+			if (vx > 0 && x > FirstX + 15)
+			{
+				x = FirstX + 15; vx = -vx;
+			}
+			vy += TORCH_GRAVITY * dt;
+			vx = 0.05f;
+		}
+
 	}
 }
 
@@ -48,9 +91,7 @@ void CBat::SetState(int state)
 
 	switch (state)
 	{
-	case BAT_STATE_DIE:
-	case BAT_STATE_SHEART:
-	case BAT_STATE_IDLE:
+    case ENEMY_STATE_IDLE:
 		vx = 0;
 		break;
 	}
@@ -61,7 +102,7 @@ void CBat::Render(Camera* camera)
 	if (active != true)
 		return;
 	int ani = 0;
-	if (state == BAT_STATE_FLYING)
+	if (state == ENEMY_STATE_MOVING)
 	{
 		if (nx > 0)
 		{
@@ -69,7 +110,7 @@ void CBat::Render(Camera* camera)
 		}
 		else ani = BAT_ANI_FLYING_LEFT;
 	}
-	else if (state == BAT_STATE_SHEART)
+	else if (state == ENEMY_STATE_SHEART)
 	{
 		ani = BAT_ANI_SHEART;
 	}
@@ -85,9 +126,9 @@ void CBat::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x + 1;
 	top = y;
-	right = x + 16;
-	bottom = y + 14;
-	if (state == BAT_STATE_SHEART)
+	right = x + 18;
+	bottom = y + 17;
+	if (state == ENEMY_STATE_SHEART)
 	{
 		right = x + 9;
 		bottom = y + 9;

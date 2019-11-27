@@ -10,16 +10,15 @@ class CBat :public CGameObject
 public:
 	CBat(D3DXVECTOR2 pos) :CGameObject()
 	{
-		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Ghoulani.txt", this);
-		state = GHOUL_STATE_WALKING;
+		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Batani.txt", this);
+		state = ENEMY_STATE_MOVING;
 		type = BAT;
-		active = true;
-		FirstY = pos.y;
 		vx = 0.04f;
 		vy = 0.03f;
-	};
+		active = true;
+		FirstY = pos.y;
+    };
 	~CBat();
-	float FirstY;
 	bool GetStop()
 	{
 		return isStop;

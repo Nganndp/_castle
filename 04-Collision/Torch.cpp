@@ -39,50 +39,49 @@ void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom
 
 void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	//CGameObject::Update(dt, coObjects);
-	if (active == true)
+	CGameObject::Update(dt, coObjects);
+	if (active != true)
+		return;
+	if (state != TORCH_STATE_NORMAL && state != TORCH_STATE_CANDLE && die ==0)
 	{
-		if (state != TORCH_STATE_NORMAL && state != TORCH_STATE_CANDLE && die ==0)
+		vy += TORCH_GRAVITY * dt;
+	if (isOnGround == false)
+	    {
+		if (vx < 0 && x < FirstX)
 		{
-			vy += TORCH_GRAVITY * dt;
+	    	x = FirstX; vx = -vx;
 		}
-		CGameObject::Update(dt);
-		if (GetTickCount() - dietime_start > 300)
+        else if (vx > 0 && x > FirstX + 15)
 		{
-			dietime_start = 0;
-			die = 0;
+			x = FirstX + 15; vx = -vx;
 		}
-		vector<LPCOLLISIONEVENT> coEvents;
-		vector<LPCOLLISIONEVENT> coEventsResult;
-
-		coEvents.clear();
-		CalcPotentialCollisions(coObjects, coEvents);
-		if (coEvents.size() == 0)
+		if (state == TORCH_STATE_SHEART || state == TORCH_STATE_LHEART)
 		{
-			y += dy;
+			vx = 0.04f;
 		}
-		else
-		{
-			float min_tx, min_ty, nx = 0, ny;
-
-			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-			for (UINT i = 0; i < coEventsResult.size(); i++)
-			{
-				LPCOLLISIONEVENT e = coEventsResult[i];
-				if (dynamic_cast<CBrick*>(e->obj))
-				{
-					// block 
-					x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-					y += min_ty * dy + ny * 0.4f;
-
-					if (nx != 0) vx = 0;
-					if (ny != 0) vy = 0;
-				}
-			}
+		else vx = 0;
 		}
-		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
+	if (GetTickCount() - dietime_start > 300)
+	{
+		dietime_start = 0;
+		die = 0;
+	}
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
 
+	coEvents.clear();
+	CalcPotentialCollisions(coObjects, coEvents);float min_tx, min_ty, nx = 0, ny;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+	    // block 
+		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+		y += min_ty * dy + ny * 0.4f;
+
+		if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;
+		if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
 void CTorch::Render(Camera * camera)

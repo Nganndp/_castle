@@ -11,9 +11,6 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (active == false)
 		return;
 	CGameObject::Update(dt, coObjects);
-	
-	vy += TORCH_GRAVITY*dt;
-
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -41,24 +38,29 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (nx != 1)
 				x += min_tx * dx + nx * 0.2f;;
 
-			if (nx == 1)  //đụng trái	
+			if (nx == 1)  
 				x += dx;
-
+			if (state == ENEMY_STATE_SHEART)
+			{
+				if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
+			}
 			if (ny != 0) vy = 0;
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	vy += TORCH_GRAVITY * dt;
 
 	if (GetTickCount() - dietime_start > 200)
 	{
 		dietime_start = 0;
 		die = 0;
 	}
-	if (state != GHOUL_STATE_WALKING && die == 0)
+	if (state != ENEMY_STATE_MOVING && die == 0)
 	{
-		state = GHOUL_STATE_SHEART;
+		state = ENEMY_STATE_SHEART;
     }
-	if (state == GHOUL_STATE_WALKING)
+	if (state == ENEMY_STATE_MOVING)
 	{
 		if (isStop)
 			return;
@@ -66,6 +68,23 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vx = 0.052f;
 		else
 			vx = -0.052f;
+	}
+	if (state == ENEMY_STATE_SHEART)
+	{
+		if (isOnGround == false)
+		{
+			if (vx < 0 && x < FirstX)
+			{
+				x = FirstX; vx = -vx;
+			}
+
+			else if (vx > 0 && x > FirstX + 15)
+			{
+				x = FirstX + 15; vx = -vx;
+			}
+			vx = 0.05f;
+		}
+
 	}
 }
 
@@ -75,9 +94,7 @@ void CGhoul::SetState(int state)
 
 	switch (state)
 	{
-	case GHOUL_STATE_DIE:
-	case GHOUL_STATE_SHEART:
-	case GHOUL_STATE_IDLE:
+	case ENEMY_STATE_IDLE:
 		vx = 0;
 		break;
 	}
@@ -85,11 +102,10 @@ void CGhoul::SetState(int state)
 
 void CGhoul::Render(Camera * camera)
 {
-	//CGameObject::Render(camera);
 	if (active != true)
 		return;
 	int ani = 0;
-	 if (state == GHOUL_STATE_WALKING)
+	 if (state == ENEMY_STATE_MOVING)
 	 {
 		if (nx > 0)
 		{
@@ -97,7 +113,7 @@ void CGhoul::Render(Camera * camera)
 		}
 		else ani = GHOUL_ANI_WALKING_LEFT;
 	 }
-	 else if (state == GHOUL_STATE_SHEART)
+	 else if (state == ENEMY_STATE_SHEART)
 	 {
 		 ani = GHOUL_ANI_SHEART;
 	 }
@@ -115,7 +131,7 @@ void CGhoul::GetBoundingBox(float & left, float & top, float & right, float & bo
 		top = y;
 		right = x + 16;
 		bottom = y + 32;
-		if (state == GHOUL_STATE_SHEART)
+		if (state == ENEMY_STATE_SHEART)
 		{
 			right = x + 9;
 			bottom = y + 9;

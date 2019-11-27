@@ -19,11 +19,11 @@ void CAxe::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 		vy = -0.0093f * dt;
 
 	}
-	if (simon->nx > 0)
+	if (nx > 0)
 	{
 		vx = 0.005f * dt;
 	}
-	else if (simon->nx < 0)
+	else if (nx < 0)
 		vx = -0.005f * dt;
 }
 void CAxe::SetState(int state) {

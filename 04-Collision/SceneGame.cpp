@@ -8,7 +8,6 @@ SceneGame::SceneGame()
 	//Textures
 	CTextures* textures = CTextures::GetInstance();
 	textures->Load();
-
 	//Sprites
 	CSprites* sprites = CSprites::GetInstance();
 	sprites->Load();
@@ -383,11 +382,7 @@ void SceneGame::Update(DWORD dt)
 		InviObjects* InOb = dynamic_cast<InviObjects*>(stagechanger[i]);
 		if (SIMON->CheckCollision(InOb))
 		{
-			if (InOb->type == BRICK)
-			{
-				return;
-			}
-			else if (InOb->type == SC_TYPE_CHANGE_SCENE)
+			if (InOb->type == SC_TYPE_CHANGE_SCENE)
 			{
 				scene = 2;
 				stage = 1;
@@ -458,6 +453,18 @@ void SceneGame::Update(DWORD dt)
 					SpawnDelayStart();
 				}
 				
+			}
+			else if (InOb->type == BAT_SPAWNER)
+			{
+				if (spawndelay == 0)
+				{
+					bat = new CBat(D3DXVECTOR2(SIMON->GetPosition().x, SIMON->GetPosition().y - 5));
+					bat->nx = -1;
+					bat->SetPosition(camera->GetPosition().x + SCREEN_WIDTH, SIMON->GetPosition().y - 50);
+					enemy.push_back(bat);
+					SpawnDelayStart();
+				}
+
 			}
 			else if (InOb->type == STAIR_TYPE_RIGHT_UP_HELPER)
 			{
@@ -577,16 +584,18 @@ void SceneGame::Update(DWORD dt)
 	{
 		if (SIMON->CheckCollision(enemy.at(i)))
 		{
-			if (enemy.at(i)->type == GHOUL)
+			if (enemy.at(i)->GetState() == ENEMY_STATE_MOVING)
 			{
-				if (enemy.at(i)->GetState() == GHOUL_STATE_WALKING)
-				{
 					//SIMON->StartJump();
+				if (enemy.at(i)->type == BAT)
+			    {
+			       enemy.at(i)->StartDieTime();
+				   enemy.at(i)->SetState(ENEMY_STATE_DIE);
 				}
-				else if (enemy.at(i)->GetState() == GHOUL_STATE_SHEART)
-				{
-					enemy.erase(enemy.begin() + i);
-				}
+			}
+			else if (enemy.at(i)->GetState() == ENEMY_STATE_SHEART)
+			{
+				enemy.erase(enemy.begin() + i);
 			}
 		}
 	}
@@ -600,6 +609,7 @@ void SceneGame::Update(DWORD dt)
 			if (torch->GetState() == TORCH_STATE_NORMAL || torch->GetState() == TORCH_STATE_CANDLE)
 			{
 				torch->StartDieTime();
+				torch->FirstX = torch->x;
 				dagger->SetActive(false);
 				MS->MSUpDropTime++;
 				int a;
@@ -659,13 +669,11 @@ void SceneGame::Update(DWORD dt)
 		if (MS->CheckCollision(enemy.at(i))|| dagger->CheckCollision(enemy.at(i)) && dagger->active == true|| Axe->CheckCollision(enemy.at(i)) && Axe->active == true)
 		{
 			dagger->SetActive(false);
-            if (enemy.at(i)->type == GHOUL)
+			enemy.at(i)->FirstX = enemy.at(i)->x;
+            if (enemy.at(i)->GetState() == ENEMY_STATE_MOVING)
 			{
-				if (enemy.at(i)->GetState() == GHOUL_STATE_WALKING)
-				{
-					enemy.at(i)->StartDieTime();
-					enemy.at(i)->SetState(GHOUL_STATE_DIE);
-				}
+			   enemy.at(i)->StartDieTime();
+			   enemy.at(i)->SetState(ENEMY_STATE_DIE);
 			}
 		}
 	}
@@ -730,17 +738,14 @@ void SceneGame::Update(DWORD dt)
 	//Adjust enemy to camera
 	for (int i = 0; i < enemy.size(); i++)
 	{
-		if (enemy.at(i)->type == GHOUL)
-		{
-			if (enemy.at(i)->x < camera->GetPosition().x - 20 && enemy.at(i)->nx < 0)
+		if (enemy.at(i)->x < camera->GetPosition().x - 20 && enemy.at(i)->nx < 0)
 			{
 				enemy.erase(enemy.begin() + i);
 			}
-			else if (enemy.at(i)->x > camera->GetPosition().x + SCREEN_WIDTH && enemy.at(i)->nx > 0)
+		else if (enemy.at(i)->x > camera->GetPosition().x + SCREEN_WIDTH && enemy.at(i)->nx > 0)
 			{
 				enemy.erase(enemy.begin() + i);
 			}
-		}
 	}
 
 	//Adjust enemy to map

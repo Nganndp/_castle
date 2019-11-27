@@ -27,7 +27,7 @@ class CSimon: public CGameObject
 	bool active = true;
 	bool sit = false;
 	bool jumping = false;
-    bool onGround = true;
+   // bool onGround = true;
 	bool isOnStair = false;
 	bool isStairUp = true;
 	bool isThrowDagger = false;
@@ -51,6 +51,7 @@ public:
 		sitattack = 0;
 		changecolor = 0;
 		autowalking = 0;
+		isOnGround = true;
 		alpha = 255;
 		level = SIMON_LEVEL_MS_1;
 	}
@@ -88,7 +89,7 @@ public:
 	}
 	boolean GetOnGround()
 	{
-		return onGround;
+		return isOnGround;
 	}
 	boolean GetOnStair()
 	{
@@ -125,7 +126,7 @@ public:
 	}
 	void SetOnGround(boolean a)
 	{
-		onGround = a;
+		isOnGround = a;
 	}
 	void SetAlpha(int a)
 	{

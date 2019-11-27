@@ -11,7 +11,7 @@ public:
 	CFishman() :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Ghoulani.txt", this);
-		state = FISHMAN_STATE_WALKING;
+		state = ENEMY_STATE_MOVING;
 		type = FISHMAN;
 	};
 	~CFishman();

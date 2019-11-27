@@ -23,6 +23,7 @@
 #include "InviObjects.h"
 #include "Grid.h"
 #include "Ghoul.h"
+#include "Bat.h"
 
 #include<iostream>
 #include<fstream>
@@ -54,6 +55,7 @@ public:
 	CBrick* brick;
 	CTorch* torch;
 	CGhoul* ghoul;
+	CBat* bat;
 	TileMap* tile;
 	InviObjects* InOb;
 	Grid* grid;

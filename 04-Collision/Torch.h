@@ -15,6 +15,7 @@ public:
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Torchani.txt", this);
 		type = TORCH;
+		isOnGround = false;
 	};
 	int GetState()
 	{

@@ -48,11 +48,11 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		dietime_start = 0;
 		die = 0;
 	}
-	if (state != FISHMAN_STATE_WALKING && die == 0)
+	if (state != ENEMY_STATE_MOVING && die == 0)
 	{
-		state = FISHMAN_STATE_SHEART;
+		state = ENEMY_STATE_SHEART;
 	}
-	if (state == FISHMAN_STATE_WALKING)
+	if (state == ENEMY_STATE_MOVING)
 	{
 		if (isStop)
 			return;
@@ -69,9 +69,9 @@ void CFishman::SetState(int state)
 
 	switch (state)
 	{
-	case FISHMAN_STATE_DIE:
-	case FISHMAN_STATE_SHEART:
-	case FISHMAN_STATE_IDLE:
+	case ENEMY_STATE_DIE:
+	case ENEMY_STATE_SHEART:
+	case ENEMY_STATE_IDLE:
 		vx = 0;
 		break;
 	}
@@ -83,7 +83,7 @@ void CFishman::Render(Camera* camera)
 	if (active != true)
 		return;
 	int ani = 0;
-	if (state == FISHMAN_STATE_WALKING)
+	if (state == ENEMY_STATE_MOVING)
 	{
 		if (nx > 0)
 		{
@@ -91,7 +91,7 @@ void CFishman::Render(Camera* camera)
 		}
 		else ani = FISHMAN_ANI_WALKING_LEFT;
 	}
-	else if (state == FISHMAN_STATE_SHEART)
+	else if (state == ENEMY_STATE_SHEART)
 	{
 		ani = FISHMAN_ANI_SHEART;
 	}
@@ -111,7 +111,7 @@ void CFishman::GetBoundingBox(float& left, float& top, float& right, float& bott
 		top = y;
 		right = x + 16;
 		bottom = y + 32;
-		if (state == FISHMAN_STATE_SHEART)
+		if (state == ENEMY_STATE_SHEART)
 		{
 			right = x + 9;
 			bottom = y + 9;
