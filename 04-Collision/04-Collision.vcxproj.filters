@@ -43,6 +43,12 @@
     <Filter Include="Header Files\Scene">
       <UniqueIdentifier>{aca7cda5-bd63-475b-b415-1aa7d906e8de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Enemy">
+      <UniqueIdentifier>{0d36e03d-578f-4764-877b-fa204dc222aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enemy">
+      <UniqueIdentifier>{60c5e077-457b-45bd-8066-742a926cdb2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Simon.h">
@@ -78,9 +84,6 @@
     <ClInclude Include="Dagger.h">
       <Filter>Header Files\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="Axe.h">
-      <Filter>Header Files\Weapon</Filter>
-    </ClInclude>
     <ClInclude Include="HolyWater.h">
       <Filter>Header Files\Weapon</Filter>
     </ClInclude>
@@ -108,11 +111,17 @@
     <ClInclude Include="Grid.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Axe.h">
+      <Filter>Header Files\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Bat.h">
+      <Filter>Header Files\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Fishman.h">
+      <Filter>Header Files\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Ghoul.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,11 +191,14 @@
     <ClCompile Include="Grid.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Bat.cpp">
+      <Filter>Source Files\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Fishman.cpp">
+      <Filter>Source Files\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Ghoul.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

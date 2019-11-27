@@ -42,11 +42,16 @@ void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	//CGameObject::Update(dt, coObjects);
 	if (active == true)
 	{
-		if (state != TORCH_STATE_NORMAL && state != TORCH_STATE_CANDLE)
+		if (state != TORCH_STATE_NORMAL && state != TORCH_STATE_CANDLE && die ==0)
 		{
 			vy += TORCH_GRAVITY * dt;
 		}
 		CGameObject::Update(dt);
+		if (GetTickCount() - dietime_start > 300)
+		{
+			dietime_start = 0;
+			die = 0;
+		}
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -135,6 +140,10 @@ void CTorch::Render(Camera * camera)
 	if (state == TORCH_STATE_MONEY3)
 	{
 		ani = TORCH_ANI_MONEY3;
+	}
+	if (die != 0)
+	{
+		ani = TORCH_ANI_DESTROYED;
 	}
 	animations[ani]->Render(camera->transform(x,y), 255);
 		RenderBoundingBox(camera);

@@ -26,7 +26,7 @@ SceneGame::SceneGame()
 
 	//push back to list simon
 	simon.push_back(SIMON);
-	//simon.push_back(MS);
+	simon.push_back(MS);
 	simon.push_back(dagger);
     simon.push_back(Axe);
 }
@@ -113,13 +113,17 @@ void SceneGame::OnKeyDown(int KeyCode)
 		{
 			simon[i]->Setbboxcolor();
 		}
-		for (int i = 0; i < mapobjects.size(); i++)
+		for (int i = 0; i < torches.size(); i++)
 		{
-			mapobjects[i]->Setbboxcolor();
+			torches[i]->Setbboxcolor();
 		}
 		for (int i = 0; i < stagechanger.size(); i++)
 		{
 			stagechanger[i]->Setbboxcolor();
+		}
+		for (int i = 0; i < bricks.size(); i++)
+		{
+			bricks[i]->Setbboxcolor();
 		}
 		//ghoul->Setbboxcolor();
 		break;
@@ -233,17 +237,19 @@ void SceneGame::LoadResources()
 
 	if (scene == 1)
 	{
-		SIMON->SetPosition(10.0f, 154);
-		//ghoul->SetPosition(150, 154);
-		//ghoul->nx = -1;
+		SIMON->SetPosition(10, 154);
 		Tile = new TileMap(L"textures\\entrance_tilemap.png", ID_TEX_ENTRANCESTAGE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
 		LoadSceneObject(1);
-		for (UINT i = 0; i < mapobjects.size(); i++)
+		for (UINT i = 0; i < bricks.size(); i++)
 		{
-			grid->InsertIntoGrid(mapobjects.at(i));
+			grid->InsertIntoGrid(bricks.at(i));
 		}
-		for (UINT i = 0; i < stagechanger.size(); i++)  //list invisible simon
+		for (UINT i = 0; i < torches.size(); i++)
+		{
+			grid->InsertIntoGrid(torches.at(i));
+		}
+		for (UINT i = 0; i < stagechanger.size(); i++)  
 		{
 			grid->InsertIntoGrid(stagechanger.at(i));
 		}
@@ -251,15 +257,20 @@ void SceneGame::LoadResources()
 	else if (scene == 2)
 	{
 		stagechanger.clear();
-		mapobjects.clear();
+		torches.clear();
+		bricks.clear();
 		//SIMON->SetPosition(10.0f, 168);
-		SIMON->SetPosition(645, 168);
+		SIMON->SetPosition(10, 168);
 		Tile = new TileMap(L"textures\\castle_tilemap.png", ID_TEX_CASTLE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
-		for (UINT i = 0; i < mapobjects.size(); i++)
+		for (UINT i = 0; i < bricks.size(); i++)
 		{
-			grid->InsertIntoGrid(mapobjects.at(i));
+			grid->InsertIntoGrid(bricks.at(i));
+		}
+		for (UINT i = 0; i < torches.size(); i++)
+		{
+			grid->InsertIntoGrid(torches.at(i));
 		}
 		for (UINT i = 0; i < stagechanger.size(); i++)
 		{
@@ -279,8 +290,9 @@ void SceneGame::Update(DWORD dt)
 	//Update Objects
 	vector<LPGAMEOBJECT> coObjects;
 	grid->GetListCollisionFromGrid(camera, ObjectsFromGrid);
-	mapobjects.clear();
+	torches.clear();
 	stagechanger.clear();
+	bricks.clear();
 	for (int i = 0; i < ObjectsFromGrid.size(); i++)
 	{
 		coObjects.push_back(ObjectsFromGrid[i]);
@@ -288,49 +300,94 @@ void SceneGame::Update(DWORD dt)
 
 	for (int i = 0; i < coObjects.size(); i++)
 	{
-		if(coObjects.at(i)->type == TORCH || coObjects.at(i)->type == BRICK)
-		mapobjects.push_back(coObjects[i]);
-		if (coObjects.at(i)->type == BRICK)
-			bricks.push_back(coObjects[i]);
-		else {
+		if(coObjects.at(i)->type == BRICK)
+		bricks.push_back(coObjects[i]);
+		else if (coObjects.at(i)->type == TORCH)
+			torches.push_back(coObjects[i]);
+		else
 			stagechanger.push_back(coObjects[i]);
-		}
 	}
-	for (int i = 0; i < mapobjects.size(); i++)
+	for (int i = 0; i < torches.size(); i++)
 	{
-		mapobjects[i]->Update(dt, &mapobjects);
+		torches[i]->Update(dt, &bricks);
 	}
 	for (int i = 0; i < simon.size(); i++)
 	{
-		simon[i]->Update(dt, &mapobjects);
+		simon[i]->Update(dt, &bricks);
 	}
 	for (int i = 0; i < enemy.size(); i++)
 	{
 		enemy[i]->Update(dt, &bricks);
 	}
-	MS->Update(dt, &mapobjects);
-	//Simon collsion with Invisible Objects
-	vector<LPGAMEOBJECT> InvObjects;
-	for (UINT i = 0; i < stagechanger.size(); i++)
-	{
-		if (dynamic_cast<InviObjects*>(stagechanger.at(i)))
-			InvObjects.push_back(stagechanger.at(i));
-	}
-	for (UINT i = 0; i < InvObjects.size(); i++)
-	{
-		InviObjects* InOb = dynamic_cast<InviObjects*>(InvObjects[i]);
-		if (SIMON->CheckCollision(InOb) != true)
-		{
-			InOb->SetTouchable(true);
 
+	//Simon collision with torch
+	for (int i = 0; i < torches.size(); i++)
+	{
+		CTorch* torch = dynamic_cast<CTorch*>(torches[i]);
+		if (SIMON->CheckCollision(torch))
+		{
+			switch (torch->GetState())
+			{
+			case TORCH_STATE_NORMAL:
+			case TORCH_STATE_CANDLE:
+				break;
+			case TORCH_STATE_LHEART:
+				torch->SetActive(false);
+				break;
+			case TORCH_STATE_SHEART:
+				torch->SetActive(false);
+				break;
+			case TORCH_STATE_CROSS:
+				torch->SetActive(false);
+				SIMON->SetEatCross(true);
+				break;
+			case TORCH_STATE_MONEY1:
+				torch->SetActive(false);
+			case TORCH_STATE_MSUP:
+				SIMON->StartChangeColor();
+				torch->SetActive(false);
+				if (SIMON->GetLevel() == SIMON_LEVEL_MS_1)
+				{
+					SIMON->SetLevel(SIMON_LEVEL_MS_2);
+				}
+				else if (SIMON->GetLevel() == SIMON_LEVEL_MS_2)
+				{
+					SIMON->SetLevel(SIMON_LEVEL_MS_3);
+				}
+				break;
+			case TORCH_STATE_DAGGER:
+				torch->SetActive(false);
+				SIMON->SetThrowDagger(true);
+				SIMON->SetThrowAxe(false);
+				SIMON->SetThrowHolyWater(false);
+				break;
+			case TORCH_STATE_AXE:
+				torch->SetActive(false);
+				SIMON->SetThrowDagger(false);
+				SIMON->SetThrowAxe(true);
+				SIMON->SetThrowHolyWater(false);
+				break;
+			case TORCH_STATE_HOLYWATER:
+				torch->SetActive(false);
+				SIMON->SetThrowDagger(false);
+				SIMON->SetThrowAxe(false);
+				SIMON->SetThrowHolyWater(true);
+				break;
+			}
 		}
 	}
-	for (int i = 0; i < InvObjects.size(); i++)
+
+	//Simon collsion with Invisible Objects
+	for (int i = 0; i < stagechanger.size(); i++)
 	{
-		InviObjects* InOb = dynamic_cast<InviObjects*>(InvObjects[i]);
+		InviObjects* InOb = dynamic_cast<InviObjects*>(stagechanger[i]);
 		if (SIMON->CheckCollision(InOb))
 		{
-			if (InOb->type == SC_TYPE_CHANGE_SCENE)
+			if (InOb->type == BRICK)
+			{
+				return;
+			}
+			else if (InOb->type == SC_TYPE_CHANGE_SCENE)
 			{
 				scene = 2;
 				stage = 1;
@@ -388,14 +445,14 @@ void SceneGame::Update(DWORD dt)
 					{
 						ghoul = new CGhoul();
 						ghoul->nx = 1;
-						ghoul->SetPosition(camera->GetPosition().x - 20 - i * 20, 170);
+						ghoul->SetPosition(camera->GetPosition().x - 20 - i * 20, 150);
 						enemy.push_back(ghoul);
 					}
 					for (int i = 0; i < (4 - a); i++)
 					{
 						ghoul = new CGhoul();
 						ghoul->nx = -1;
-						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 20, 170);
+						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 20, 150);
 						enemy.push_back(ghoul);
 					}
 					SpawnDelayStart();
@@ -418,7 +475,6 @@ void SceneGame::Update(DWORD dt)
 			}
 			else if (InOb->type == STAIR_TYPE_UP_RIGHT)
 			{
-				InOb->SetTouchable(false);
 				if (game->IsKeyDown(DIK_UP))
 				{
 					if (InOb->x - SIMON->x <= 5)
@@ -442,7 +498,6 @@ void SceneGame::Update(DWORD dt)
 			}
 			else if (InOb->type == STAIR_TYPE_DOWN_LEFT)
 			{
-				InOb->SetTouchable(false);
 				if (game->IsKeyDown(DIK_DOWN))
 				{
 					if (SIMON->x >= InOb->x - 14 || SIMON->x < InOb->x - 14 && SIMON->GetOnStair() == false)
@@ -469,9 +524,7 @@ void SceneGame::Update(DWORD dt)
 			}
 			else if (InOb->type == STAIR_TYPE_UP_LEFT)
 			{
-				InOb->SetTouchable(false);
-
-				if (game->IsKeyDown(DIK_UP))
+			if (game->IsKeyDown(DIK_UP))
 				{
 					if(InOb->x - SIMON->x >= 20)
 					{
@@ -494,7 +547,6 @@ void SceneGame::Update(DWORD dt)
 			}
 			else if (InOb->type == STAIR_TYPE_DOWN_RIGHT)
 			{
-				InOb->SetTouchable(false);
 				if (game->IsKeyDown(DIK_DOWN) && SIMON->GetOnStair() == false)
 				{
 					if (SIMON->x >= InOb->x - 7 || SIMON->x < InOb->x - 7 && SIMON->GetOnStair() == false)
@@ -539,6 +591,68 @@ void SceneGame::Update(DWORD dt)
 		}
 	}
 
+	//Weapon collision with torch
+	for (int i = 0; i < torches.size(); i++)
+	{
+		CTorch* torch = dynamic_cast<CTorch*>(torches[i]);
+		if (MS->CheckCollision(torch) || dagger->CheckCollision(torch))
+		{
+			if (torch->GetState() == TORCH_STATE_NORMAL || torch->GetState() == TORCH_STATE_CANDLE)
+			{
+				torch->StartDieTime();
+				dagger->SetActive(false);
+				MS->MSUpDropTime++;
+				int a;
+				srand(time(NULL));
+				a = rand() % 30 + 1;
+				if (MS->MSUpDropTime < 3)
+				{
+					torch->SetState(TORCH_STATE_MSUP);
+				}
+				else
+					switch (a)
+					{
+					case 1:
+					case 2:
+					case 3:
+					case 4:
+					case 5:
+					case 6:
+					case 7:
+					case 8:
+					case 9:
+					case 10:
+					case 11:
+					case 12:
+					case 13:
+					case 14:
+					case 15:
+					case 16:
+					case 17:
+					case 18:
+					case 19:
+					case 20:
+					case 21:
+					case 22:
+					case 23:
+					case 24:
+					case 25:
+						torch->SetState(TORCH_STATE_SHEART); break;
+					case 26:
+						torch->SetState(TORCH_STATE_LHEART); break;
+					case 27:
+						torch->SetState(TORCH_STATE_DAGGER); break;
+					case 28:
+						torch->SetState(TORCH_STATE_HOLYWATER); break;
+					case 29:
+						torch->SetState(TORCH_STATE_CROSS); break;
+					case 30:
+						torch->SetState(TORCH_STATE_AXE); break;
+					}
+			}
+		}
+	}
+
 	//Weapon collision with enemy
 	for (int i = 0; i < enemy.size(); i++)
 	{
@@ -552,14 +666,12 @@ void SceneGame::Update(DWORD dt)
 					enemy.at(i)->StartDieTime();
 					enemy.at(i)->SetState(GHOUL_STATE_DIE);
 				}
-				//enemy.clear();
-				//enemy.erase(enemy.begin() + i);
 			}
 		}
 	}
 
 
-	//adjust Simon to Camera
+	//Adjust Simon to Camera
 	if (SIMON->x - camera->GetPosition().x <= 100 && SimonMove == true)
 	{
 		SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME * 2);
@@ -579,7 +691,7 @@ void SceneGame::Update(DWORD dt)
 	}
 	camera->Update(dt, scene, stage);
 
-	//adjust Simon to map
+	//Adjust Simon to map
 	if (camera->GetCamMoving() == false)
 	{
 		if (scene == 1)
@@ -615,7 +727,7 @@ void SceneGame::Update(DWORD dt)
 		}
 	}
 
-	//Enemy to camera
+	//Adjust enemy to camera
 	for (int i = 0; i < enemy.size(); i++)
 	{
 		if (enemy.at(i)->type == GHOUL)
@@ -702,15 +814,14 @@ void SceneGame::Render()
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 		Tile->DrawMap(camera);
-		for (int i = 0; i < mapobjects.size(); i++)
-			mapobjects[i]->Render(camera);
+		for (int i = 0; i < torches.size(); i++)
+			torches[i]->Render(camera);
 		for (int i = 0; i < stagechanger.size(); i++)
 			stagechanger[i]->Render(camera);
 		for (int i = 0; i < enemy.size(); i++)
 			enemy[i]->Render(camera);
 		for (int i = 0; i < simon.size(); i++)
 			simon[i]->Render(camera);
-		MS->Render(camera);
 		spriteHandler->End();
         d3ddv->EndScene();
 	}
@@ -742,13 +853,13 @@ void SceneGame::LoadObjectFromFile(string source)
 						brick = new CBrick();
 						brick->SetMulwidth(arr[3]);
 						brick->SetPosition(arr[1], arr[2]);
-						mapobjects.push_back(brick);
+						bricks.push_back(brick);
 						break;
 					case TORCH:
 						torch = new CTorch();
 						torch->SetPosition(arr[1], arr[2]);
 						torch->SetState(arr[3]);
-						mapobjects.push_back(torch);
+						torches.push_back(torch);
 						break;
 					case STAGECHANGER:
 						InOb = new InviObjects();

@@ -2,27 +2,31 @@
 #include "LoadAnimations.h"
 #include "GameObject.h"
 
-class CGhoul:public CGameObject
+class CBat :public CGameObject
 {
 	bool isStop = false;
 	//int die = 0;
 	//DWORD dietime_start;
 public:
-	CGhoul():CGameObject()
+	CBat(D3DXVECTOR2 pos) :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Ghoulani.txt", this);
 		state = GHOUL_STATE_WALKING;
-		type = GHOUL;
+		type = BAT;
 		active = true;
+		FirstY = pos.y;
+		vx = 0.04f;
+		vy = 0.03f;
 	};
-	~CGhoul();
+	~CBat();
+	float FirstY;
 	bool GetStop()
 	{
 		return isStop;
 	}
 	void SetStop(bool a) { isStop = a; }
 	void SetState(int state);
-	void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
+	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render(Camera* camera);
 
 	RECT GetBound()
@@ -36,9 +40,9 @@ public:
 		rect.bottom = b;
 		return rect;
 	}
-	void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
-	
+
 };
 
 

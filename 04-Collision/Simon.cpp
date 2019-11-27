@@ -79,22 +79,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x += dx;
 		y += dy;
 	}
-	//check overlap
-	vector<LPGAMEOBJECT> tor;
-	for (UINT i = 0; i < coObjects->size(); i++)
-	{
-		if (dynamic_cast<CTorch*>(coObjects->at(i)))
-			tor.push_back(coObjects->at(i));
-	}
-	for (UINT i = 0; i < tor.size(); i++)
-	{
-		CTorch* torch = dynamic_cast<CTorch*>(tor[i]);
-		if (CheckCollision(torch) != true)
-		{
-			torch->SetTouchable(true);
-
-		}
-	}
 		float min_tx, min_ty, nx = 0, ny;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
@@ -115,65 +99,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					jumpmove = 0;
 				}
 				jump_start = 10000;
-			}
-			else if (dynamic_cast<CTorch*>(e->obj))
-			{
-				if ((e->obj)->active == true)
-				{
-					CTorch* tor = dynamic_cast<CTorch*>(e->obj);
-					if (CheckOverlap(tor) != true)
-					{
-						switch (tor->GetState())
-						{
-						case TORCH_STATE_NORMAL:
-						case TORCH_STATE_CANDLE:
-							tor->SetTouchable(false); 
-							break;
-						case TORCH_STATE_LHEART:
-							tor->SetActive(false);
-							break;
-						case TORCH_STATE_SHEART:
-							tor->SetActive(false);
-							break;
-						case TORCH_STATE_CROSS:
-							tor->SetActive(false);
-							isEatCross = true;
-							break;
-						case TORCH_STATE_MONEY1:
-							tor->SetActive(false);
-						case TORCH_STATE_MSUP:
-							StartChangeColor();
-							tor->SetActive(false);
-							if (this->GetLevel() == SIMON_LEVEL_MS_1)
-							{
-								this->SetLevel(SIMON_LEVEL_MS_2);
-							}
-							else if (this->GetLevel() == SIMON_LEVEL_MS_2)
-							{
-								this->SetLevel(SIMON_LEVEL_MS_3);
-							}
-							break;
-						case TORCH_STATE_DAGGER:
-							tor->SetActive(false);
-							isThrowDagger = true;
-							isThrowAxe = false;
-							isThrowHolyWater = false;
-							break;
-						case TORCH_STATE_AXE:
-							tor->SetActive(false);
-							isThrowAxe = true;
-							isThrowDagger = false;
-							isThrowHolyWater = false;
-							break;
-						case TORCH_STATE_HOLYWATER:
-							tor->SetActive(false);
-							isThrowAxe = false;
-							isThrowDagger = false;
-							isThrowHolyWater = true;
-							break;
-						}
-					}
-				}
 			}
 
 		}

@@ -2,27 +2,27 @@
 #include "LoadAnimations.h"
 #include "GameObject.h"
 
-class CGhoul:public CGameObject
+class CFishman :public CGameObject
 {
 	bool isStop = false;
-	//int die = 0;
-	//DWORD dietime_start;
+	int jump = 0;
+	DWORD jump_start;
 public:
-	CGhoul():CGameObject()
+	CFishman() :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Ghoulani.txt", this);
-		state = GHOUL_STATE_WALKING;
-		type = GHOUL;
-		active = true;
+		state = FISHMAN_STATE_WALKING;
+		type = FISHMAN;
 	};
-	~CGhoul();
+	~CFishman();
+	void StartJump() { jump = 1; jump_start = GetTickCount(); }
 	bool GetStop()
 	{
 		return isStop;
 	}
 	void SetStop(bool a) { isStop = a; }
 	void SetState(int state);
-	void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
+	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render(Camera* camera);
 
 	RECT GetBound()
@@ -36,9 +36,9 @@ public:
 		rect.bottom = b;
 		return rect;
 	}
-	void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
-	
+
 };
 
 

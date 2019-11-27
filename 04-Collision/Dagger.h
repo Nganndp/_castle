@@ -14,13 +14,14 @@ public:
 	DWORD attack_start;
 	int attackStart;
 	bool waiting = false;
+	int MSUpDropTime;
 public:
 	CDagger() :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Daggerani.txt", this);
 		attack = 0;
 		active = false;
-
+		MSUpDropTime = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	void Render(Camera* camera);

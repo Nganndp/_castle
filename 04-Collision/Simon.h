@@ -52,7 +52,7 @@ public:
 		changecolor = 0;
 		autowalking = 0;
 		alpha = 255;
-		level = SIMON_LEVEL_MS_3;
+		level = SIMON_LEVEL_MS_1;
 	}
 	void StandUp();
 	void SitDown();

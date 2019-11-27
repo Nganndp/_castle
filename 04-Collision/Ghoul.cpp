@@ -33,9 +33,9 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float min_tx, min_ty, nx = 0, ny;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
+		
 		// block 
-		y += min_ty * dy + ny * 0.2f;
+			y += min_ty * dy + ny * 0.2f;
 
 			// block 
 			if (nx != 1)
@@ -44,7 +44,7 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (nx == 1)  //đụng trái	
 				x += dx;
 
-		if (ny != 0) vy = 0;
+			if (ny != 0) vy = 0;
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

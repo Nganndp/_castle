@@ -60,13 +60,13 @@ public:
 	CAnimations* animations;
 	CSprites* sprites;
 	LPANIMATION ani;
-	vector<LPGAMEOBJECT> mapobjects;
-	vector<LPGAMEOBJECT> stagechanger;
 	vector<LPGAMEOBJECT> simon;
-	vector<LPGAMEOBJECT> ObjectsFromGrid;
-	vector<LPGAMEOBJECT> enemy;
+	vector<LPGAMEOBJECT> torches;
+	vector<LPGAMEOBJECT> stagechanger;
 	vector<LPGAMEOBJECT> bricks;
-	
+	vector<LPGAMEOBJECT> enemy;
+    vector<LPGAMEOBJECT> ObjectsFromGrid;
+
 	bool castle = false;
 	bool SimonMove = false;
 	int scene;
