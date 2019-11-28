@@ -24,6 +24,8 @@
 #include "Grid.h"
 #include "Ghoul.h"
 #include "Bat.h"
+#include "Fishman.h"
+#include "Panther.h"
 
 #include<iostream>
 #include<fstream>
@@ -56,6 +58,8 @@ public:
 	CTorch* torch;
 	CGhoul* ghoul;
 	CBat* bat;
+	CFishman* fishman;
+	CPanther* panther;
 	TileMap* tile;
 	InviObjects* InOb;
 	Grid* grid;

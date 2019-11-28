@@ -138,6 +138,7 @@
     <ClInclude Include="debug.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Panther.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="InviObjects.h" />
@@ -164,6 +165,7 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Panther.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="InviObjects.cpp" />

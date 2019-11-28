@@ -236,6 +236,9 @@ void SceneGame::LoadResources()
 
 	if (scene == 1)
 	{
+		stagechanger.clear();
+		torches.clear();
+		bricks.clear();
 		SIMON->SetPosition(10, 154);
 		Tile = new TileMap(L"textures\\entrance_tilemap.png", ID_TEX_ENTRANCESTAGE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
@@ -454,14 +457,39 @@ void SceneGame::Update(DWORD dt)
 				}
 				
 			}
+			//else if (InOb->type == BAT_SPAWNER)
+			//{
+			//	if (spawndelay == 0)
+			//	{
+			//		bat = new CBat(D3DXVECTOR2(SIMON->GetPosition().x, SIMON->GetPosition().y - 5));
+			//		bat->nx = -1;
+			//		bat->SetPosition(camera->GetPosition().x + SCREEN_WIDTH, SIMON->GetPosition().y - 50);
+			//		enemy.push_back(bat);
+			//		SpawnDelayStart();
+			//	}
+
+			//}
+			//else if (InOb->type == BAT_SPAWNER)
+			//{
+			//	if (spawndelay == 0)
+			//	{
+			//		fishman = new CFishman(D3DXVECTOR2(InOb->x - 30, camera->GetPosition().y + SCREEN_HEIGHT -30));
+			//		fishman->nx = -1;
+			//		fishman->SetPosition(InOb->x - 30, /*camera->GetPosition().y + SCREEN_HEIGHT - 30*/InOb->y - 30);
+			//		//fishman->StartJump();
+			//		enemy.push_back(fishman);
+			//		SpawnDelayStart();
+			//	}
+
+			//}
 			else if (InOb->type == BAT_SPAWNER)
 			{
 				if (spawndelay == 0)
 				{
-					bat = new CBat(D3DXVECTOR2(SIMON->GetPosition().x, SIMON->GetPosition().y - 5));
-					bat->nx = -1;
-					bat->SetPosition(camera->GetPosition().x + SCREEN_WIDTH, SIMON->GetPosition().y - 50);
-					enemy.push_back(bat);
+					panther = new CPanther(SIMON, InOb->x + 110);
+					panther->nx = -1;
+					panther->SetPosition(InOb->x + 100, /*camera->GetPosition().y + SCREEN_HEIGHT - 30*/InOb->y - 30);
+					enemy.push_back(panther);
 					SpawnDelayStart();
 				}
 
@@ -674,6 +702,7 @@ void SceneGame::Update(DWORD dt)
 			{
 			   enemy.at(i)->StartDieTime();
 			   enemy.at(i)->SetState(ENEMY_STATE_DIE);
+			   enemy.at(i)->isOnGround = false;
 			}
 		}
 	}
@@ -740,7 +769,11 @@ void SceneGame::Update(DWORD dt)
 	{
 		if (enemy.at(i)->x < camera->GetPosition().x - 20 && enemy.at(i)->nx < 0)
 			{
-				enemy.erase(enemy.begin() + i);
+				if (enemy.at(i)->type == PANTHER)
+				{
+					enemy.at(i)->nx = 1;
+				}
+				else enemy.erase(enemy.begin() + i);
 			}
 		else if (enemy.at(i)->x > camera->GetPosition().x + SCREEN_WIDTH && enemy.at(i)->nx > 0)
 			{

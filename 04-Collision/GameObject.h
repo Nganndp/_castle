@@ -56,13 +56,16 @@ public:
 	int nx;
 	int bboxcolor;
 	int die = 0;
+	int action = 0;
 	DWORD dietime_start;
+	DWORD action_start;
 
 	int state;
 	bool active = true;
 	bool isTouchable;
 	bool isOnGround;
 	bool isDie;
+	
 	DWORD dt;
 	CTextures* texture;
 	CSprite* sprite;
@@ -93,6 +96,7 @@ public:
 		isDie = a;
 	}
 	void StartDieTime() { die = 1; dietime_start = GetTickCount(); }
+	void StartAction() { action = 1; action_start = GetTickCount(); }
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	D3DXVECTOR2 GetPosition() { return D3DXVECTOR2(x, y); }

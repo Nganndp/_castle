@@ -1,163 +1,99 @@
 ﻿#include "Panther.h"
 
 
-
-CPanther::CPanther(CSimon *Simon, float _firstX)
-{
-	mSimon = Simon;
-	//nx = -1;
-	firstX = _firstX;
-
-	this->AddAnimation(105); //idle
-	this->AddAnimation(106); //run
-	this->AddAnimation(823); //jump
-
-	//freezed
-	this->AddAnimation(112); //run
-
-}
-
 CPanther::~CPanther()
 {
 }
 
 void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (isDeleted)
+
+	if (active == false)
 		return;
-
-	if (state == STATE_RUNNING || state == STATE_JUMPING || state == STATE_FALLING)
-		CGameObject::Update(dt, coObjects);
-
-	//fall down
-	vy += 0.0035f*dt;
-
-
-	if ((this->x - mSimon->x) < 80 && state != STATE_RUNNING && state != STATE_FALLING) //Simon đến gần
-	{
-		this->SetState(STATE_JUMPING);
-		isOnGround = false;
-	}
-	if (abs(this->firstX - this->x) >= 30 && state != STATE_RUNNING)
-	{
-		this->SetState(STATE_FALLING);
-	}
-	if (state == STATE_FALLING && isOnGround == true)
-	{
-		this->SetState(STATE_RUNNING);
-	}
-
-
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
-	coEvents.clear();
-
-	CalcPotentialCollisions(coObjects, coEvents);
-
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-	{	
-		if (!isFreezed && !isStop)
+	CGameObject::Update(dt, coObjects);
+		vy += TORCH_GRAVITY * dt;
+		if ((this->x - Simon->x) < 80 && state ==ENEMY_STATE_JUMPING || (this->x - Simon->x) < 80 && state == ENEMY_STATE_IDLE)
 		{
-			x += dx; //dx=vx*dt
-			y += dy;
+			this->SetState(ENEMY_STATE_JUMPING);
+			isOnGround = false;
 		}
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
-
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-		// block 		
-		y += min_ty * dy + ny * 0.2f;
-
-		if (nx == -1 || nx == 1) 
-		{ 
-			x += dx; 			
-		}
-	
-		if (ny == 1)
+		if (abs(this->jumprange - this->x) >= 30 && state == ENEMY_STATE_JUMPING)
 		{
-			y += dy;
+			this->SetState(ENEMY_STATE_FALLING);
 		}
-		if (ny == -1)
-		{	
-			isOnGround = true;
-			vy = 0;
-		}
-	}
-
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-
-
-	if (vx < 0 && firstX - x >= 155)
-	{
-		nx = 1;
-		x = x + 25;
-		vx = -vx;
-	}
-
-}
-
-void CPanther::Render(Camera * camera)
-{
-	if (state == STATE_RUNNING)
-	{
-		if (x - camera->GetPosition().x <= 0 || x - camera->GetPosition().x >= 320)
+		if (state == ENEMY_STATE_FALLING && isOnGround == true)
 		{
-			isDeleted = true;
-			isOutOfCamera = true;
-			return;
+			this->SetState(ENEMY_STATE_MOVING);
 		}
-	}
 
+		if (state == ENEMY_STATE_SHEART)
+		{
+			if (isOnGround == false)
+			{
+				if (vx < 0 && x < FirstX)
+				{
+					x = FirstX; vx = -vx;
+				}
 
+				else if (vx > 0 && x > FirstX + 15)
+				{
+					x = FirstX + 15; vx = -vx;
+				}
+				vx = 0.05f;
+			}
 
-	int ani = 0; //panther idle
+		}
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
 
-	if (state == STATE_RUNNING)
-	{
-		if (isFreezed || isStop)
-			ani = 3;
+		coEvents.clear();
+
+		CalcPotentialCollisions(coObjects, coEvents);
+
+		// No collision occured, proceed normally
+		if (coEvents.size() == 0)
+		{
+			if (!isStop)
+			{
+				x += dx; //dx=vx*dt
+				y += dy;
+			}
+		}
 		else
-			ani = 1;
-	}
-	else if (state == STATE_JUMPING || state == STATE_FALLING)
-		ani = 2;
+		{
+			float min_tx, min_ty, nx = 0, ny;
 
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-	if(nx==-1)
-		animations[ani]->Render(camera->transform(x, y));
-	else 
-		animations[ani]->Render(camera->transform(x, y),255,1);
+			// block 		
+			y += min_ty * dy + ny * 0.2f;
 
-	RenderBoundingBox(camera);
-}
+			if (nx == -1 || nx == 1)
+			{
+				x += dx;
+			}
 
-RECT CPanther::GetBound()
-{
-	return CGameObject::GetBound();
-}
+			if (ny == 1)
+			{
+				y += dy;
+			}
+			if (ny == -1)
+			{
+				isOnGround = true;
+				vy = 0;
+			}
+		}
 
-void CPanther::GetBoundingBox(float & left, float & top, float & right, float & bottom)
-{
-	if (nx == -1)
-	{
-		left = x;
-		top = y;
-		right = x + 25;
-		bottom = y + 16;
-	}
-	else 
-	{
-		left = x-25;
-		top = y+1;
-		right = x;
-		bottom = y + 16;
-	}
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+		if (GetTickCount() - dietime_start > 200)
+		{
+			dietime_start = 0;
+			die = 0;
+		}
+		if (state == ENEMY_STATE_DIE && die == 0)
+		{
+			this->SetState(ENEMY_STATE_SHEART);
+		}
 }
 
 void CPanther::SetState(int state)
@@ -166,14 +102,18 @@ void CPanther::SetState(int state)
 
 	switch (state)
 	{
-	case STATE_RUNNING:
+	case ENEMY_STATE_DIE:
+	case ENEMY_STATE_SHEART:
+		vx = 0;
+		break;
+	case ENEMY_STATE_MOVING:
 		if (nx < 0)
-			vx = -0.23f;
-		else 
-			vx = 0.23f;
+		vx = -0.23f;
+		else
+		vx = 0.23f;
 		break;
 
-	case STATE_JUMPING:
+	case ENEMY_STATE_JUMPING:
 		if (nx < 0)
 		{
 			vy = -0.1f;
@@ -186,8 +126,48 @@ void CPanther::SetState(int state)
 		}
 		break;
 
-	case STATE_FALLING:
+	case ENEMY_STATE_FALLING:
 		vy = 0.12f;
 		break;
+	}
+}
+
+void CPanther::Render(Camera* camera)
+{
+	if (active != true)
+		return;
+	int ani = 0;
+	if (state == ENEMY_STATE_MOVING)
+	{
+		if (nx > 0)
+		{
+			ani = PANTHER_ANI_RUNNING_RIGHT;
+		}
+		else ani = PANTHER_ANI_RUNNING_LEFT;
+	}
+	else if (state == ENEMY_STATE_SHEART)
+	{
+		ani = PANTHER_ANI_SHEART;
+	}
+	else if (state == ENEMY_STATE_JUMPING || state == ENEMY_STATE_FALLING)
+		ani = PANTHER_ANI_JUMPING;
+    if (die != 0)
+	{
+		ani = PANTHER_ANI_DIE;
+	}
+	animations[ani]->Render(camera->transform(x, y), 255);
+	RenderBoundingBox(camera);
+}
+
+void CPanther::GetBoundingBox(float& left, float& top, float& right, float& bottom)
+{
+	left = x + 1;
+	top = y;
+	right = x + 34;
+	bottom = y + 18;
+	if (state == ENEMY_STATE_SHEART)
+	{
+		right = x + 9;
+		bottom = y + 9;
 	}
 }

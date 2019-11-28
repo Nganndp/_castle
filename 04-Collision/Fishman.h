@@ -8,11 +8,12 @@ class CFishman :public CGameObject
 	int jump = 0;
 	DWORD jump_start;
 public:
-	CFishman() :CGameObject()
+	CFishman(D3DXVECTOR2 pos) :CGameObject()
 	{
-		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Ghoulani.txt", this);
+		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Fishmanani.txt", this);
 		state = ENEMY_STATE_MOVING;
 		type = FISHMAN;
+		FirstX = pos.x;
 	};
 	~CFishman();
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }

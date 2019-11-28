@@ -5,8 +5,6 @@
 class CGhoul:public CGameObject
 {
 	bool isStop = false;
-	//int die = 0;
-	//DWORD dietime_start;
 public:
 	CGhoul():CGameObject()
 	{
