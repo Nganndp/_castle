@@ -69,19 +69,18 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (isOnGround == false)
 		{
-			if (vx < 0 && x < FirstX)
+			if (vx < 0 && x < FirstX - 15)
 			{
-				x = FirstX; vx = -vx;
+				x = FirstX - 15; vx = -vx;
 			}
 
 			if (vx > 0 && x > FirstX + 15)
 			{
 				x = FirstX + 15; vx = -vx;
 			}
-			vy += TORCH_GRAVITY * dt;
-			vx = 0.05f;
+			vy = GRAVITY * dt;
+			vx = -0.05f;
 		}
-
 	}
 }
 

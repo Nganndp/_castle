@@ -14,7 +14,7 @@ public:
 #define SPAWN_DELAY_TIMER 15000
 
 #define MAX_FRAME_RATE 120
-
+#define GRAVITY 0.0015f
 #define ID_TEX_SIMON 1
 #define ID_TEX_MISC 2
 #define ID_TEX_TORCH 3
@@ -100,11 +100,9 @@ public:
 #define BRICK 0
 #define TORCH 1
 #define STAGECHANGER 3
-#define TORCH_TYPE 10
 	//Torch
 #define TORCH_BBOX_WIDTH 16
 #define TORCH_BBOX_HEIGHT 15
-#define TORCH_GRAVITY 0.0001f
 #define TORCH_STATE_NORMAL 0
 #define TORCH_STATE_LHEART 1
 #define TORCH_STATE_SHEART 2

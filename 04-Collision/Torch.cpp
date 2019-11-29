@@ -44,12 +44,12 @@ void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		return;
 	if (state != TORCH_STATE_NORMAL && state != TORCH_STATE_CANDLE && die ==0)
 	{
-		vy += TORCH_GRAVITY * dt;
+		vy = GRAVITY * dt;
 	if (isOnGround == false)
 	    {
-		if (vx < 0 && x < FirstX)
+		if (vx < 0 && x < FirstX-15)
 		{
-	    	x = FirstX; vx = -vx;
+	    	x = FirstX-15; vx = -vx;
 		}
         else if (vx > 0 && x > FirstX + 15)
 		{
@@ -57,7 +57,7 @@ void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 		if (state == TORCH_STATE_SHEART || state == TORCH_STATE_LHEART)
 		{
-			vx = 0.04f;
+			vx = -0.05f;
 		}
 		else vx = 0;
 		}

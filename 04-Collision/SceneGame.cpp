@@ -443,32 +443,36 @@ void SceneGame::Update(DWORD dt)
 					{
 						ghoul = new CGhoul();
 						ghoul->nx = 1;
-						ghoul->SetPosition(camera->GetPosition().x - 20 - i * 20, 150);
+						ghoul->SetPosition(camera->GetPosition().x - 20 - i * 20, 170);
 						enemy.push_back(ghoul);
 					}
 					for (int i = 0; i < (4 - a); i++)
 					{
 						ghoul = new CGhoul();
 						ghoul->nx = -1;
-						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 20, 150);
+						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 20, 170);
 						enemy.push_back(ghoul);
 					}
+					//panther = new CPanther(SIMON, camera, InOb->x + 100);
+					//panther->nx = -1;
+					//panther->SetPosition(InOb->x + 100, InOb->y - 30);
+					//enemy.push_back(panther);
 					SpawnDelayStart();
 				}
 				
 			}
-			//else if (InOb->type == BAT_SPAWNER)
-			//{
-			//	if (spawndelay == 0)
-			//	{
-			//		bat = new CBat(D3DXVECTOR2(SIMON->GetPosition().x, SIMON->GetPosition().y - 5));
-			//		bat->nx = -1;
-			//		bat->SetPosition(camera->GetPosition().x + SCREEN_WIDTH, SIMON->GetPosition().y - 50);
-			//		enemy.push_back(bat);
-			//		SpawnDelayStart();
-			//	}
+			else if (InOb->type == BAT_SPAWNER)
+			{
+				if (spawndelay == 0)
+				{
+					bat = new CBat(D3DXVECTOR2(SIMON->GetPosition().x, SIMON->GetPosition().y - 5));
+					bat->nx = -1;
+					bat->SetPosition(camera->GetPosition().x + SCREEN_WIDTH, SIMON->GetPosition().y - 50);
+					enemy.push_back(bat);
+					SpawnDelayStart();
+				}
 
-			//}
+			}
 			else if (InOb->type == FISHMAN_SPAWNER)
 			{
 				if (spawndelay == 0)
@@ -486,18 +490,6 @@ void SceneGame::Update(DWORD dt)
 				}
 
 			}
-			//else if (InOb->type == BAT_SPAWNER)
-			//{
-			//	if (spawndelay == 0)
-			//	{
-			//		panther = new CPanther(SIMON, camera, InOb->x + 100);
-			//		panther->nx = -1;
-			//		panther->SetPosition(InOb->x + 100, /*camera->GetPosition().y + SCREEN_HEIGHT - 30*/InOb->y - 30);
-			//		enemy.push_back(panther);
-			//		SpawnDelayStart();
-			//	}
-
-			//}
 			else if (InOb->type == STAIR_TYPE_RIGHT_UP_HELPER)
 			{
 				if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == false)
@@ -749,7 +741,7 @@ void SceneGame::Update(DWORD dt)
 	}
 	if (stage == 3)
 	{
-		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 212);
+		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 200);
 	}
 	camera->Update(dt, scene, stage);
 

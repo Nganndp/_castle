@@ -22,8 +22,12 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-			x += dx; //dx=vx*dt
+		if (!isStop)
+		{
+			x += dx;
 			y += dy;
+		}
+		isOnGround = false;
 	}
 	else
 	{
@@ -49,7 +53,7 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-	vy += TORCH_GRAVITY * dt;
+	vy = GRAVITY * dt;
 
 	if (GetTickCount() - dietime_start > 200)
 	{
@@ -73,18 +77,17 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (isOnGround == false)
 		{
-			if (vx < 0 && x < FirstX)
+			if (vx < 0 && x < FirstX-15)
 			{
-				x = FirstX; vx = -vx;
+				x = FirstX-15; vx = -vx;
 			}
 
-			else if (vx > 0 && x > FirstX + 15)
+			if (vx > 0 && x > FirstX + 15)
 			{
 				x = FirstX + 15; vx = -vx;
 			}
-			vx = 0.05f;
+			vx = -0.05f;
 		}
-
 	}
 }
 

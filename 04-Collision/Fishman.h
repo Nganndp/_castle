@@ -13,11 +13,10 @@ public:
 	CFishman(CGameObject * Simon, Camera * camera, float movepoint) :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Fishmanani.txt", this);
-		state = ENEMY_STATE_JUMPING;
+		SetState(ENEMY_STATE_JUMPING);
 		type = FISHMAN;
 		active = true;
 		isStop = false;
-		//isFalling = true;
 		this->movepoint = movepoint;
 		this->Simon = Simon;
 		this->camera = camera;

@@ -11,7 +11,9 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (active == false)
 		return;
 	CGameObject::Update(dt, coObjects);
-		vy += TORCH_GRAVITY * dt;
+	if (state == ENEMY_STATE_SHEART)
+		vy = GRAVITY * dt;
+	else vy += 0.001f;
 		if ((x - Simon->x) < 80 && state ==ENEMY_STATE_JUMPING || (x - Simon->x) < 80 && state == ENEMY_STATE_IDLE)
 		{
 			SetState(ENEMY_STATE_JUMPING);
@@ -30,18 +32,17 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			if (isOnGround == false)
 			{
-				if (vx < 0 && x < FirstX)
+				if (vx < 0 && x < FirstX - 15)
 				{
-					x = FirstX; vx = -vx;
+					x = FirstX - 15; vx = -vx;
 				}
 
-				else if (vx > 0 && x > FirstX + 15)
+				if (vx > 0 && x > FirstX + 15)
 				{
 					x = FirstX + 15; vx = -vx;
 				}
-				vx = 0.05f;
+				vx = -0.05f;
 			}
-
 		}
 		if (state == ENEMY_STATE_MOVING && vx < 0 && x <= Simon->x - (SCREEN_WIDTH/2))
 		{
@@ -63,17 +64,15 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vector<LPCOLLISIONEVENT> coEventsResult;
 
 		coEvents.clear();
-
-		CalcPotentialCollisions(coObjects, coEvents);
-
-		// No collision occured, proceed normally
+        CalcPotentialCollisions(coObjects, coEvents);
 		if (coEvents.size() == 0)
 		{
 			if (!isStop)
 			{
-				x += dx; //dx=vx*dt
+				x += dx; 
 				y += dy;
 			}
+			isOnGround = false;
 		}
 		else
 		{
@@ -109,7 +108,6 @@ void CPanther::SetState(int state)
 	switch (state)
 	{
 	case ENEMY_STATE_DIE:
-	case ENEMY_STATE_SHEART:
 		vx = 0;
 		break;
 	case ENEMY_STATE_MOVING:

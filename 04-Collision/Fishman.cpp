@@ -12,35 +12,31 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	CGameObject::Update(dt, coObjects);
 	if (state == ENEMY_STATE_JUMPING)
-		vy += -0.0007f * dt;
-	if (state == ENEMY_STATE_FALLING)
-	{
-		vy += 0.0007f * dt;
-	}
-	else vy += 0.0001f * dt;
+		vy = -0.015f * dt;
 	if (isOnGround && state != ENEMY_STATE_SHEART && state != ENEMY_STATE_DIE)
 	{
-		if (isAttack == false)  
+		if (!isAttack)
+		{
 			SetState(ENEMY_STATE_MOVING);
 
 
-		if (vx < 0 && x < movepoint - 10)
-		{
-			isAttack = true;
-			nx = -1;
-			x = movepoint - 10; vx = -vx;
-			isFire = true;
-		}
-		else if (vx > 0 && x > movepoint + 50)
-		{
-			isAttack = true;
-			nx = 1;
-			x = movepoint + 50; vx = -vx;
-			isFire = true;
+			if (vx < 0 && x < movepoint - 10)
+			{
+				isFire = true;
+				isAttack = true;
+				nx = -1;
+				x = movepoint - 10; vx = -vx;
+			}
+			else if (vx > 0 && x > movepoint + 50)
+			{
+				isFire = true;
+				isAttack = true;
+				nx = 1;
+				x = movepoint + 50; vx = -vx;
+			}
 		}
 
-
-		if (isAttack)
+		else if (isAttack)
 		{
 			SetState(ENEMY_STATE_ATTACK);
 
@@ -66,7 +62,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
-	if (y - camera->GetPosition().y <= 100)  
+	if (y - camera->GetPosition().y <= 80)  
 	{
 		SetState(ENEMY_STATE_FALLING);
 	}
@@ -79,18 +75,17 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (isOnGround == false)
 		{
-			if (vx < 0 && x < FirstX)
+			if (vx < 0 && x < FirstX - 15)
 			{
-				x = FirstX; vx = -vx;
+				x = FirstX - 15; vx = -vx;
 			}
 
-			else if (vx > 0 && x > FirstX + 15)
+			if (vx > 0 && x > FirstX + 15)
 			{
 				x = FirstX + 15; vx = -vx;
 			}
-			vx = 0.05f;
+			vx = -0.05f;
 		}
-
 	}
 	if (GetTickCount() - dietime_start > 200)
 	{
@@ -154,6 +149,9 @@ void CFishman::SetState(int state)
 
 	switch (state)
 	{
+	case ENEMY_STATE_FALLING:
+		vy = 0.015f * dt;
+		break;
 	case ENEMY_STATE_MOVING:
 		if (nx == 1)
 			vx = 0.03f;
@@ -162,8 +160,10 @@ void CFishman::SetState(int state)
 		break;
 	case ENEMY_STATE_ATTACK:
 	case ENEMY_STATE_DIE:
-	case ENEMY_STATE_SHEART:
 	    vx = 0;
+		break;
+	case ENEMY_STATE_SHEART:
+		vy = GRAVITY * dt;
 		break;
 	}
 	

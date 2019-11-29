@@ -13,8 +13,8 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	x += dx; 
 	if (nx > 0)
-		vx += 0.005f;
-	else vx += -0.005f;
+		vx = 0.07f;
+	else vx = -0.07f;
 }
 
 void CFireBullet::SetState(int state)
