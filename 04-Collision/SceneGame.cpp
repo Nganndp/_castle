@@ -469,31 +469,35 @@ void SceneGame::Update(DWORD dt)
 			//	}
 
 			//}
-			//else if (InOb->type == BAT_SPAWNER)
-			//{
-			//	if (spawndelay == 0)
-			//	{
-			//		fishman = new CFishman(D3DXVECTOR2(InOb->x - 30, camera->GetPosition().y + SCREEN_HEIGHT -30));
-			//		fishman->nx = -1;
-			//		fishman->SetPosition(InOb->x - 30, /*camera->GetPosition().y + SCREEN_HEIGHT - 30*/InOb->y - 30);
-			//		//fishman->StartJump();
-			//		enemy.push_back(fishman);
-			//		SpawnDelayStart();
-			//	}
-
-			//}
-			else if (InOb->type == BAT_SPAWNER)
+			else if (InOb->type == FISHMAN_SPAWNER)
 			{
 				if (spawndelay == 0)
 				{
-					panther = new CPanther(SIMON, InOb->x + 110);
-					panther->nx = -1;
-					panther->SetPosition(InOb->x + 100, /*camera->GetPosition().y + SCREEN_HEIGHT - 30*/InOb->y - 30);
-					enemy.push_back(panther);
+					fishman = new CFishman(SIMON, camera, InOb->x - 50);
+					fishman->nx = -1;
+					fishman->SetPosition(InOb->x - 50, InOb->y + 120);
+					enemy.push_back(fishman);
+
+					fishman = new CFishman(SIMON, camera, InOb->x + 60);
+					fishman->nx = 1;
+					fishman->SetPosition(InOb->x + 60, InOb->y + 120);
+					enemy.push_back(fishman);
 					SpawnDelayStart();
 				}
 
 			}
+			//else if (InOb->type == BAT_SPAWNER)
+			//{
+			//	if (spawndelay == 0)
+			//	{
+			//		panther = new CPanther(SIMON, camera, InOb->x + 100);
+			//		panther->nx = -1;
+			//		panther->SetPosition(InOb->x + 100, /*camera->GetPosition().y + SCREEN_HEIGHT - 30*/InOb->y - 30);
+			//		enemy.push_back(panther);
+			//		SpawnDelayStart();
+			//	}
+
+			//}
 			else if (InOb->type == STAIR_TYPE_RIGHT_UP_HELPER)
 			{
 				if (game->IsKeyDown(DIK_UP) && SIMON->GetOnStair() == false)
@@ -606,7 +610,28 @@ void SceneGame::Update(DWORD dt)
 			}
 		}
 	}
-
+	for (int i = 0; i < enemy.size(); i++)
+	{
+		if (enemy.at(i)->type == FISHMAN)
+		{
+			if (enemy.at(i)->isFire)
+			{
+				firebullet = new CFireBullet();
+				if (enemy.at(i)->nx > 0)
+				{
+					firebullet->nx = 1;
+					firebullet->SetPosition(enemy.at(i)->x + 18, enemy.at(i)->y + 5);
+				}
+				else 
+				{
+					firebullet->nx = -1;
+					firebullet->SetPosition(enemy.at(i)->x - 9, enemy.at(i)->y + 5);
+				}
+				enemy.push_back(firebullet);
+				enemy.at(i)->isFire = false;
+			}
+		}
+	}
 	//Simon Collision with enemy
 	for (int i = 0; i < enemy.size(); i++)
 	{
@@ -768,17 +793,15 @@ void SceneGame::Update(DWORD dt)
 	for (int i = 0; i < enemy.size(); i++)
 	{
 		if (enemy.at(i)->x < camera->GetPosition().x - 20 && enemy.at(i)->nx < 0)
-			{
-				if (enemy.at(i)->type == PANTHER)
-				{
-					enemy.at(i)->nx = 1;
-				}
-				else enemy.erase(enemy.begin() + i);
-			}
-		else if (enemy.at(i)->x > camera->GetPosition().x + SCREEN_WIDTH && enemy.at(i)->nx > 0)
-			{
-				enemy.erase(enemy.begin() + i);
-			}
+		{
+			if (enemy.at(i)->type == PANTHER)
+				return;
+			else enemy.erase(enemy.begin() + i);
+		}
+	    else if (enemy.at(i)->x > camera->GetPosition().x + SCREEN_WIDTH && enemy.at(i)->nx > 0)
+		{
+			enemy.erase(enemy.begin() + i);
+		}
 	}
 
 	//Adjust enemy to map

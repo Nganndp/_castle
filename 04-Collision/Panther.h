@@ -1,27 +1,27 @@
 #pragma once
 #include "LoadAnimations.h"
 #include "GameObject.h"
+#include "Camera.h"
 
 class CPanther :public CGameObject
 {
-	bool isStop = false;
-	int action = 0;
-	DWORD action_start;
 public:
-	CPanther(CGameObject *simon, float jumprange) :CGameObject()
+	CPanther(CGameObject *simon, Camera *camera, float jumppoint) :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Pantherani.txt", this);
 		state = ENEMY_STATE_IDLE;
 		type = PANTHER;
 		active = true;
 		action = 0;
+		isStop = false;
 		Simon = simon;
-		this->jumprange = jumprange;
+		this->jumppoint = jumppoint;
+		this->camera = camera;
 	};
 	~CPanther();
-	float jumprange;
+	float jumppoint;
 	CGameObject* Simon;
-	void StartAction() { action = 1; action_start = GetTickCount(); }
+	Camera* camera;
 	bool GetStop()
 	{
 		return isStop;

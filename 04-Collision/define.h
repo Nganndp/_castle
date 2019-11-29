@@ -159,7 +159,7 @@ public:
     //Enemy Spawner
 #define GHOUL_SPAWNER 50
 #define BAT_SPAWNER 51
-#define FISHERMAN_SPAWNER 52
+#define FISHMAN_SPAWNER 52
 //Wepon
    //Axe
 #define AXE_GRAVITY  0.007f; 
@@ -196,6 +196,7 @@ public:
 #define PANTHER 2001
 #define BAT 2002
 #define FISHMAN 2003
+#define FIREBULLET 2004
 
 #define ENEMY_STATE_MOVING 0
 #define ENEMY_STATE_DIE 1
@@ -203,6 +204,7 @@ public:
 #define ENEMY_STATE_SHEART 3
 #define ENEMY_STATE_JUMPING 4
 #define ENEMY_STATE_FALLING 5
+#define ENEMY_STATE_ATTACK 6
 
 //Ghoul
 #define GHOUL_ANI_IDLE_RIGHT 0

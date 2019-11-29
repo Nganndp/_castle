@@ -54,6 +54,7 @@ public:
 
 	int level = 1;
 	int nx;
+	int ny;
 	int bboxcolor;
 	int die = 0;
 	int action = 0;
@@ -64,8 +65,9 @@ public:
 	bool active = true;
 	bool isTouchable;
 	bool isOnGround;
-	bool isDie;
-	
+	bool isStop;
+	bool isFire;
+
 	DWORD dt;
 	CTextures* texture;
 	CSprite* sprite;
@@ -90,10 +92,6 @@ public:
 	virtual boolean GetActive()
 	{
 		return active;
-	}
-	void SetDie(bool a)
-	{
-		isDie = a;
 	}
 	void StartDieTime() { die = 1; dietime_start = GetTickCount(); }
 	void StartAction() { action = 1; action_start = GetTickCount(); }

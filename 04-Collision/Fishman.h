@@ -1,22 +1,31 @@
 #pragma once
 #include "LoadAnimations.h"
 #include "GameObject.h"
+#include "Camera.h"
 
 class CFishman :public CGameObject
 {
 	bool isStop = false;
-	int jump = 0;
-	DWORD jump_start;
+	bool isFalling;
+	bool isAttack;
+	DWORD timerAttack = 0;
 public:
-	CFishman(D3DXVECTOR2 pos) :CGameObject()
+	CFishman(CGameObject * Simon, Camera * camera, float movepoint) :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Fishmanani.txt", this);
-		state = ENEMY_STATE_MOVING;
+		state = ENEMY_STATE_JUMPING;
 		type = FISHMAN;
-		FirstX = pos.x;
+		active = true;
+		isStop = false;
+		//isFalling = true;
+		this->movepoint = movepoint;
+		this->Simon = Simon;
+		this->camera = camera;
 	};
 	~CFishman();
-	void StartJump() { jump = 1; jump_start = GetTickCount(); }
+	float movepoint;
+	CGameObject* Simon;
+	Camera* camera;
 	bool GetStop()
 	{
 		return isStop;

@@ -26,6 +26,7 @@
 #include "Bat.h"
 #include "Fishman.h"
 #include "Panther.h"
+#include "FireBullet.h"
 
 #include<iostream>
 #include<fstream>
@@ -60,6 +61,7 @@ public:
 	CBat* bat;
 	CFishman* fishman;
 	CPanther* panther;
+	CFireBullet* firebullet;
 	TileMap* tile;
 	InviObjects* InOb;
 	Grid* grid;

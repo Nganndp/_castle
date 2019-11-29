@@ -12,18 +12,18 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	CGameObject::Update(dt, coObjects);
 		vy += TORCH_GRAVITY * dt;
-		if ((this->x - Simon->x) < 80 && state ==ENEMY_STATE_JUMPING || (this->x - Simon->x) < 80 && state == ENEMY_STATE_IDLE)
+		if ((x - Simon->x) < 80 && state ==ENEMY_STATE_JUMPING || (x - Simon->x) < 80 && state == ENEMY_STATE_IDLE)
 		{
-			this->SetState(ENEMY_STATE_JUMPING);
+			SetState(ENEMY_STATE_JUMPING);
 			isOnGround = false;
 		}
-		if (abs(this->jumprange - this->x) >= 30 && state == ENEMY_STATE_JUMPING)
+		if (abs(jumppoint -x) >= 30 && state == ENEMY_STATE_JUMPING)
 		{
-			this->SetState(ENEMY_STATE_FALLING);
+			SetState(ENEMY_STATE_FALLING);
 		}
 		if (state == ENEMY_STATE_FALLING && isOnGround == true)
 		{
-			this->SetState(ENEMY_STATE_MOVING);
+			SetState(ENEMY_STATE_MOVING);
 		}
 
 		if (state == ENEMY_STATE_SHEART)
@@ -42,6 +42,22 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				vx = 0.05f;
 			}
 
+		}
+		if (state == ENEMY_STATE_MOVING && vx < 0 && x <= Simon->x - (SCREEN_WIDTH/2))
+		{
+			x = camera->GetPosition().x;
+			nx = 1;
+			vx = -vx;
+		}
+		
+		if (GetTickCount() - dietime_start > 200)
+		{
+			dietime_start = 0;
+			die = 0;
+		}
+		if (state == ENEMY_STATE_DIE && die == 0)
+		{
+			SetState(ENEMY_STATE_SHEART);
 		}
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
@@ -83,17 +99,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				vy = 0;
 			}
 		}
-
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-		if (GetTickCount() - dietime_start > 200)
-		{
-			dietime_start = 0;
-			die = 0;
-		}
-		if (state == ENEMY_STATE_DIE && die == 0)
-		{
-			this->SetState(ENEMY_STATE_SHEART);
-		}
 }
 
 void CPanther::SetState(int state)
