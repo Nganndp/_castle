@@ -12,6 +12,8 @@ SceneGame::SceneGame()
 	CSprites* sprites = CSprites::GetInstance();
 	sprites->Load();
 
+	grid = new Grid();
+
 	SIMON = new CSimon();
 
 	MS = new CMS();
@@ -36,14 +38,17 @@ void SceneGame::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_S:
-		if (SIMON->GetOnGround())
+		if (SIMON->GetOnStair() == false)
 		{
-			SIMON->SetState(SIMON_STATE_JUMP);
-			if (game->IsKeyDown(DIK_RIGHT) || game->IsKeyDown(DIK_LEFT))
+			if (SIMON->GetOnGround())
 			{
-				SIMON->StartJumpMove();
+				SIMON->SetState(SIMON_STATE_JUMP);
+				if (game->IsKeyDown(DIK_RIGHT) || game->IsKeyDown(DIK_LEFT))
+				{
+					SIMON->StartJumpMove();
+				}
+				else SIMON->StartJump();
 			}
-			else SIMON->StartJump();
 		}
 		break;
 	case DIK_A:
@@ -232,56 +237,22 @@ void  SceneGame::KeyState(BYTE* states)
 void SceneGame::LoadResources()
 {
 	camera->SetCamera(0, 0);
-	grid = new Grid();
 
 	if (scene == 1)
 	{
-		stagechanger.clear();
-		torches.clear();
-		bricks.clear();
 		SIMON->SetPosition(10, 154);
 		Tile = new TileMap(L"textures\\entrance_tilemap.png", ID_TEX_ENTRANCESTAGE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
 		LoadSceneObject(1);
-		for (UINT i = 0; i < bricks.size(); i++)
-		{
-			grid->InsertIntoGrid(bricks.at(i));
-		}
-		for (UINT i = 0; i < torches.size(); i++)
-		{
-			grid->InsertIntoGrid(torches.at(i));
-		}
-		for (UINT i = 0; i < stagechanger.size(); i++)  
-		{
-			grid->InsertIntoGrid(stagechanger.at(i));
-		}
 	}
 	else if (scene == 2)
 	{
-		stagechanger.clear();
-		torches.clear();
-		bricks.clear();
-		//SIMON->SetPosition(10.0f, 168);
+		grid->ClearGrid();
 		SIMON->SetPosition(10, 168);
 		Tile = new TileMap(L"textures\\castle_tilemap.png", ID_TEX_CASTLE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
-		for (UINT i = 0; i < bricks.size(); i++)
-		{
-			grid->InsertIntoGrid(bricks.at(i));
-		}
-		for (UINT i = 0; i < torches.size(); i++)
-		{
-			grid->InsertIntoGrid(torches.at(i));
-		}
-		for (UINT i = 0; i < stagechanger.size(); i++)
-		{
-			grid->InsertIntoGrid(stagechanger.at(i));
-		}
-
-
-	}
-	int tmp = 0;
+    }
 }
 /*
 	Update world status for this frame
@@ -888,7 +859,7 @@ void SceneGame::LoadObjectFromFile(string source)
 	vector<int> numbers;
 	int flag = 0;
 	int number;
-	int arr[4];
+	int arr[10];
 	ifstream file_objects(source);
 	if (file_objects.is_open())
 	{
@@ -898,7 +869,7 @@ void SceneGame::LoadObjectFromFile(string source)
 			{
 				arr[flag] = number;
 				flag++;
-				if (flag == 4)
+				if (flag == 10)
 				{
 					switch (arr[0])
 					{
@@ -906,19 +877,19 @@ void SceneGame::LoadObjectFromFile(string source)
 						brick = new CBrick();
 						brick->SetMulwidth(arr[3]);
 						brick->SetPosition(arr[1], arr[2]);
-						bricks.push_back(brick);
+						grid->InsertIntoGrid(brick, arr[6], arr[7], arr[8], arr[9]);
 						break;
 					case TORCH:
 						torch = new CTorch();
 						torch->SetPosition(arr[1], arr[2]);
 						torch->SetState(arr[3]);
-						torches.push_back(torch);
+						grid->InsertIntoGrid(torch, arr[6], arr[7], arr[8], arr[9]);
 						break;
 					case STAGECHANGER:
 						InOb = new InviObjects();
 						InOb->SetPosition(arr[1], arr[2]);
 						InOb->SetType(arr[3]);
-						stagechanger.push_back(InOb);
+						grid->InsertIntoGrid(InOb, arr[6], arr[7], arr[8], arr[9]);
 						break;
 					}
 
@@ -933,11 +904,13 @@ void SceneGame::LoadSceneObject(int a)
 {
 	if (a == 1)
 	{
-		LoadObjectFromFile("ReadFile\\Objects\\ObjectsStage1.txt");
+		LoadObjectFromFile("ReadFile\\Objects\\test.txt");
+		grid->maprow = 3;
+		grid->mapcol = 9;
 	}
 	if (a == 2)
 	{
-		LoadObjectFromFile("ReadFile\\Objects\\ObjectsStage2.txt");
+		LoadObjectFromFile("ReadFile\\Objects\\test2.txt");
 	}
 }
 SceneGame::~SceneGame()

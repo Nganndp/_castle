@@ -86,6 +86,10 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			vx = -0.05f;
 		}
+		if (isOnGround)
+		{
+			vx = 0;
+		}
 	}
 	if (GetTickCount() - dietime_start > 200)
 	{
@@ -163,6 +167,7 @@ void CFishman::SetState(int state)
 	    vx = 0;
 		break;
 	case ENEMY_STATE_SHEART:
+		vx = 0;
 		vy = GRAVITY * dt;
 		break;
 	}
@@ -213,8 +218,8 @@ void CFishman::GetBoundingBox(float& left, float& top, float& right, float& bott
 	bottom = y + 32;
 	if (state == ENEMY_STATE_SHEART)
 	{
-		right = x + 9;
-		bottom = y + 9;
+		right = x + SHEART_WIDTH;
+		bottom = y + SHEART_HEIGHT;
 	}
 }
 

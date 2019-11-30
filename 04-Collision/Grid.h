@@ -18,23 +18,21 @@ public:
 	Grid() 
 	{ 
 	}
+	int maprow, mapcol;
 
-
-	void InsertIntoGrid(CGameObject *object);
+	void InsertIntoGrid(CGameObject *object, int rowstart, int colstart, int rowend, int colend);
 	void CheckSimonRevive(bool isRevive);
 
 	void GetListCollisionFromGrid(Camera * Camera, vector<CGameObject*> &listColObjects);
 	void TakeObjectsFromCell(int rowIndex, int colIndex, vector<CGameObject*> &listColObjects);
-
+	void ClearGrid();
 	~Grid();
 	
 private:
 
-	vector<LPGAMEOBJECT> cells[10][200];
+	vector<LPGAMEOBJECT> cells[200][200];
 	set<CGameObject*> listTemp1;  //set: tồn tại 1 object duy nhất đó và ko trùng
-
-	int rowIndex;
-	int colIndex;
+	int rowstart, rowend, colstart, colend, rowIndex, colIndex;
 	bool isRevive = false;
 };
 

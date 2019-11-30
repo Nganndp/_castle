@@ -1,36 +1,30 @@
 ﻿#include "Grid.h"
 
-
-void Grid::InsertIntoGrid(CGameObject * object)
+void Grid::InsertIntoGrid(CGameObject * object, int rowstart, int colstart, int rowend, int colend)
 {
-	D3DXVECTOR2 objPosition = object->GetPosition();
-	RECT r = object->GetBound();
-
-	int objWidth = r.right - r.left;
-	int objHeight = r.bottom - r.top;
-
-	//o bat dau neu' nhu vat dai va` nam` tren nhieu o
-	int rowInMapBegin = objPosition.y / (CELL_HEIGHT);
-	int colInMapBegin = objPosition.x / (CELL_WIDTH);
-
-	//o ket thuc neu' nhu vat dai va` nam` tren nhieu o
-	int rowInMapEnd = r.bottom / CELL_HEIGHT;
-	int colInMapEnd = r.right / CELL_WIDTH;
-
-
-	//insert vào lưới
-
-	for (int i = rowInMapBegin; i <= rowInMapEnd; i++)
+	this->rowstart = rowstart;
+	this->rowend = rowend;
+	this->colstart = colstart;
+	this->colend = colend;
+	for (int i = this->rowstart; i <= this->rowend; i++)
 	{
-		for (int j = colInMapBegin; j <= colInMapEnd; j++)
-		{
-			cells[i][j].push_back(object);
-		}
+	   for (int j = this->colstart; j <= this->colend; j++)
+	   {
+		   cells[i][j].push_back(object);
+	   }
 	}
-
 }
 
-
+void Grid::ClearGrid()
+{
+	for (int i = 0; i <= maprow ;++i)
+	{
+		for (int j = 0; j <= mapcol; ++j)
+		{
+			cells[i][j].clear();
+		}
+	}
+}
 
 void Grid::GetListCollisionFromGrid(Camera * Camera, vector<CGameObject*>& listColObjects)
 {
@@ -59,7 +53,7 @@ void Grid::TakeObjectsFromCell(int rowIndex, int colIndex, vector<CGameObject*>&
 	{
 		if (cells[rowIndex][colIndex].at(i)->GetActive() == false)
 		{
-			if (this->isRevive) //reload lại candle/torch khi Simon revive
+			if (this->isRevive) 
 			{
 				cells[rowIndex][colIndex].at(i)->SetActive(true);
 			}

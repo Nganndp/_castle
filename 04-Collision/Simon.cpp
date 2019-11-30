@@ -91,16 +91,19 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				x += min_tx * dx + nx * 0.4;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 				y += min_ty * dy + ny * 0.4f;
-
 				if (nx != 0) vx = 0;
 				if (ny != 0) vy = 0;
-				isOnGround = true;
-				if (e->ny < 0)
+				if (ny == 1 && isOnStair)
+				{
+					y += dy;
+				}
+				if (ny == -1)
 				{
 					jump = 0;
 					jumpmove = 0;
 				}
 				jump_start = 10000;
+				isOnGround = true;
 			}
 
 		}

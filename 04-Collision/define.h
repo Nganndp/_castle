@@ -12,6 +12,8 @@ public:
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 255
 #define SPAWN_DELAY_TIMER 15000
+#define SHEART_WIDTH 8
+#define SHEART_HEIGHT 8
 
 #define MAX_FRAME_RATE 120
 #define GRAVITY 0.0015f
@@ -158,6 +160,8 @@ public:
 #define GHOUL_SPAWNER 50
 #define BAT_SPAWNER 51
 #define FISHMAN_SPAWNER 52
+
+
 //Wepon
    //Axe
 #define AXE_GRAVITY  0.007f; 

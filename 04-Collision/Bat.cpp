@@ -129,8 +129,8 @@ void CBat::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 	bottom = y + 17;
 	if (state == ENEMY_STATE_SHEART)
 	{
-		right = x + 9;
-		bottom = y + 9;
+		right = x + SHEART_WIDTH;
+		bottom = y + SHEART_HEIGHT;
 	}
 }
 
