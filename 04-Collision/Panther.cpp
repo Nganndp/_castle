@@ -13,7 +13,14 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	if (state == ENEMY_STATE_SHEART)
 		vy = GRAVITY * dt;
-	else vy += 0.001f;
+	if (state == ENEMY_STATE_IDLE)
+	{
+		vy = 0;
+	}
+	if (state == ENEMY_STATE_MOVING)
+	{
+		vy = 0.2f;
+	}
 		if ((x - Simon->x) < 80 && state ==ENEMY_STATE_JUMPING || (x - Simon->x) < 80 && state == ENEMY_STATE_IDLE)
 		{
 			SetState(ENEMY_STATE_JUMPING);
@@ -168,7 +175,7 @@ void CPanther::GetBoundingBox(float& left, float& top, float& right, float& bott
 	left = x + 1;
 	top = y;
 	right = x + 34;
-	bottom = y + 18;
+	bottom = y + 15;
 	if (state == ENEMY_STATE_SHEART)
 	{
 		right = x + SHEART_WIDTH;

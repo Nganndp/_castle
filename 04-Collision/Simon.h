@@ -57,7 +57,7 @@ public:
 	}
 	void StandUp();
 	void SitDown();
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects, float startpoint, float endpoint);
 	virtual void Render(Camera *camera);
 	int GetLevel()
 	{

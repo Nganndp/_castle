@@ -9,7 +9,7 @@ Camera::~Camera()
 {
 }
 
-void Camera::Update(DWORD dt, int scene, int stage)
+void Camera::Update(DWORD dt, float startpoint, float endpoint, float camstoppoint)
 {
 	if (GetTickCount() - cammove_start > cameramovetime)
 	{
@@ -20,62 +20,20 @@ void Camera::Update(DWORD dt, int scene, int stage)
 	{
 		cam_x += 1;
 	}
-	if (cam_x >= 1535 && stage == 2)
+	if (cam_x >= camstoppoint)
 	{
 		CamMoving = false;
 	}
-	else if (CamMoving == false)
+    if (CamMoving == false)
 	{
-		if (scene == 1)
+		if (cam_x <= startpoint)
 		{
-			if (cam_x <= 0)
-			{
-				cam_x = 0;
-			}
-			else
-				if (cam_x >= 770 - SCREEN_WIDTH)
-				{
-					cam_x = 770 - SCREEN_WIDTH;
-				}
+			cam_x = startpoint;
 		}
-		else if (scene == 2)
+			else
+		if (cam_x >= endpoint - SCREEN_WIDTH)
 		{
-			if (stage == 1)
-			{
-				if (cam_x <= 0)
-				{
-					cam_x = 0;
-				}
-				else
-					if (cam_x >= 1550 - SCREEN_WIDTH)
-					{
-						cam_x = 1550 - SCREEN_WIDTH;
-					}
-			}
-			if (stage == 2)
-			{
-				if (cam_x <= 1535)
-				{
-					cam_x = 1535;
-				}
-				else
-					if (cam_x >= 2051 - SCREEN_WIDTH)
-					{
-						cam_x = 2051 - SCREEN_WIDTH;
-					}
-			}
-			if (stage == 3)
-			{
-				if (cam_x <= 1579)
-				{
-					cam_x = 1579;
-				}
-				else
-					if (cam_x >= 2108 - SCREEN_WIDTH)
-					{
-						cam_x = 2108 - SCREEN_WIDTH;
-					}
-			}
+			cam_x = endpoint - SCREEN_WIDTH;
 		}
 	}
 }

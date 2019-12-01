@@ -12,6 +12,42 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	CGameObject::Update(dt, coObjects);
 
+	vy = GRAVITY * dt;
+
+	if (GetTickCount() - dietime_start > 200)
+	{
+		dietime_start = 0;
+		die = 0;
+	}
+	if (state == ENEMY_STATE_MOVING)
+	{
+		if (isStop == false)
+		{
+			if (nx > 0)
+				vx = 0.052f;
+			else vx = -0.052f;
+		}
+	}
+	if (state != ENEMY_STATE_MOVING && die == 0)
+	{
+		state = ENEMY_STATE_SHEART;
+    }
+	if (state == ENEMY_STATE_SHEART)
+	{
+		if (isOnGround == false)
+		{
+			if (vx < 0 && x < FirstX-15)
+			{
+				x = FirstX-15; vx = -vx;
+			}
+
+			if (vx > 0 && x > FirstX + 15)
+			{
+				x = FirstX + 15; vx = -vx;
+			}
+			vx = -0.05f;
+		}
+	}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -34,61 +70,28 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float min_tx, min_ty, nx = 0, ny;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-		
+
 		// block 
-			y += min_ty * dy + ny * 0.2f;
+		y += min_ty * dy + ny * 0.2f;
 
-			// block 
-			if (nx != 1)
-				x += min_tx * dx + nx * 0.2f;;
+		// block 
+		//if (nx != 1)
+		//	x += min_tx * dx + nx * 0.2f;;
 
-			if (nx == 1)  
-				x += dx;
-			if (state == ENEMY_STATE_SHEART)
-			{
-				if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
-			}
-			if (ny != 0) vy = 0;
+		//if (nx == 1)
+		//	x += dx;
+		if (nx == -1 || nx == 1)
+		{
+			x += dx;
+		}
+		if (state == ENEMY_STATE_SHEART)
+		{
+			if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
+		}
+		if (ny != 0) vy = 0;
 	}
 
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-	vy = GRAVITY * dt;
-
-	if (GetTickCount() - dietime_start > 200)
-	{
-		dietime_start = 0;
-		die = 0;
-	}
-	if (state != ENEMY_STATE_MOVING && die == 0)
-	{
-		state = ENEMY_STATE_SHEART;
-    }
-	if (state == ENEMY_STATE_MOVING)
-	{
-		if (isStop)
-			return;
-		if (nx > 0)
-			vx = 0.052f;
-		else
-			vx = -0.052f;
-	}
-	if (state == ENEMY_STATE_SHEART)
-	{
-		if (isOnGround == false)
-		{
-			if (vx < 0 && x < FirstX-15)
-			{
-				x = FirstX-15; vx = -vx;
-			}
-
-			if (vx > 0 && x > FirstX + 15)
-			{
-				x = FirstX + 15; vx = -vx;
-			}
-			vx = -0.05f;
-		}
-	}
 }
 
 void CGhoul::SetState(int state)
@@ -97,6 +100,11 @@ void CGhoul::SetState(int state)
 
 	switch (state)
 	{
+	//case ENEMY_STATE_MOVING:
+	//	if (nx > 0)
+	//		vx = 0.052f;
+	//	else
+	//		vx = -0.052f;
 	case ENEMY_STATE_IDLE:
 		vx = 0;
 		break;

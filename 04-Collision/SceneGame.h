@@ -46,7 +46,11 @@ public:
 	void Render();
 	void LoadObjectFromFile(string source);
 	void LoadSceneObject(int a);
-	void SpawnDelayStart() { spawndelay = 1;  spawndelaytimer_start = GetTickCount(); }
+	void SpawnDelayGhoulStart() { spawndelayghoul = 1;  spawndelayghoultimer_start = GetTickCount(); }
+	void SpawnDelayBatStart() { spawndelaybat = 1;  spawndelaybattimer_start = GetTickCount(); }
+	void SpawnDelayFishmanStart() { spawndelayfishman = 1;  spawndelayfishmantimer_start = GetTickCount(); }
+	void SpawnDelayPantherStart() { spawndelaypanther = 1;  spawndelaypanthertimer_start = GetTickCount(); }
+	void StopEnemyStart() { stopenemy = 1; stopenemytimer_start = GetTickCount(); }
 	~SceneGame();
 	CGame* game;
 	Camera* camera;
@@ -68,24 +72,32 @@ public:
 	CAnimations* animations;
 	CSprites* sprites;
 	LPANIMATION ani;
-	vector<LPGAMEOBJECT> simon;
+	vector<LPGAMEOBJECT> weapon;
 	vector<LPGAMEOBJECT> torches;
-	vector<LPGAMEOBJECT> stagechanger;
+	vector<LPGAMEOBJECT> invisibleobjects;
 	vector<LPGAMEOBJECT> bricks;
 	vector<LPGAMEOBJECT> enemy;
     vector<LPGAMEOBJECT> ObjectsFromGrid;
 
 	bool castle = false;
 	bool SimonMove = false;
-	int scene;
-	int stage;
-	int spawndelay = 0;
-	float cx, cy;
-	DWORD timerChangeColor;
-	DWORD spawndelaytimer_start;
 	bool isChangeColor;
 	bool isGrey;
+	int scene;
+	int stage;
 	int countChangeColor;
-
+	int spawndelayghoul = 0;
+	int spawndelaybat = 0;
+	int spawndelayfishman = 0;
+	int spawndelaypanther = 0;
+	int stopenemy;
+	float cx, cy;
+	float startpoint, endpoint, camstoppoint;
+    DWORD timerChangeColor;
+	DWORD spawndelayghoultimer_start;
+	DWORD spawndelaybattimer_start;
+	DWORD spawndelayfishmantimer_start;
+	DWORD spawndelaypanthertimer_start;
+	DWORD stopenemytimer_start;
 };
 

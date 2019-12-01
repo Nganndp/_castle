@@ -25,11 +25,10 @@ SceneGame::SceneGame()
 	Axe = new CAxe();
 	Axe->GetSimon(SIMON);
 
-	//push back to list simon
-	simon.push_back(SIMON);
-	simon.push_back(MS);
-	simon.push_back(dagger);
-    simon.push_back(Axe);
+	//push back to list weapon
+	weapon.push_back(MS);
+	weapon.push_back(dagger);
+    weapon.push_back(Axe);
 }
 void SceneGame::OnKeyDown(int KeyCode)
 {
@@ -113,22 +112,23 @@ void SceneGame::OnKeyDown(int KeyCode)
 		else SIMON->SetActive(true);
 		break;
 	case DIK_R:
-		for (int i = 0; i < simon.size(); i++)
+		for (int i = 0; i < weapon.size(); i++)
 		{
-			simon[i]->Setbboxcolor();
+			weapon[i]->Setbboxcolor();
 		}
 		for (int i = 0; i < torches.size(); i++)
 		{
 			torches[i]->Setbboxcolor();
 		}
-		for (int i = 0; i < stagechanger.size(); i++)
+		for (int i = 0; i < invisibleobjects.size(); i++)
 		{
-			stagechanger[i]->Setbboxcolor();
+			invisibleobjects[i]->Setbboxcolor();
 		}
 		for (int i = 0; i < bricks.size(); i++)
 		{
 			bricks[i]->Setbboxcolor();
 		}
+		SIMON->Setbboxcolor();
 		//ghoul->Setbboxcolor();
 		break;
 	case DIK_W:
@@ -157,10 +157,8 @@ void SceneGame::OnKeyDown(int KeyCode)
 	case DIK_2:
 		scene = 2;
 		stage = 1;
-	
-		LoadResources();
-
-		break;
+	    LoadResources();
+        break;
 		case DIK_3:
 			stage = 3;
 			SIMON->SetPosition(1931, 212);
@@ -179,6 +177,8 @@ void SceneGame::OnKeyDown(int KeyCode)
 			SIMON->SetEatCross(true);
 			//isChangeColor = true;
 			break;
+		case DIK_6:
+			StopEnemyStart();
 	}
 }
 
@@ -260,11 +260,11 @@ void SceneGame::LoadResources()
 */
 void SceneGame::Update(DWORD dt)
 {
-	//Update Objects
+	//Push Objects
 	vector<LPGAMEOBJECT> coObjects;
 	grid->GetListCollisionFromGrid(camera, ObjectsFromGrid);
 	torches.clear();
-	stagechanger.clear();
+	invisibleobjects.clear();
 	bricks.clear();
 	for (int i = 0; i < ObjectsFromGrid.size(); i++)
 	{
@@ -278,20 +278,24 @@ void SceneGame::Update(DWORD dt)
 		else if (coObjects.at(i)->type == TORCH)
 			torches.push_back(coObjects[i]);
 		else
-			stagechanger.push_back(coObjects[i]);
+			invisibleobjects.push_back(coObjects[i]);
 	}
+
+	//Update Objects
 	for (int i = 0; i < torches.size(); i++)
 	{
 		torches[i]->Update(dt, &bricks);
 	}
-	for (int i = 0; i < simon.size(); i++)
+	for (int i = 0; i < weapon.size(); i++)
 	{
-		simon[i]->Update(dt, &bricks);
+		weapon[i]->Update(dt, &bricks);
 	}
 	for (int i = 0; i < enemy.size(); i++)
 	{
 		enemy[i]->Update(dt, &bricks);
 	}
+	SIMON->Update(dt, &bricks, startpoint, endpoint);
+
 
 	//Simon collision with torch
 	for (int i = 0; i < torches.size(); i++)
@@ -313,6 +317,11 @@ void SceneGame::Update(DWORD dt)
 			case TORCH_STATE_CROSS:
 				torch->SetActive(false);
 				SIMON->SetEatCross(true);
+				enemy.clear();
+				break;
+			case TORCH_STATE_CLOCK:
+				torch->SetActive(false);
+				StopEnemyStart();
 				break;
 			case TORCH_STATE_MONEY1:
 				torch->SetActive(false);
@@ -351,9 +360,9 @@ void SceneGame::Update(DWORD dt)
 	}
 
 	//Simon collsion with Invisible Objects
-	for (int i = 0; i < stagechanger.size(); i++)
+	for (int i = 0; i < invisibleobjects.size(); i++)
 	{
-		InviObjects* InOb = dynamic_cast<InviObjects*>(stagechanger[i]);
+		InviObjects* InOb = dynamic_cast<InviObjects*>(invisibleobjects[i]);
 		if (SIMON->CheckCollision(InOb))
 		{
 			if (InOb->type == SC_TYPE_CHANGE_SCENE)
@@ -370,6 +379,8 @@ void SceneGame::Update(DWORD dt)
 			else if (InOb->type == SC_TYPE_DOOR)
 			{
 				InOb->SetActive(false);
+				if (SIMON->x >= InOb->x - 24)
+					SIMON->x = InOb->x - 24;
 				camera->StartCamMove(3000);
 				camera->SetCamMoving(true);
 				if (stage == 1)
@@ -404,9 +415,8 @@ void SceneGame::Update(DWORD dt)
 			}
 			else if (InOb->type == GHOUL_SPAWNER)
 			{
-				if (spawndelay == 0)
+				if (spawndelayghoul == 0)
 				{
-					
 					int a;
 					srand(time(NULL));
 					a = rand() % 4 + 1;
@@ -424,29 +434,44 @@ void SceneGame::Update(DWORD dt)
 						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 20, 170);
 						enemy.push_back(ghoul);
 					}
-					//panther = new CPanther(SIMON, camera, InOb->x + 100);
-					//panther->nx = -1;
-					//panther->SetPosition(InOb->x + 100, InOb->y - 30);
-					//enemy.push_back(panther);
-					SpawnDelayStart();
+                    SpawnDelayGhoulStart();
 				}
 				
 			}
+			else if (InOb->type == PANTHER_SPAWNER)
+			{
+				if (spawndelaypanther == 0)
+				{
+					panther = new CPanther(SIMON, camera, 690);
+					panther->nx = -1;
+					panther->SetPosition(690, 124);
+					enemy.push_back(panther);
+					panther = new CPanther(SIMON, camera, 863);
+					panther->nx = -1;
+					panther->SetPosition(863, 92);
+					enemy.push_back(panther);
+					panther = new CPanther(SIMON, camera, 960);
+					panther->nx = -1;
+					panther->SetPosition(960, 124);
+					enemy.push_back(panther);
+					SpawnDelayPantherStart();
+				}
+			}
 			else if (InOb->type == BAT_SPAWNER)
 			{
-				if (spawndelay == 0)
+				if (spawndelaybat == 0)
 				{
 					bat = new CBat(D3DXVECTOR2(SIMON->GetPosition().x, SIMON->GetPosition().y - 5));
 					bat->nx = -1;
 					bat->SetPosition(camera->GetPosition().x + SCREEN_WIDTH, SIMON->GetPosition().y - 50);
 					enemy.push_back(bat);
-					SpawnDelayStart();
+					SpawnDelayBatStart();
 				}
 
 			}
 			else if (InOb->type == FISHMAN_SPAWNER)
 			{
-				if (spawndelay == 0)
+				if (spawndelayfishman == 0)
 				{
 					fishman = new CFishman(SIMON, camera, InOb->x - 50);
 					fishman->nx = -1;
@@ -457,7 +482,7 @@ void SceneGame::Update(DWORD dt)
 					fishman->nx = 1;
 					fishman->SetPosition(InOb->x + 60, InOb->y + 120);
 					enemy.push_back(fishman);
-					SpawnDelayStart();
+					SpawnDelayFishmanStart();
 				}
 
 			}
@@ -695,7 +720,6 @@ void SceneGame::Update(DWORD dt)
 		}
 	}
 
-
 	//Adjust Simon to Camera
 	if (SIMON->x - camera->GetPosition().x <= 100 && SimonMove == true)
 	{
@@ -714,44 +738,41 @@ void SceneGame::Update(DWORD dt)
 	{
 		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 200);
 	}
-	camera->Update(dt, scene, stage);
 
-	//Adjust Simon to map
+	//Map boundary
 	if (camera->GetCamMoving() == false)
 	{
 		if (scene == 1)
 		{
-			if (SIMON->x < 0)
-				SIMON->x = 0;
-			if (SIMON->x > 750)
-				SIMON->x = 750;
+			startpoint = 0;
+			endpoint = 770;
 		}
 		if (scene == 2)
 		{
 			if (stage == 1)
 			{
-				if (SIMON->x < 0)
-					SIMON->x = 0;
-				if (SIMON->x > 1502)
-					SIMON->x = 1502;
+				startpoint = 0;
+				endpoint = 1550;
 			}
 			if (stage == 2)
 			{
-				if (SIMON->x < 1530)
-					SIMON->x = 1530;
-				if (SIMON->x > 2014)
-					SIMON->x = 2014;
+				startpoint = 1535;
+				endpoint = 2051;
+				camstoppoint = 1535;
 			}
 			if (stage == 3)
 			{
-				if (SIMON->x < 1570)
-					SIMON->x = 1570;
-				if (SIMON->x > 2082)
-					SIMON->x = 2082;
+				startpoint = 1579;
+				endpoint = 2108;
 			}
 		}
 	}
-
+	if (camera->GetCamMoving() == true)
+	{
+		startpoint = 0;
+		endpoint = 10000;
+	}
+	camera->Update(dt, startpoint, endpoint, camstoppoint);
 	//Adjust enemy to camera
 	for (int i = 0; i < enemy.size(); i++)
 	{
@@ -787,11 +808,45 @@ void SceneGame::Update(DWORD dt)
 	}
 
 	//functiions that affect the scene
-	if (GetTickCount() - spawndelaytimer_start > SPAWN_DELAY_TIMER)
+	if (GetTickCount() - spawndelayghoultimer_start > SPAWN_DELAY_TIMER)
 	{
-		spawndelaytimer_start = 0;
-		spawndelay = 0;
+		spawndelayghoultimer_start = 0;
+		spawndelayghoul = 0;
     }
+	if (GetTickCount() - spawndelaybattimer_start > SPAWN_DELAY_TIMER)
+	{
+		spawndelaybattimer_start = 0;
+		spawndelaybat = 0;
+	}
+	if (GetTickCount() - spawndelayfishmantimer_start > SPAWN_DELAY_TIMER)
+	{
+		spawndelayfishmantimer_start = 0;
+		spawndelayfishman = 0;
+	}
+	if (GetTickCount() - spawndelaypanthertimer_start > SPAWN_DELAY_TIMER)
+	{
+		spawndelaypanthertimer_start = 0;
+		spawndelaypanther = 0;
+	}
+	if (GetTickCount() - stopenemytimer_start > STOP_ENEMY_TIMER)
+	{
+		stopenemytimer_start = 0;
+		stopenemy = 0;
+	}
+	if (stopenemy != 0)
+	{
+		for (int i = 0; i < enemy.size(); i++)
+		{
+			enemy.at(i)->isStop = true;
+		}
+	}
+	if (stopenemy == 0)
+	{
+		for (int i = 0; i < enemy.size(); i++)
+		{
+			enemy.at(i)->isStop = false;
+		}
+	}
 	if (SIMON->GetEatCross() == true)
 	{
 		isChangeColor = true;
@@ -840,12 +895,13 @@ void SceneGame::Render()
 		Tile->DrawMap(camera);
 		for (int i = 0; i < torches.size(); i++)
 			torches[i]->Render(camera);
-		for (int i = 0; i < stagechanger.size(); i++)
-			stagechanger[i]->Render(camera);
+		for (int i = 0; i < invisibleobjects.size(); i++)
+			invisibleobjects[i]->Render(camera);
 		for (int i = 0; i < enemy.size(); i++)
 			enemy[i]->Render(camera);
-		for (int i = 0; i < simon.size(); i++)
-			simon[i]->Render(camera);
+		for (int i = 0; i < weapon.size(); i++)
+			weapon[i]->Render(camera);
+		SIMON->Render(camera);
 		spriteHandler->End();
         d3ddv->EndScene();
 	}
@@ -900,15 +956,15 @@ void SceneGame::LoadObjectFromFile(string source)
 	}
 }
 
-void SceneGame::LoadSceneObject(int a)
+void SceneGame::LoadSceneObject(int scene)
 {
-	if (a == 1)
+	if (scene == 1)
 	{
 		LoadObjectFromFile("ReadFile\\Objects\\test.txt");
 		grid->maprow = 3;
 		grid->mapcol = 9;
 	}
-	if (a == 2)
+	if (scene == 2)
 	{
 		LoadObjectFromFile("ReadFile\\Objects\\test2.txt");
 	}

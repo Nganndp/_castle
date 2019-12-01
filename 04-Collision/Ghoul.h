@@ -4,12 +4,11 @@
 
 class CGhoul:public CGameObject
 {
-	bool isStop = false;
 public:
 	CGhoul():CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Ghoulani.txt", this);
-		state = ENEMY_STATE_MOVING;
+		SetState(ENEMY_STATE_MOVING);
 		type = GHOUL;
 		active = true;
 	};

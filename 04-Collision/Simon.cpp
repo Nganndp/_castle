@@ -1,8 +1,13 @@
 #include "Simon.h"
 
-void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float startpoint, float endpoint)
 {
 	CGameObject::Update(dt);
+	//adjust Simon pos
+	if (x < startpoint)
+		x = startpoint;
+	if (x > endpoint - 39)
+		x = endpoint - 39;
 	if (isOnStair == false)
 	{
 		vy += SIMON_GRAVITY * dt;
