@@ -51,14 +51,6 @@ void Grid::TakeObjectsFromCell(int rowIndex, int colIndex, vector<CGameObject*>&
 {
 	for (int i = 0; i < cells[rowIndex][colIndex].size(); i++)
 	{
-		if (cells[rowIndex][colIndex].at(i)->GetActive() == false)
-		{
-			if (this->isRevive) 
-			{
-				cells[rowIndex][colIndex].at(i)->SetActive(true);
-			}
-		}
-
 		if (cells[rowIndex][colIndex].at(i)->GetActive() == true)
 		{
 			if (listTemp1.find(cells[rowIndex][colIndex].at(i)) == listTemp1.end())
@@ -71,11 +63,6 @@ void Grid::TakeObjectsFromCell(int rowIndex, int colIndex, vector<CGameObject*>&
 	}
 }
 
-
-void Grid::CheckSimonRevive(bool isRevive)
-{
-	this->isRevive = isRevive;
-}
 
 
 Grid::~Grid()

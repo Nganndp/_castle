@@ -12,24 +12,82 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float startpoint,
 	{
 		vy += SIMON_GRAVITY * dt;
 	}
-	
-	if (state != SIMON_STATE_DIE)
-		
-	//timer
-	if (GetTickCount() - jump_start > SIMON_JUMP_TIME)
-	{
-		jump_start = 0;
 
+	if (state != SIMON_STATE_DIE)
+
+		//timer
+		if (GetTickCount() - jump_start > SIMON_JUMP_TIME)
+		{
+			jump_start = 0;
+
+		}
+		else
+		{
+			if (GetTickCount() - jump_start < SIMON_JUMP_TIME)
+			{
+				if (isOnGround)
+				{
+					vy = -SIMON_JUMP_SPEED_Y;
+					isOnGround = false;
+				}
+			}
+		}
+	//if (GetTickCount() - isDamaged_start > SIMON_JUMP_TIME)
+	//{
+	//	isDamaged_start = 0;
+	//	state = SIMON_STATE_IDLE;
+	//}
+	//else
+	//{
+	//	if (GetTickCount() - isDamaged_start < SIMON_JUMP_TIME)
+	//	{
+	//		if (nx > 0)
+	//		{
+	//			vx = -SIMON_JUMP_SPEED_Y;
+	//		}
+	//		else { vx = SIMON_JUMP_SPEED_Y; }
+	//		dx = vx * dt;
+	//		if (isOnGround)
+	//		{
+	//			vy = -SIMON_JUMP_SPEED_Y;
+	//			isOnGround = false;
+	//		}
+	//	}
+	//}
+	if (GetTickCount() - isDamaged_start > SIMON_IS_DAMAGED_TIME)
+	{
+		isDamaged_start = 0;
+		isDamaged = 0;
 	}
 	else
 	{
-		if (GetTickCount() - jump_start < SIMON_JUMP_TIME)
+		if (GetTickCount() - isDamaged_start < SIMON_IS_DAMAGED_TIME)
 		{
+			if (nx > 0)
+			{
+				vx = -0.05f;
+			}
+			else { vx = 0.05f; }
+			dx = vx * dt;
 			if (isOnGround)
 			{
-				vy = -SIMON_JUMP_SPEED_Y;
-				isOnGround = false;
+			    vy = -SIMON_JUMP_SPEED_Y;
+			    isOnGround = false;
+		        //dx = 0;
 			}
+		}
+	}
+	if (GetTickCount() - isUntouchable_start > SIMON_UNTOUCHABLE_TIME)
+	{
+		isUntouchable_start = 0;
+		isUntouchable = 0;
+		alpha = 255;
+	}
+	else
+	{
+		if (GetTickCount() - isUntouchable_start < SIMON_UNTOUCHABLE_TIME)
+		{
+			alpha = 150;
 		}
 	}
 	if (GetTickCount() - attack_start > SIMON_ATTACK_TIME)
@@ -106,6 +164,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float startpoint,
 				{
 					jump = 0;
 					jumpmove = 0;
+					isDamaged = 0;
 				}
 				jump_start = 10000;
 				isOnGround = true;
@@ -221,6 +280,14 @@ void CSimon::Render(Camera *camera)
 		if (nx > 0)
 			ani = SIMON_ANI_JUMP_RIGHT;
 		else ani = SIMON_ANI_JUMP_LEFT;
+	}
+	if (isDamaged != 0)
+	{
+		if (nx > 0)
+		{
+			ani = SIMON_ANI_IS_DAMAGED_LEFT;
+		}
+		else ani = SIMON_ANI_IS_DAMAGED_RIGHT;
 	}
 	if (autowalking != 0)
 	{

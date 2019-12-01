@@ -21,9 +21,7 @@ public:
 	int maprow, mapcol;
 
 	void InsertIntoGrid(CGameObject *object, int rowstart, int colstart, int rowend, int colend);
-	void CheckSimonRevive(bool isRevive);
-
-	void GetListCollisionFromGrid(Camera * Camera, vector<CGameObject*> &listColObjects);
+    void GetListCollisionFromGrid(Camera * Camera, vector<CGameObject*> &listColObjects);
 	void TakeObjectsFromCell(int rowIndex, int colIndex, vector<CGameObject*> &listColObjects);
 	void ClearGrid();
 	~Grid();

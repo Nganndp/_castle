@@ -9,22 +9,41 @@ void CAxe::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 
 	CGameObject::Update(dt);
 
-	vy += 0.007f;
+	if (y > camera->GetPosition().y + SCREEN_HEIGHT || x > camera->GetPosition().x + SCREEN_WIDTH || x + 17 < camera->GetPosition().x)
+	{
+		SetActive(false);
+	}
+	vy += 0.0001f * dt; 
 	y += dy;
 	x += dx;
 
-	if (GetTickCount() - throw_start < 500)
+	if (abs(x - this->firstPos) <= 15) 
 	{
-
-		vy = -0.0093f * dt;
-
+		if (nx > 0)
+		{
+			vx = 0.0093f * dt;
+		}
+		else
+		{
+			vx = -0.0093f * dt;
+		}
+		vy = -0.17f;
 	}
-	if (nx > 0)
+	else 
 	{
-		vx = 0.005f * dt;
-	}
-	else if (nx < 0)
-		vx = -0.005f * dt;
+		if (nx > 0)
+		{
+			vx = 0.0093f * dt;
+		}
+		else
+		{
+			vx = -0.0093f * dt;
+		}
+		if (abs(x - this->firstPos) >= 70)  
+			vy = 0.15f;
+    }
+
+	this->SetPosition(x, y);
 }
 void CAxe::SetState(int state) {
 	CGameObject::SetState(state);
@@ -38,19 +57,6 @@ void CAxe::Render(Camera* camera) {
 		animations[0]->Render(camera->transform(x, y), alpha);
 
 		RenderBoundingBox(camera);
-	}
-}
-void CAxe::AdjustPos()
-{
-	if (simon->nx > 0)
-	{
-		x = simon->x;
-		y = simon->y + 5;
-	}
-	else if (simon->nx < 0)
-	{
-		x = simon->x;
-		y = simon->y + 5;
 	}
 }
 void CAxe::GetBoundingBox(float& left, float& top, float& right, float& bottom)

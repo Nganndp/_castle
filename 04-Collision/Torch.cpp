@@ -14,7 +14,14 @@ void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			bottom = y + 30;
 
 		}
-		else if (state == TORCH_STATE_LHEART || state == TORCH_STATE_CANDLE)
+		else if (state == TORCH_STATE_CANDLE)
+		{
+			left = x;
+			top = y;
+			right = x + 10;
+			bottom = y + 15;
+		}
+		else if (state == TORCH_STATE_LHEART)
 		{
 			left = x;
 			top = y;

@@ -20,6 +20,7 @@
 #include "Brick.h"
 #include "Dagger.h"
 #include "Axe.h"
+#include "HolyWater.h"
 #include "InviObjects.h"
 #include "Grid.h"
 #include "Ghoul.h"
@@ -58,6 +59,7 @@ public:
 	CMS* MS;
 	CDagger* dagger;
 	CAxe* Axe;
+	CHolyWater* Holywater;
 	TileMap* Tile;
 	CBrick* brick;
 	CTorch* torch;

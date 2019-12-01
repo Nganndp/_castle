@@ -5,6 +5,7 @@ SceneGame::SceneGame()
 	game = CGame::GetInstance();
 	camera = new Camera();
 	scene = 1;
+
 	//Textures
 	CTextures* textures = CTextures::GetInstance();
 	textures->Load();
@@ -18,22 +19,19 @@ SceneGame::SceneGame()
 
 	MS = new CMS();
 	MS->GetSimon(SIMON);
-
-	dagger = new CDagger();
-	dagger->GetSimon(SIMON);
-
-	Axe = new CAxe();
-	Axe->GetSimon(SIMON);
-
-	//push back to list weapon
-	weapon.push_back(MS);
-	weapon.push_back(dagger);
-    weapon.push_back(Axe);
+	
+	//dummy weapon
+	dagger = new CDagger(camera, SIMON->nx);
+	dagger->SetActive(false);
+	Axe = new CAxe(SIMON->GetPosition().x, camera, SIMON->nx);
+	Axe->SetActive(false);
+	Holywater = new CHolyWater(SIMON->GetPosition().x, camera, SIMON->nx);
+	Holywater->SetActive(false);
 }
 void SceneGame::OnKeyDown(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0 || SIMON->GetAutoWalkingTime() != 0 || camera->GetCamMove() == true) return;
+	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0 || SIMON->GetAutoWalkingTime() != 0 || camera->GetCamMove() == true || SIMON->GetIsDamaged() != 0) return;
 	switch (KeyCode)
 	{
 	case DIK_S:
@@ -57,24 +55,50 @@ void SceneGame::OnKeyDown(int KeyCode)
 		}
 		if (game->IsKeyDown(DIK_UP))
 		{
-			if (SIMON->GetThrowDagger())
+			if (SIMON->GetThrowDagger() && weapon.size() < SIMON->GetNumWeapon())
 			{
-				dagger->StartAttack();
-				dagger->nx = SIMON->nx;
-				dagger->SetActive(true);
+				dagger = new CDagger(camera, SIMON->nx);
+				if (SIMON->nx > 0)
+				{
+					dagger->SetPosition(SIMON->x+ 20, SIMON->y+5);
+				}
+				else 
+					dagger->SetPosition(SIMON->x, SIMON->y+5);
+				weapon.push_back(dagger);
 				MS->SetActive(false);
 				SIMON->SetState(SIMON_STATE_ATTACK);
 				SIMON->StartAttack();
 			}
-			else if (SIMON->GetThrowAxe())
+			else if (SIMON->GetThrowAxe() && weapon.size() <SIMON->GetNumWeapon())
 			{
-				Axe->StartAttack();
-				Axe->nx = SIMON->nx;
-				Axe->SetActive(true);
+				Axe = new CAxe(SIMON->GetPosition().x + 8, camera, SIMON->nx);
+				if (SIMON->nx > 0)
+				{
+					Axe->SetPosition(SIMON->x+ 8, SIMON->y);
+				}
+				else
+					Axe->SetPosition(SIMON->x + 24, SIMON->y);
+				weapon.push_back(Axe);
 				MS->SetActive(false);
 				SIMON->SetState(SIMON_STATE_ATTACK);
 				SIMON->StartAttack();
-
+            }
+			else if (SIMON->GetThrowHolyWater() && weapon.size() <SIMON->GetNumWeapon())
+			{
+				if (SIMON->nx > 0)
+				{
+					Holywater = new CHolyWater(SIMON->GetPosition().x + 20, camera, SIMON->nx);
+					Holywater->SetPosition(SIMON->x + 20, SIMON->y);
+				}
+				else 
+				{
+					Holywater = new CHolyWater(SIMON->GetPosition().x, camera, SIMON->nx);
+					Holywater->SetPosition(SIMON->x + 8, SIMON->y);
+				}
+				weapon.push_back(Holywater);
+				MS->SetActive(false);
+				SIMON->SetState(SIMON_STATE_ATTACK);
+				SIMON->StartAttack();
 			}
 		}
 		if (!game->IsKeyDown(DIK_UP))
@@ -174,8 +198,8 @@ void SceneGame::OnKeyDown(int KeyCode)
 			SIMON->nx = -1;
 			break;
 		case DIK_5:
-			SIMON->SetEatCross(true);
-			//isChangeColor = true;
+			//SIMON->SetEatCross(true);
+			SIMON->StartIsDamaged();
 			break;
 		case DIK_6:
 			StopEnemyStart();
@@ -195,17 +219,17 @@ void  SceneGame::KeyState(BYTE* states)
 {
 	// disable control key when SIMON die 
 	if (SIMON->GetState() == SIMON_STATE_DIE || SIMON->GetChangeColorTime() != 0) return;
-	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false && camera->GetCamMove() == false)
+	if (game->IsKeyDown(DIK_RIGHT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false && camera->GetCamMove() == false && SIMON->GetIsDamaged() == 0)
 	{
 		if (SIMON->GetAutoWalkingTime() == 0)
 			SIMON->SetState(SIMON_STATE_WALKING_RIGHT);
 	}
-	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false && camera->GetCamMove() == false)
+	else if (game->IsKeyDown(DIK_LEFT) && !game->IsKeyDown(DIK_DOWN) && SIMON->GetJumpTime() == 0 && SIMON->GetOnStair() == false && camera->GetCamMove() == false && SIMON->GetIsDamaged() == 0)
 	{
 		if (SIMON->GetAutoWalkingTime() == 0)
 			SIMON->SetState(SIMON_STATE_WALKING_LEFT);
 	}
-	else if (game->IsKeyDown(DIK_DOWN) && camera->GetCamMove() == false)
+	else if (game->IsKeyDown(DIK_DOWN) && camera->GetCamMove() == false && SIMON->GetIsDamaged() == 0)
 	{
 		if (SIMON->GetAutoWalkingTime() == 0)
 		{
@@ -220,7 +244,7 @@ void  SceneGame::KeyState(BYTE* states)
 			}
 		}
 	}
-	else if (game->IsKeyDown(DIK_UP) && camera->GetCamMove() == false)
+	else if (game->IsKeyDown(DIK_UP) && camera->GetCamMove() == false && SIMON->GetIsDamaged() == 0)
 	{
 
 		if (SIMON->GetAutoWalkingTime() == 0)
@@ -248,7 +272,7 @@ void SceneGame::LoadResources()
 	else if (scene == 2)
 	{
 		grid->ClearGrid();
-		SIMON->SetPosition(10, 168);
+		SIMON->SetPosition(1500, 168);
 		Tile = new TileMap(L"textures\\castle_tilemap.png", ID_TEX_CASTLE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
@@ -273,8 +297,8 @@ void SceneGame::Update(DWORD dt)
 
 	for (int i = 0; i < coObjects.size(); i++)
 	{
-		if(coObjects.at(i)->type == BRICK)
-		bricks.push_back(coObjects[i]);
+		if (coObjects.at(i)->type == BRICK)
+			bricks.push_back(coObjects[i]);
 		else if (coObjects.at(i)->type == TORCH)
 			torches.push_back(coObjects[i]);
 		else
@@ -295,7 +319,7 @@ void SceneGame::Update(DWORD dt)
 		enemy[i]->Update(dt, &bricks);
 	}
 	SIMON->Update(dt, &bricks, startpoint, endpoint);
-
+	MS->Update(dt, &bricks);
 
 	//Simon collision with torch
 	for (int i = 0; i < torches.size(); i++)
@@ -434,9 +458,9 @@ void SceneGame::Update(DWORD dt)
 						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 20, 170);
 						enemy.push_back(ghoul);
 					}
-                    SpawnDelayGhoulStart();
+					SpawnDelayGhoulStart();
 				}
-				
+
 			}
 			else if (InOb->type == PANTHER_SPAWNER)
 			{
@@ -531,7 +555,7 @@ void SceneGame::Update(DWORD dt)
 					{
 						SIMON->x = InOb->x - 14;
 					}
-					if (SIMON->x >= InOb->x - 14 || SIMON->x <= InOb->x -16)
+					if (SIMON->x >= InOb->x - 14 || SIMON->x <= InOb->x - 16)
 					{
 						SIMON->SetState(SIMON_STATE_WALKING_DOWN_STAIR);
 						SIMON->SetOnStair(true);
@@ -543,7 +567,7 @@ void SceneGame::Update(DWORD dt)
 				{
 					if (SIMON->y + SIMON_IDLE_BBOX_HEIGHT > InOb->y + INVI_HEIGHT)
 					{
-						SIMON->y = InOb->y + 1+ INVI_HEIGHT*2 - SIMON_IDLE_BBOX_HEIGHT;
+						SIMON->y = InOb->y + 1 + INVI_HEIGHT * 2 - SIMON_IDLE_BBOX_HEIGHT;
 					}
 					SIMON->SetOnStair(false);
 					SIMON->SetStairUp(false);
@@ -551,9 +575,9 @@ void SceneGame::Update(DWORD dt)
 			}
 			else if (InOb->type == STAIR_TYPE_UP_LEFT)
 			{
-			if (game->IsKeyDown(DIK_UP))
+				if (game->IsKeyDown(DIK_UP))
 				{
-					if(InOb->x - SIMON->x >= 20)
+					if (InOb->x - SIMON->x >= 20)
 					{
 						SIMON->x = InOb->x - 23.5;
 					}
@@ -581,7 +605,7 @@ void SceneGame::Update(DWORD dt)
 						SIMON->x = InOb->x - 7;
 					}
 					if (SIMON->x == InOb->x - 7)
-					SIMON->SetState(SIMON_STATE_WALKING_DOWN_STAIR);
+						SIMON->SetState(SIMON_STATE_WALKING_DOWN_STAIR);
 					SIMON->SetOnStair(true);
 					SIMON->SetStairUp(false);
 					SIMON->nx = 1;
@@ -610,7 +634,7 @@ void SceneGame::Update(DWORD dt)
 					firebullet->nx = 1;
 					firebullet->SetPosition(enemy.at(i)->x + 18, enemy.at(i)->y + 5);
 				}
-				else 
+				else
 				{
 					firebullet->nx = -1;
 					firebullet->SetPosition(enemy.at(i)->x - 9, enemy.at(i)->y + 5);
@@ -627,11 +651,23 @@ void SceneGame::Update(DWORD dt)
 		{
 			if (enemy.at(i)->GetState() == ENEMY_STATE_MOVING)
 			{
-					//SIMON->StartJump();
+				if (SIMON->GetUntouchable() == 0)
+				{
+					if (enemy.at(i)->nx > 0)
+					{
+						SIMON->nx = -1;
+					}
+					else SIMON->nx = 1;
+					if (SIMON->GetOnStair() == false)
+					{
+						SIMON->StartIsUnTouchable();
+					}
+					SIMON->StartIsDamaged();
+				}
 				if (enemy.at(i)->type == BAT)
-			    {
-			       enemy.at(i)->StartDieTime();
-				   enemy.at(i)->SetState(ENEMY_STATE_DIE);
+				{
+					enemy.at(i)->StartDieTime();
+					enemy.at(i)->SetState(ENEMY_STATE_DIE);
 				}
 			}
 			else if (enemy.at(i)->GetState() == ENEMY_STATE_SHEART)
@@ -707,16 +743,29 @@ void SceneGame::Update(DWORD dt)
 	//Weapon collision with enemy
 	for (int i = 0; i < enemy.size(); i++)
 	{
-		if (MS->CheckCollision(enemy.at(i))|| dagger->CheckCollision(enemy.at(i)) && dagger->active == true|| Axe->CheckCollision(enemy.at(i)) && Axe->active == true)
+		if (MS->CheckCollision(enemy.at(i)) 
+			|| dagger->CheckCollision(enemy.at(i)) && dagger->active == true
+			|| Axe->CheckCollision(enemy.at(i)) && Axe->active == true 
+			|| Holywater->CheckCollision(enemy.at(i)) && Holywater->isOnGround)
 		{
 			dagger->SetActive(false);
+			Axe->SetActive(false);
 			enemy.at(i)->FirstX = enemy.at(i)->x;
-            if (enemy.at(i)->GetState() == ENEMY_STATE_MOVING)
+			if (enemy.at(i)->GetState() == ENEMY_STATE_MOVING)
 			{
-			   enemy.at(i)->StartDieTime();
-			   enemy.at(i)->SetState(ENEMY_STATE_DIE);
-			   enemy.at(i)->isOnGround = false;
+				enemy.at(i)->StartDieTime();
+				enemy.at(i)->SetState(ENEMY_STATE_DIE);
+				enemy.at(i)->isOnGround = false;
 			}
+		}
+	}
+
+	//Delete weapon when unactive
+	for (int i = 0; i < weapon.size(); i++)
+	{
+		if (weapon.at(i)->GetActive() == false)
+		{
+			weapon.erase(weapon.begin() + i);
 		}
 	}
 
@@ -746,6 +795,7 @@ void SceneGame::Update(DWORD dt)
 		{
 			startpoint = 0;
 			endpoint = 770;
+			camstoppoint = 0;
 		}
 		if (scene == 2)
 		{
@@ -753,6 +803,7 @@ void SceneGame::Update(DWORD dt)
 			{
 				startpoint = 0;
 				endpoint = 1550;
+				camstoppoint = 0;
 			}
 			if (stage == 2)
 			{
@@ -764,6 +815,7 @@ void SceneGame::Update(DWORD dt)
 			{
 				startpoint = 1579;
 				endpoint = 2108;
+				camstoppoint = 0;
 			}
 		}
 	}
@@ -772,8 +824,9 @@ void SceneGame::Update(DWORD dt)
 		startpoint = 0;
 		endpoint = 10000;
 	}
-	camera->Update(dt, startpoint, endpoint, camstoppoint);
-	//Adjust enemy to camera
+	camera->Update(dt, startpoint, endpoint, camstoppoint, stage);
+
+	//Deleate enemy when out of camera
 	for (int i = 0; i < enemy.size(); i++)
 	{
 		if (enemy.at(i)->x < camera->GetPosition().x - 20 && enemy.at(i)->nx < 0)
@@ -902,6 +955,7 @@ void SceneGame::Render()
 		for (int i = 0; i < weapon.size(); i++)
 			weapon[i]->Render(camera);
 		SIMON->Render(camera);
+		MS->Render(camera);
 		spriteHandler->End();
         d3ddv->EndScene();
 	}

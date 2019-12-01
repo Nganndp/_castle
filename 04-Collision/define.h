@@ -83,7 +83,8 @@ public:
 #define SIMON_ANI_UP_STAIR_ATTACK_LEFT  23
 #define SIMON_ANI_DOWN_STAIR_ATTACK_RIGHT 24
 #define SIMON_ANI_DOWN_STAIR_ATTACK_LEFT  25
-#define SIMON_ANI_IS_DAMAGED            100
+#define SIMON_ANI_IS_DAMAGED_LEFT 26
+#define SIMON_ANI_IS_DAMAGED_RIGHT 27
 #define SIMON_ANI_DIE		            99	
 
 #define SIMON_LEVEL_MS_1            0
@@ -98,6 +99,8 @@ public:
 #define SIMON_ATTACK_TIME           300
 #define SIMON_EAT_TIME              500
 #define SIMON_AUTO_GO_TIME          1200
+#define SIMON_UNTOUCHABLE_TIME  3000
+#define	SIMON_IS_DAMAGED_TIME 400
 
 //Map
 #define BRICK 0
@@ -178,6 +181,8 @@ public:
 #define HW_GRAVITY 0.0002f
 #define HW_STATE_BOTTLE 0
 #define HW_STATE_FIRE 1
+#define HW_ANI_BOTTLE 0
+#define HW_ANI_FIRE 1
 	//Morning Star
 #define MS_ATTACK_TIME 300
 

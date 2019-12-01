@@ -1,36 +1,26 @@
 #pragma once
 #include "GameObject.h"
-#include "Simon.h"
-#include "Game.h"
+#include "Camera.h"
 #include "LoadAnimations.h"
 #include "define.h"
 
 class CAxe :public CGameObject
 {
 private:
-	CGameObject* simon;
-	int attack;
-	DWORD throw_start;
+	float firstPos;
+	DWORD throw_timer;
+	Camera* camera;
 public:
-	CAxe() :CGameObject()
+	CAxe(float pos, Camera * camera, int nx) :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Axeani.txt", this);
-		attack = 0;
-		active = false;
-
+		firstPos = pos;
+		this->camera = camera;
+		this->nx = nx;
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render(Camera * camera);
-	void GetSimon(CGameObject* Simon) {
-		simon = Simon;
-		nx = Simon->nx;
-	}
 	void SetState(int state);
-	void AdjustPos();
-	void StartAttack() {
-		throw_start = GetTickCount();
-		AdjustPos();
-	}
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
 
