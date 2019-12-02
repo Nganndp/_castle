@@ -91,7 +91,7 @@ public:
 #define SIMON_LEVEL_MS_2            1
 #define SIMON_LEVEL_MS_3            2
 
-#define SIMON_IDLE_BBOX_WIDTH       14
+#define SIMON_IDLE_BBOX_WIDTH       12
 #define SIMON_IDLE_BBOX_HEIGHT      30
 #define SIMON_SIT_BBOX_HEIGHT       22
 
@@ -99,6 +99,7 @@ public:
 #define SIMON_ATTACK_TIME           300
 #define SIMON_EAT_TIME              500
 #define SIMON_AUTO_GO_TIME          1200
+#define SIMON_AUTO_GO_SCENE1          1000
 #define SIMON_UNTOUCHABLE_TIME  3000
 #define	SIMON_IS_DAMAGED_TIME 450
 

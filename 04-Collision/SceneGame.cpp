@@ -192,7 +192,6 @@ void SceneGame::OnKeyDown(int KeyCode)
 			break;
 		case DIK_4:
 			stage = 2;
-			//SIMON->SetPosition(1574, 183);
 			SIMON->SetPosition(1901, 190);
 			SIMON->SetOnStair(true);
 			SIMON->SetStairUp(false);
@@ -263,11 +262,12 @@ void SceneGame::LoadResources()
 		Tile = new TileMap(L"textures\\entrance_tilemap.png", ID_TEX_ENTRANCESTAGE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
 		LoadSceneObject(1);
+		hiddenmoney->SetPosition(600, 168);
 	}
 	else if (scene == 2)
 	{
 		grid->ClearGrid();
-		SIMON->SetPosition(10, 168);
+		SIMON->SetPosition(10, 172);
 		Tile = new TileMap(L"textures\\castle_tilemap.png", ID_TEX_CASTLE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
@@ -410,14 +410,17 @@ void SceneGame::Update(DWORD dt)
 		{
 			if (InOb->type == SC_TYPE_CHANGE_SCENE)
 			{
-				scene = 2;
-				stage = 1;
-				LoadResources();
+				if (SIMON->GetAutoWalkingTime() == 0)
+				{
+					scene = 2;
+					stage = 1;
+					LoadResources();
+				}
 			}
 			else if (InOb->type == SC_TYPE_AUTO_HELPER)
 			{
 				InOb->SetActive(false);
-				SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME);
+				SIMON->StartAutoWalking(SIMON_AUTO_GO_SCENE1);
 			}
 			else if (InOb->type == SC_TYPE_DOOR)
 			{
@@ -476,6 +479,7 @@ void SceneGame::Update(DWORD dt)
 			}
 			else if (InOb->type == MONEY_SPAWNER)
 			{
+				InOb->SetActive(false);
 				hiddenmoney->SetActive(true);
 			}
 			else if (InOb->type == GHOUL_SPAWNER)
@@ -649,11 +653,11 @@ void SceneGame::Update(DWORD dt)
 			{
 				if (game->IsKeyDown(DIK_DOWN) && SIMON->GetOnStair() == false)
 				{
-					if (SIMON->x >= InOb->x - 7 || SIMON->x < InOb->x - 7 && SIMON->GetOnStair() == false)
+					if (SIMON->x >= InOb->x - 5 || SIMON->x < InOb->x - 6 && SIMON->GetOnStair() == false)
 					{
-						SIMON->x = InOb->x - 7;
+						SIMON->x = InOb->x - 5;
 					}
-					if (SIMON->x == InOb->x - 7)
+					if (SIMON->x == InOb->x - 5)
 						SIMON->SetState(SIMON_STATE_WALKING_DOWN_STAIR);
 					SIMON->SetOnStair(true);
 					SIMON->SetStairUp(false);
@@ -867,6 +871,13 @@ void SceneGame::Update(DWORD dt)
 		if (torches.at(i)->GetActive() == false)
 		{
 			torches.erase(torches.begin() + i);
+		}
+	}
+	for (int i = 0; i < invisibleobjects.size(); i++)
+	{
+		if (invisibleobjects.at(i)->GetActive() == false)
+		{
+			invisibleobjects.erase(invisibleobjects.begin() + i);
 		}
 	}
 
@@ -1108,10 +1119,10 @@ void SceneGame::LoadObjectFromFile(string source)
 						grid->InsertIntoGrid(torch, arr[6], arr[7], arr[8], arr[9]);
 						break;
 					case STAGECHANGER:
-						InOb = new InviObjects();
-						InOb->SetPosition(arr[1], arr[2]);
-						InOb->SetType(arr[3]);
-						grid->InsertIntoGrid(InOb, arr[6], arr[7], arr[8], arr[9]);
+						InObj = new InviObjects();
+						InObj->SetPosition(arr[1], arr[2]);
+						InObj->SetType(arr[3]);
+						grid->InsertIntoGrid(InObj, arr[6], arr[7], arr[8], arr[9]);
 						break;
 					case BREAKABLE_BRICK:
 						brick = new CBrick();
@@ -1132,13 +1143,13 @@ void SceneGame::LoadSceneObject(int scene)
 {
 	if (scene == 1)
 	{
-		LoadObjectFromFile("ReadFile\\Objects\\test.txt");
+		LoadObjectFromFile("ReadFile\\Objects\\ObjectsScene1.txt");
 		grid->maprow = 3;
 		grid->mapcol = 9;
 	}
 	if (scene == 2)
 	{
-		LoadObjectFromFile("ReadFile\\Objects\\test2.txt");
+		LoadObjectFromFile("ReadFile\\Objects\\ObjectsScene2.txt");
 	}
 }
 SceneGame::~SceneGame()

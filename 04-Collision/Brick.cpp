@@ -73,6 +73,6 @@ void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 	if (state == BBRICK_STATE_MONEY || state == BBRICK_STATE_CHIKEN || state == BBRICK_STATE_DOUBLE_SHOOT)
 	{
 		r = x + 14;
-		b = y + 14;
+		b = y + 16;
 	}
 }

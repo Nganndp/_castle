@@ -72,7 +72,7 @@ public:
 	CFireBullet* firebullet;
 	CEffect* effect;
 	TileMap* tile;
-	InviObjects* InOb;
+	InviObjects* InObj;
 	Grid* grid;
 	CAnimations* animations;
 	CSprites* sprites;

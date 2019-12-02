@@ -146,6 +146,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float startpoint,
 				{
 					y += dy;
 				}
+				if (nx != 0 && isOnStair)
+				{
+					x += dx;
+				}
 				if (ny == -1)
 				{
 					jump = 0;
