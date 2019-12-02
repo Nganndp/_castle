@@ -1,5 +1,6 @@
 #pragma once
 #include "LoadAnimations.h"
+#include "Brick.h"
 #include "GameObject.h"
 
 class CGhoul:public CGameObject

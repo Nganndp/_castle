@@ -28,6 +28,7 @@
 #include "Fishman.h"
 #include "Panther.h"
 #include "FireBullet.h"
+#include "CEffect.h"
 
 #include<iostream>
 #include<fstream>
@@ -63,11 +64,13 @@ public:
 	TileMap* Tile;
 	CBrick* brick;
 	CTorch* torch;
+	CTorch* hiddenmoney;
 	CGhoul* ghoul;
 	CBat* bat;
 	CFishman* fishman;
 	CPanther* panther;
 	CFireBullet* firebullet;
+	CEffect* effect;
 	TileMap* tile;
 	InviObjects* InOb;
 	Grid* grid;
@@ -79,6 +82,7 @@ public:
 	vector<LPGAMEOBJECT> invisibleobjects;
 	vector<LPGAMEOBJECT> bricks;
 	vector<LPGAMEOBJECT> enemy;
+	vector<LPGAMEOBJECT> effects;
     vector<LPGAMEOBJECT> ObjectsFromGrid;
 
 	bool castle = false;

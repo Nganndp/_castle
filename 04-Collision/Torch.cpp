@@ -28,18 +28,32 @@ void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			right = x + 15;
 			bottom = y + 10;
 		}
-		else if (state == TORCH_STATE_SHEART || state == TORCH_STATE_DAGGER)
+		else if (state == TORCH_STATE_DAGGER)
+		{
+			left = x;
+			top = y;
+			right = x + 18;
+			bottom = y + 9;
+		}
+		else if (state == TORCH_STATE_SHEART)
 		{
 			left = x;
 			top = y;
 			right = x + 9;
 			bottom = y + 9;
 		}
-		else
+		else if (state == TORCH_STATE_MONEY1 || state == TORCH_STATE_MONEY2 || state == TORCH_STATE_MONEY3 || state == TORCH_STATE_MONEY4)
 		{
 			left = x;
 			top = y;
 			right = x + 15;
+			bottom = y + 16;
+		}
+		else
+		{
+			left = x;
+			top = y;
+			right = x + 16;
 			bottom = y + 17;
 		}
 }
@@ -146,6 +160,18 @@ void CTorch::Render(Camera * camera)
 	if (state == TORCH_STATE_MONEY3)
 	{
 		ani = TORCH_ANI_MONEY3;
+	}
+	if (state == TORCH_STATE_CHIKEN)
+	{
+		ani = TORCH_ANI_CHIKEN;
+	}
+	if (state == TORCH_STATE_DOUBLE_SHOOT)
+	{
+		ani = TORCH_ANI_DOUBLE_SHOOT;
+	}
+	if (state == TORCH_STATE_MONEY4)
+	{
+		ani = TORCH_ANI_MONEY4;
 	}
 	if (die != 0)
 	{

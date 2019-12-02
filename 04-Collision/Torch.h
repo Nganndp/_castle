@@ -6,7 +6,6 @@
 
 class CTorch : public CGameObject
 {
-	int state = 0;
 	int ani = 0;
     bool isTouchable = true;
 public:
@@ -28,10 +27,6 @@ public:
 	void SetType(int a)
 	{
 		type = a;
-	}
-	void SetTouchable(bool a)
-	{
-		isTouchable = a;
 	}
 	RECT GetBound()
 	{

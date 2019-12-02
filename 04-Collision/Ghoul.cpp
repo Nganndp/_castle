@@ -24,8 +24,8 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (isStop == false)
 		{
 			if (nx > 0)
-				vx = 0.052f;
-			else vx = -0.052f;
+				vx = 0.06f;
+			else vx = -0.06f;
 		}
 	}
 	if (state != ENEMY_STATE_MOVING && die == 0)
@@ -71,16 +71,8 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-		// block 
 		y += min_ty * dy + ny * 0.2f;
-
-		// block 
-		//if (nx != 1)
-		//	x += min_tx * dx + nx * 0.2f;;
-
-		//if (nx == 1)
-		//	x += dx;
-		if (nx == -1 || nx == 1)
+		if (nx != 0)
 		{
 			x += dx;
 		}
@@ -89,8 +81,21 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
 		}
 		if (ny != 0) vy = 0;
-	}
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
 
+			if (dynamic_cast<CBrick*>(e->obj))
+			{
+				CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+				if (e->nx < 0)
+				{
+					this->nx = 1;
+					this->nx = -1;
+				}
+			}
+		}
+	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 

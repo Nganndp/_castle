@@ -32,28 +32,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float startpoint,
 				}
 			}
 		}
-	//if (GetTickCount() - isDamaged_start > SIMON_JUMP_TIME)
-	//{
-	//	isDamaged_start = 0;
-	//	state = SIMON_STATE_IDLE;
-	//}
-	//else
-	//{
-	//	if (GetTickCount() - isDamaged_start < SIMON_JUMP_TIME)
-	//	{
-	//		if (nx > 0)
-	//		{
-	//			vx = -SIMON_JUMP_SPEED_Y;
-	//		}
-	//		else { vx = SIMON_JUMP_SPEED_Y; }
-	//		dx = vx * dt;
-	//		if (isOnGround)
-	//		{
-	//			vy = -SIMON_JUMP_SPEED_Y;
-	//			isOnGround = false;
-	//		}
-	//	}
-	//}
 	if (GetTickCount() - isDamaged_start > SIMON_IS_DAMAGED_TIME)
 	{
 		isDamaged_start = 0;
@@ -61,7 +39,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float startpoint,
 	}
 	else
 	{
-		if (GetTickCount() - isDamaged_start < SIMON_IS_DAMAGED_TIME)
+		if (GetTickCount() - isDamaged_start < (SIMON_IS_DAMAGED_TIME/2))
 		{
 			if (nx > 0)
 			{
@@ -74,6 +52,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float startpoint,
 			    vy = -SIMON_JUMP_SPEED_Y;
 			    isOnGround = false;
 		        //dx = 0;
+			}
+		}
+		else if (GetTickCount() - isDamaged_start >= (SIMON_JUMP_TIME / 2))
+		{
+			dx = vx * dt;
+			if (isOnGround)
+			{
+				SetState(SIMON_STATE_IDLE);
 			}
 		}
 	}
@@ -164,7 +150,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float startpoint,
 				{
 					jump = 0;
 					jumpmove = 0;
-					isDamaged = 0;
 				}
 				jump_start = 10000;
 				isOnGround = true;
@@ -281,7 +266,7 @@ void CSimon::Render(Camera *camera)
 			ani = SIMON_ANI_JUMP_RIGHT;
 		else ani = SIMON_ANI_JUMP_LEFT;
 	}
-	if (isDamaged != 0)
+	if (isDamaged)
 	{
 		if (nx > 0)
 		{
@@ -382,7 +367,7 @@ void CSimon::StandUp()
 }
 void CSimon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x + 8;
+	left = x + 9;
 	top = y;
 	right = left + SIMON_IDLE_BBOX_WIDTH;
 	bottom = y + SIMON_IDLE_BBOX_HEIGHT;

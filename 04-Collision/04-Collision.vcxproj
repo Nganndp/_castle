@@ -126,6 +126,7 @@
     <ClInclude Include="Axe.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="CEffect.h" />
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="FireBullet.h" />
@@ -154,6 +155,7 @@
     <ClCompile Include="Axe.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="CEffect.cpp" />
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="define.cpp" />
     <ClCompile Include="FireBullet.cpp" />

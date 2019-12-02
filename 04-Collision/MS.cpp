@@ -29,19 +29,9 @@ void CMS::Render(Camera * camera) {
 			if (simon->nx > 0)
 			{
 				ani = 0;
-				if (animations[ani]->GetCurrentFrame() == 3)
-				{
-					animations[ani]->SetCurrentcFrame(-1);
-					SetActive(false);
-				}
 			}
 			else
 				ani = 1;
-			if (animations[ani]->GetCurrentFrame() == 3)
-			{
-				animations[ani]->SetCurrentcFrame(-1);
-				SetActive(false);
-			}
 			int alpha = 255;
 			animations[ani]->Render(camera->transform(x,y), alpha);
 
@@ -56,19 +46,9 @@ void CMS::Render(Camera * camera) {
 			if (simon->nx > 0)
 			{
 				ani = 2;
-				if (animations[ani]->GetCurrentFrame() == 3)
-				{
-					animations[ani]->SetCurrentcFrame(-1);
-					SetActive(false);
-				}
 			}
 			else
 				ani = 3;
-			if (animations[ani]->GetCurrentFrame() == 3)
-			{
-				animations[ani]->SetCurrentcFrame(-1);
-				SetActive(false);
-			}
 			int alpha = 255;
 				animations[ani]->Render(camera->transform(x,y), alpha);
 
@@ -83,19 +63,9 @@ void CMS::Render(Camera * camera) {
 			if (simon->nx > 0)
 			{
 				ani = 4;
-				if (animations[ani]->GetCurrentFrame() == 9)
-				{
-					animations[ani]->SetCurrentcFrame(-1);
-					SetActive(false);
-				}
 			}
 			else
 				ani = 5;
-			if (animations[ani]->GetCurrentFrame() == 9)
-			{
-				animations[ani]->SetCurrentcFrame(-1);
-				SetActive(false);
-			}
 			int alpha = 255;
 			animations[ani]->Render(camera->transform(x,y), alpha);
 

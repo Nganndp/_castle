@@ -20,13 +20,15 @@ SceneGame::SceneGame()
 	MS = new CMS();
 	MS->GetSimon(SIMON);
 	
-	//dummy weapon
+	//tokens
 	dagger = new CDagger(camera, SIMON->nx);
-	dagger->SetActive(false);
 	Axe = new CAxe(SIMON->GetPosition().x, camera, SIMON->nx);
-	Axe->SetActive(false);
 	Holywater = new CHolyWater(SIMON->GetPosition().x, camera, SIMON->nx);
-	Holywater->SetActive(false);
+
+	//Hidden money
+    hiddenmoney = new CTorch();
+	hiddenmoney->SetState(TORCH_STATE_MONEY4);
+	hiddenmoney->SetActive(false);
 }
 void SceneGame::OnKeyDown(int KeyCode)
 {
@@ -153,7 +155,6 @@ void SceneGame::OnKeyDown(int KeyCode)
 			bricks[i]->Setbboxcolor();
 		}
 		SIMON->Setbboxcolor();
-		//ghoul->Setbboxcolor();
 		break;
 	case DIK_W:
 		SIMON->StartAutoWalking(SIMON_AUTO_GO_TIME * 2);
@@ -197,12 +198,6 @@ void SceneGame::OnKeyDown(int KeyCode)
 			SIMON->SetStairUp(false);
 			SIMON->nx = -1;
 			break;
-		case DIK_5:
-			//SIMON->SetEatCross(true);
-			SIMON->StartIsDamaged();
-			break;
-		case DIK_6:
-			StopEnemyStart();
 	}
 }
 
@@ -272,10 +267,11 @@ void SceneGame::LoadResources()
 	else if (scene == 2)
 	{
 		grid->ClearGrid();
-		SIMON->SetPosition(1500, 168);
+		SIMON->SetPosition(10, 168);
 		Tile = new TileMap(L"textures\\castle_tilemap.png", ID_TEX_CASTLE, 42, 0);
 		Tile->LoadMap("ReadFile\\Map\\castle.txt");
 		LoadSceneObject(2);
+		hiddenmoney->SetPosition(1922, 300);
     }
 }
 /*
@@ -305,22 +301,6 @@ void SceneGame::Update(DWORD dt)
 			invisibleobjects.push_back(coObjects[i]);
 	}
 
-	//Update Objects
-	for (int i = 0; i < torches.size(); i++)
-	{
-		torches[i]->Update(dt, &bricks);
-	}
-	for (int i = 0; i < weapon.size(); i++)
-	{
-		weapon[i]->Update(dt, &bricks);
-	}
-	for (int i = 0; i < enemy.size(); i++)
-	{
-		enemy[i]->Update(dt, &bricks);
-	}
-	SIMON->Update(dt, &bricks, startpoint, endpoint);
-	MS->Update(dt, &bricks);
-
 	//Simon collision with torch
 	for (int i = 0; i < torches.size(); i++)
 	{
@@ -338,6 +318,8 @@ void SceneGame::Update(DWORD dt)
 			case TORCH_STATE_SHEART:
 				torch->SetActive(false);
 				break;
+			case TORCH_STATE_CHIKEN:
+				torch->SetActive(false);
 			case TORCH_STATE_CROSS:
 				torch->SetActive(false);
 				SIMON->SetEatCross(true);
@@ -348,6 +330,12 @@ void SceneGame::Update(DWORD dt)
 				StopEnemyStart();
 				break;
 			case TORCH_STATE_MONEY1:
+				torch->SetActive(false);
+			case TORCH_STATE_MONEY2:
+				torch->SetActive(false);
+			case TORCH_STATE_MONEY3:
+				torch->SetActive(false);
+			case TORCH_STATE_MONEY4:
 				torch->SetActive(false);
 			case TORCH_STATE_MSUP:
 				SIMON->StartChangeColor();
@@ -379,11 +367,42 @@ void SceneGame::Update(DWORD dt)
 				SIMON->SetThrowAxe(false);
 				SIMON->SetThrowHolyWater(true);
 				break;
+			case TORCH_STATE_DOUBLE_SHOOT:
+				torch->SetActive(false);
+				SIMON->SetNumWeapon(2);
 			}
 		}
 	}
 
-	//Simon collsion with Invisible Objects
+	//Simon collison with breakabkle brick
+	for (int i = 0; i < bricks.size(); i++)
+	{
+		if (bricks.at(i)->GetState() != BRICK_STATE_NORMAL)
+		{
+			if (SIMON->CheckCollision(bricks.at(i)))
+			{
+				if (bricks.at(i)->GetState() == BBRICK_STATE_CHIKEN)
+				{
+					bricks.at(i)->SetActive(false);
+				}
+				if (bricks.at(i)->GetState() == BBRICK_STATE_DOUBLE_SHOOT)
+				{
+					SIMON->SetNumWeapon(2);
+					bricks.at(i)->SetActive(false);
+				}
+				if (bricks.at(i)->GetState() == BBRICK_STATE_MONEY)
+				{
+					bricks.at(i)->SetActive(false);
+				}
+			}
+		}
+	}
+	if (SIMON->CheckCollision(hiddenmoney) && hiddenmoney->GetActive() == true)
+	{
+		hiddenmoney->SetActive(false);
+	}
+
+	//Simon collision with Invisible Objects
 	for (int i = 0; i < invisibleobjects.size(); i++)
 	{
 		InviObjects* InOb = dynamic_cast<InviObjects*>(invisibleobjects[i]);
@@ -405,6 +424,10 @@ void SceneGame::Update(DWORD dt)
 				InOb->SetActive(false);
 				if (SIMON->x >= InOb->x - 24)
 					SIMON->x = InOb->x - 24;
+				effect = new CEffect(camera);
+				effect->SetType(EFFECT_TYPE_DOOR);
+				effect->SetPosition(InOb->x, 57);
+				effects.push_back(effect);
 				camera->StartCamMove(3000);
 				camera->SetCamMoving(true);
 				if (stage == 1)
@@ -430,12 +453,30 @@ void SceneGame::Update(DWORD dt)
 					SIMON->SetPosition(1581, 190);
 				}
 			}
+			else if (InOb->type == SC_TYPE_UNDER_TO_LAND)
+			{
+				if (stage == 2)
+				{
+					stage = 3;
+					SIMON->SetPosition(1931, 212);
+				}
+				else if (stage == 3)
+				{
+					stage = 2;
+					SIMON->SetPosition(1901, 190);
+
+				}
+			}
 			else if (InOb->type == SC_TYPE_AUTO_CLOSE_DOOR)
 			{
 				InOb->SetActive(false);
 				camera->StartCamMove(1750);
 				camera->SetCamMoving(true);
 				SimonMove = false;
+			}
+			else if (InOb->type == MONEY_SPAWNER)
+			{
+				hiddenmoney->SetActive(true);
 			}
 			else if (InOb->type == GHOUL_SPAWNER)
 			{
@@ -501,11 +542,19 @@ void SceneGame::Update(DWORD dt)
 					fishman->nx = -1;
 					fishman->SetPosition(InOb->x - 50, InOb->y + 120);
 					enemy.push_back(fishman);
+					effect = new CEffect(camera);
+					effect->SetType(EFFECT_TYPE_WATER);
+					effect->SetPosition(InOb->x - 60, InOb->y + 50);
+					effects.push_back(effect);
 
-					fishman = new CFishman(SIMON, camera, InOb->x + 60);
+					fishman = new CFishman(SIMON, camera, InOb->x + 40);
 					fishman->nx = 1;
-					fishman->SetPosition(InOb->x + 60, InOb->y + 120);
+					fishman->SetPosition(InOb->x + 40, InOb->y + 120);
 					enemy.push_back(fishman);
+					effect = new CEffect(camera);
+					effect->SetType(EFFECT_TYPE_WATER);
+					effect->SetPosition(InOb->x + 50, InOb->y + 50);
+					effects.push_back(effect);
 					SpawnDelayFishmanStart();
 				}
 
@@ -660,9 +709,9 @@ void SceneGame::Update(DWORD dt)
 					else SIMON->nx = 1;
 					if (SIMON->GetOnStair() == false)
 					{
-						SIMON->StartIsUnTouchable();
+						SIMON->StartIsDamaged();
 					}
-					SIMON->StartIsDamaged();
+					SIMON->StartIsUnTouchable();
 				}
 				if (enemy.at(i)->type == BAT)
 				{
@@ -740,12 +789,43 @@ void SceneGame::Update(DWORD dt)
 		}
 	}
 
+	//Morning Star collsion with breackable brick
+	for (int i = 0; i < bricks.size(); i++)
+	{
+		if (MS->CheckCollision(bricks.at(i)))
+		{
+			if (bricks.at(i)->state != BRICK_STATE_NORMAL)
+			{
+				effect = new CEffect(camera);
+				effect->SetPosition(bricks.at(i)->x - 30, bricks.at(i)->y - 20);
+				effect->SetType(EFFECT_TYPE_BRICK);
+				effects.push_back(effect);
+				if (bricks.at(i)->GetState() == BBRICK_STATE_NORMAL)
+				{
+					bricks.at(i)->SetActive(false);
+				}
+				else if (bricks.at(i)->GetState()== BBRICK_STATE_CHIKEN_BRICK)
+				{
+					bricks.at(i)->SetState(BBRICK_STATE_CHIKEN);
+				}
+				else if (bricks.at(i)->GetState() == BBRICK_STATE_MONEY_BRICK)
+				{
+					bricks.at(i)->SetState(BBRICK_STATE_MONEY);
+				}
+				else if (bricks.at(i)->GetState() == BBRICK_STATE_DOUBLE_SHOOT_BRICK)
+				{
+					bricks.at(i)->SetState(BBRICK_STATE_DOUBLE_SHOOT);
+				}
+			}
+		}
+	}
+
 	//Weapon collision with enemy
 	for (int i = 0; i < enemy.size(); i++)
 	{
-		if (MS->CheckCollision(enemy.at(i)) 
+		if (MS->CheckCollision(enemy.at(i))
 			|| dagger->CheckCollision(enemy.at(i)) && dagger->active == true
-			|| Axe->CheckCollision(enemy.at(i)) && Axe->active == true 
+			|| Axe->CheckCollision(enemy.at(i)) && Axe->active == true
 			|| Holywater->CheckCollision(enemy.at(i)) && Holywater->isOnGround)
 		{
 			dagger->SetActive(false);
@@ -760,12 +840,33 @@ void SceneGame::Update(DWORD dt)
 		}
 	}
 
-	//Delete weapon when unactive
+	//Delete object when unactive
 	for (int i = 0; i < weapon.size(); i++)
 	{
 		if (weapon.at(i)->GetActive() == false)
 		{
 			weapon.erase(weapon.begin() + i);
+		}
+	}
+	for (int i = 0; i < effects.size(); i++)
+	{
+		if (effects.at(i)->GetActive() == false)
+		{
+			effects.erase(effects.begin() + i);
+		}
+	}
+	for (int i = 0; i < bricks.size(); i++)
+	{
+		if (bricks.at(i)->GetActive() == false)
+		{
+			bricks.erase(bricks.begin() + i);
+		}
+	}
+	for (int i = 0; i < torches.size(); i++)
+	{
+		if (torches.at(i)->GetActive() == false)
+		{
+			torches.erase(torches.begin() + i);
 		}
 	}
 
@@ -808,7 +909,7 @@ void SceneGame::Update(DWORD dt)
 			if (stage == 2)
 			{
 				startpoint = 1535;
-				endpoint = 2051;
+				endpoint = 2060;
 				camstoppoint = 1535;
 			}
 			if (stage == 3)
@@ -841,24 +942,30 @@ void SceneGame::Update(DWORD dt)
 		}
 	}
 
-	//Adjust enemy to map
+	//Update Objects
+	for (int i = 0; i < torches.size(); i++)
+	{
+		torches[i]->Update(dt, &bricks);
+	}
+	for (int i = 0; i < weapon.size(); i++)
+	{
+		weapon[i]->Update(dt, &bricks);
+	}
 	for (int i = 0; i < enemy.size(); i++)
 	{
-		if (enemy.at(i)->type == GHOUL)
-		{
-			if (stage == 1)
-			{
-				if (enemy.at(i)->x >= 1502 && enemy.at(i)->nx > 0)
-				{
-					enemy.at(i)->nx = -1;
-				}
-			}
-			else if (stage == 4)
-			{
-
-			}
-		}
+		enemy[i]->Update(dt, &bricks);
 	}
+	for (int i = 0; i < effects.size(); i++)
+	{
+		effects[i]->Update(dt, &bricks);
+	}
+	for (int i = 0; i < bricks.size(); i++)
+	{
+		bricks[i]->Update(dt, &bricks);
+	}
+	SIMON->Update(dt, &bricks, startpoint, endpoint);
+	MS->Update(dt, &bricks);
+	hiddenmoney->Update(dt, &bricks);
 
 	//functiions that affect the scene
 	if (GetTickCount() - spawndelayghoultimer_start > SPAWN_DELAY_TIMER)
@@ -954,6 +1061,11 @@ void SceneGame::Render()
 			enemy[i]->Render(camera);
 		for (int i = 0; i < weapon.size(); i++)
 			weapon[i]->Render(camera);
+		for (int i = 0; i < effects.size(); i++)
+			effects[i]->Render(camera);
+		for (int i = 0; i < bricks.size(); i++)
+			bricks[i]->Render(camera);
+		hiddenmoney->Render(camera);
 		SIMON->Render(camera);
 		MS->Render(camera);
 		spriteHandler->End();
@@ -1001,6 +1113,12 @@ void SceneGame::LoadObjectFromFile(string source)
 						InOb->SetType(arr[3]);
 						grid->InsertIntoGrid(InOb, arr[6], arr[7], arr[8], arr[9]);
 						break;
+					case BREAKABLE_BRICK:
+						brick = new CBrick();
+						brick->SetMulwidth(1);
+						brick->SetState(arr[3]);
+						brick->SetPosition(arr[1], arr[2]);
+						grid->InsertIntoGrid(brick, arr[6], arr[7], arr[8], arr[9]);
 					}
 
 					flag = 0;
