@@ -36,7 +36,7 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (ny != 0) vy = 0;
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
-	if (GetTickCount() - dietime_start > 200)
+	if (GetTickCount() - dietime_start > ENEMY_DIE_TIME)
 	{
 		dietime_start = 0;
 		die = 0;
@@ -69,17 +69,17 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (isOnGround == false)
 		{
-			if (vx < 0 && x < FirstX - 15)
+			if (vx < 0 && x < FirstX - ENEMY_SHEART_RANGE)
 			{
-				x = FirstX - 15; vx = -vx;
+				x = FirstX - ENEMY_SHEART_RANGE; vx = -vx;
 			}
 
-			if (vx > 0 && x > FirstX + 15)
+			if (vx > 0 && x > FirstX + ENEMY_SHEART_RANGE)
 			{
-				x = FirstX + 15; vx = -vx;
+				x = FirstX + ENEMY_SHEART_RANGE; vx = -vx;
 			}
 			vy = GRAVITY * dt;
-			vx = -0.05f;
+			vx = ENEMY_SHEART_SPEED;
 		}
 	}
 }

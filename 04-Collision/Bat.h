@@ -5,16 +5,14 @@
 class CBat :public CGameObject
 {
 	bool isStop = false;
-	//int die = 0;
-	//DWORD dietime_start;
 public:
 	CBat(D3DXVECTOR2 pos) :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Batani.txt", this);
 		state = ENEMY_STATE_MOVING;
 		type = BAT;
-		vx = 0.04f;
-		vy = 0.03f;
+		vx = BAT_SPEED_X;
+		vy = BAT_SPEED_Y;
 		active = true;
 		FirstY = pos.y;
     };

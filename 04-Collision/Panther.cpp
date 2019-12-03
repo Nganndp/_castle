@@ -19,7 +19,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	if (state == ENEMY_STATE_MOVING)
 	{
-		vy = 0.2f;
+		vy = PANTHER_GRAVITY;
 	}
 		if ((x - Simon->x) < 80 && state ==ENEMY_STATE_JUMPING || (x - Simon->x) < 80 && state == ENEMY_STATE_IDLE)
 		{
@@ -39,16 +39,16 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			if (isOnGround == false)
 			{
-				if (vx < 0 && x < FirstX - 15)
+				if (vx < 0 && x < FirstX - ENEMY_SHEART_RANGE)
 				{
-					x = FirstX - 15; vx = -vx;
+					x = FirstX - ENEMY_SHEART_RANGE; vx = -vx;
 				}
 
-				if (vx > 0 && x > FirstX + 15)
+				if (vx > 0 && x > FirstX + ENEMY_SHEART_RANGE)
 				{
-					x = FirstX + 15; vx = -vx;
+					x = FirstX + ENEMY_SHEART_RANGE; vx = -vx;
 				}
-				vx = -0.05f;
+				vx = ENEMY_SHEART_SPEED;
 			}
 		}
 		if (state == ENEMY_STATE_MOVING && vx < 0 && x <= Simon->x - (SCREEN_WIDTH/2))
@@ -58,7 +58,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vx = -vx;
 		}
 		
-		if (GetTickCount() - dietime_start > 200)
+		if (GetTickCount() - dietime_start > ENEMY_DIE_TIME)
 		{
 			dietime_start = 0;
 			die = 0;
@@ -119,26 +119,25 @@ void CPanther::SetState(int state)
 		break;
 	case ENEMY_STATE_MOVING:
 		if (nx < 0)
-		vx = -0.23f;
+		vx = -PANTHER_SPEED;
 		else
-		vx = 0.23f;
+		vx = PANTHER_SPEED;
 		break;
 
 	case ENEMY_STATE_JUMPING:
+		vy = PANTHER_JUMP_SPEED_Y;
 		if (nx < 0)
 		{
-			vy = -0.1f;
-			vx = -0.12f;
+			vx = -PANTHER_JUMP_SPEED_X;
 		}
 		else
 		{
-			vy = -0.1f;
-			vx = 0.12f;
+			vx = PANTHER_JUMP_SPEED_X;
 		}
 		break;
 
 	case ENEMY_STATE_FALLING:
-		vy = 0.12f;
+		vy = PANTHER_JUMP_SPEED_X;
 		break;
 	}
 }
@@ -172,7 +171,7 @@ void CPanther::Render(Camera* camera)
 
 void CPanther::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x + 1;
+	left = x;
 	top = y;
 	right = x + 34;
 	bottom = y + 15;

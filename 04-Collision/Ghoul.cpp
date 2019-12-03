@@ -105,11 +105,6 @@ void CGhoul::SetState(int state)
 
 	switch (state)
 	{
-	//case ENEMY_STATE_MOVING:
-	//	if (nx > 0)
-	//		vx = 0.052f;
-	//	else
-	//		vx = -0.052f;
 	case ENEMY_STATE_IDLE:
 		vx = 0;
 		break;
@@ -143,10 +138,10 @@ void CGhoul::Render(Camera * camera)
 
 void CGhoul::GetBoundingBox(float & left, float & top, float & right, float & bottom)
 {
-		left = x+1;
+		left = x;
 		top = y;
-		right = x + 16;
-		bottom = y + 32;
+		right = x + GHOUL_BOX_WIDTH;
+		bottom = y + GHOUL_BOX_HEIGHT;
 		if (state == ENEMY_STATE_SHEART)
 		{
 			right = x + SHEART_WIDTH;

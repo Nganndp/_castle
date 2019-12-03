@@ -16,6 +16,9 @@ public:
 #define SHEART_WIDTH 8
 #define SHEART_HEIGHT 8
 
+#define CAM_MOVE_TIME1 3000
+#define CAM_MOVE_TIME2 1750
+
 #define MAX_FRAME_RATE 120
 #define GRAVITY 0.0015f
 #define ID_TEX_SIMON 1
@@ -38,6 +41,8 @@ public:
 #define SOURCE_ENTRANCE_TXT "ReadFile\\Map\\entrance.txt"
 #define SOURCE_CASTLE_PNG L"textures\\castle_tilemap.png"
 #define SOURCE_CASTLE_TXT "ReadFile\\Map\\castle.txt"
+#define SOURCE_ENTRANCE_ELEMENT_TXT "ReadFile\\SceneElement\\Scene1.txt"
+#define SOURCE_CASTLE_ELEMENT_TXT "ReadFile\\SceneElement\\Scene2.txt"
 
 //Simon
 #define SIMON_WALKING_SPEED		    0.05f 
@@ -236,6 +241,10 @@ public:
 #define FISHMAN 2003
 #define FIREBULLET 2004
 
+#define ENEMY_DIE_TIME 200
+#define ENEMY_SHEART_RANGE 15
+#define ENEMY_SHEART_SPEED -0.05f
+
 #define ENEMY_STATE_MOVING 0
 #define ENEMY_STATE_DIE 1
 #define ENEMY_STATE_IDLE 2
@@ -245,6 +254,8 @@ public:
 #define ENEMY_STATE_ATTACK 6
 
 //Ghoul
+#define GHOUL_BOX_WIDTH 16
+#define GHOUL_BOX_HEIGHT 32
 #define GHOUL_ANI_IDLE_RIGHT 0
 #define GHOUL_ANI_IDLE_LEFT 1
 #define GHOUL_ANI_WALKING_RIGHT 2
@@ -253,6 +264,8 @@ public:
 #define GHOUL_ANI_SHEART 5
 
 //Bat
+#define BAT_SPEED_X 0.04f
+#define BAT_SPEED_Y 0.03f
 #define BAT_ANI_IDLE_RIGHT 0
 #define BAT_ANI_IDLE_LEFT 1
 #define BAT_ANI_FLYING_RIGHT 2
@@ -261,6 +274,10 @@ public:
 #define BAT_ANI_SHEART 5
 
 //Fishman
+#define FISHMAN_BOX_WIDTH 16
+#define FISHMAN_BOX_HEIGHT 32
+#define FISHMAN_ATTACK_TIME 300
+#define FISHMAN_JUMP_SPEED 0.015f
 #define FISHMAN_ANI_IDLE_RIGHT 0
 #define FISHMAN_ANI_IDLE_LEFT 1
 #define FISHMAN_ANI_WALKING_RIGHT 2
@@ -269,8 +286,17 @@ public:
 #define FISHMAN_ANI_SHEART 5
 #define FISHMAN_ANI_ATTACK_RIGHT 6
 #define FISHMAN_ANI_ATTACK_LEFT 7
+#define FISHMAN_MOVE_LEFT_RANGE 10
+#define FISHMAN_MOVE_RIGHT_RANGE 50
+#define BULLET_SPEED 0.07f
 
 //Panther
+#define PANTHER_BOX_WIDTH
+#define PANTHER_BOX_HEIGHT 
+#define PANTHER_GRAVITY 0.2f
+#define PANTHER_SPEED 0.23f
+#define PANTHER_JUMP_SPEED_X 0.12
+#define PANTHER_JUMP_SPEED_Y -0.1f
 #define PANTHER_ANI_IDLE 0
 #define PANTHER_ANI_RUNNING_RIGHT 1
 #define PANTHER_ANI_RUNNING_LEFT 2

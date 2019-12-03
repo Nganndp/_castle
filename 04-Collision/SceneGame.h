@@ -47,7 +47,9 @@ public:
 	void Update(DWORD dt);
 	void Render();
 	void LoadObjectFromFile(string source);
+	void LoadElementFromFile(string source);
 	void LoadSceneObject(int a);
+	void LoadSceneElement(int a);
 	void SpawnDelayGhoulStart() { spawndelayghoul = 1;  spawndelayghoultimer_start = GetTickCount(); }
 	void SpawnDelayBatStart() { spawndelaybat = 1;  spawndelaybattimer_start = GetTickCount(); }
 	void SpawnDelayFishmanStart() { spawndelayfishman = 1;  spawndelayfishmantimer_start = GetTickCount(); }
@@ -111,14 +113,14 @@ public:
 	//read from file
 	int simonposstartx;
 	int simonposstarty;
+	int simonposlandtounderground1x;
+	int simonposlandtounderground1y;
 	int simonposundergroundtoland1x;
 	int simonposundergroundtoland1y;
-    int simonposlandtounderground1x;
-	int simonposlandtounderground1y;
-	int simonposundergroundtoland2x;
-	int simonposundergroundtoland2y;
 	int simonposlandtounderground2x;
 	int simonposlandtounderground2y;
+	int simonposundergroundtoland2x;
+	int simonposundergroundtoland2y;
 	int hiddenmoneyposx;
 	int hiddenmoneyposy;
 	int ghouly;
@@ -136,5 +138,6 @@ public:
 	int endstage3;
 	int startstage4;
 	int endstage4;
+	int effectdoory;
 };
 

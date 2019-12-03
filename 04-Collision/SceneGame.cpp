@@ -4,7 +4,6 @@ SceneGame::SceneGame()
 {
 	game = CGame::GetInstance();
 	camera = new Camera();
-	scene = 1;
 
 	//Textures
 	CTextures* textures = CTextures::GetInstance();
@@ -14,7 +13,7 @@ SceneGame::SceneGame()
 	sprites->Load();
 
 	grid = new Grid();
-
+	//LoadSceneElement(1);
 	SIMON = new CSimon();
 
 	MS = new CMS();
@@ -254,28 +253,16 @@ void SceneGame::LoadResources(LPCWSTR picturePath, int idTex, const char* filepa
 {
 	camera->SetCamera(0, 0);
 	grid->ClearGrid();
-    SIMON->SetPosition(10, 154);
-	hiddenmoney->SetPosition(600, 168);
+	LoadSceneElement(scene);
+	LoadSceneObject(scene);
+	SIMON->SetPosition(simonposstartx, simonposstarty);
+	hiddenmoney->SetPosition(hiddenmoneyposx, hiddenmoneyposy);
 	Tile = new TileMap(picturePath, idTex, 42, 0);
 	Tile->LoadMap(filepath);
-	LoadSceneObject(scene);
-	SIMON->SetStartPoint(0);
-	SIMON->SetEndPoint(770);
-	camera->SetStartPoint(0);
-	camera->SetEndPoint(770);
-	//else if (scene == 2)
-	//{
-	//	grid->ClearGrid();
-	//	SIMON->SetPosition(1490, 53);
-	//	Tile = new TileMap(SOURCE_CASTLE_PNG, ID_TEX_CASTLE, 42, 0);
-	//	Tile->LoadMap(SOURCE_CASTLE_TXT);
-	//	LoadSceneObject(2);
-	//	hiddenmoney->SetPosition(1922, 300);
-	//	SIMON->SetStartPoint(0);
-	//	SIMON->SetEndPoint(1550);
-	//	camera->SetStartPoint(0);
-	//	camera->SetEndPoint(1550);
- //   }
+	SIMON->SetStartPoint(startstage1);
+	SIMON->SetEndPoint(endstage1);
+	camera->SetStartPoint(startstage1);
+	camera->SetEndPoint(endstage1);
 }
 /*
 	Update world status for this frame
@@ -310,31 +297,43 @@ void SceneGame::Update(DWORD dt)
 		CTorch* torch = dynamic_cast<CTorch*>(torches[i]);
 		if (SIMON->CheckCollision(torch))
 		{
-			torch->SetActive(false);
 			switch (torch->GetState())
 			{
+			case TORCH_STATE_CANDLE:
+			case TORCH_STATE_NORMAL:
+					break;
 			case TORCH_STATE_LHEART:
+				torch->SetActive(false);
 				break;
 			case TORCH_STATE_SHEART:
+				torch->SetActive(false);
 				break;
 			case TORCH_STATE_CHIKEN:
+				torch->SetActive(false);
 				break;
 			case TORCH_STATE_CROSS:
+				torch->SetActive(false);
 				SIMON->SetEatCross(true);
 				enemy.clear();
 				break;
 			case TORCH_STATE_CLOCK:
+				torch->SetActive(false);
 				StopEnemyStart();
 				break;
 			case TORCH_STATE_MONEY1:
+				torch->SetActive(false);
 				break;
 			case TORCH_STATE_MONEY2:
+				torch->SetActive(false);
 				break;
 			case TORCH_STATE_MONEY3:
+				torch->SetActive(false);
 				break;
 			case TORCH_STATE_MONEY4:
+				torch->SetActive(false);
 				break;
 			case TORCH_STATE_MSUP:
+				torch->SetActive(false);
 				SIMON->StartChangeColor();
 				if (SIMON->GetLevel() == SIMON_LEVEL_MS_1)
 				{
@@ -346,21 +345,25 @@ void SceneGame::Update(DWORD dt)
 				}
 				break;
 			case TORCH_STATE_DAGGER:
+				torch->SetActive(false);
 				SIMON->SetThrowDagger(true);
 				SIMON->SetThrowAxe(false);
 				SIMON->SetThrowHolyWater(false);
 				break;
 			case TORCH_STATE_AXE:
+				torch->SetActive(false);
 				SIMON->SetThrowDagger(false);
 				SIMON->SetThrowAxe(true);
 				SIMON->SetThrowHolyWater(false);
 				break;
 			case TORCH_STATE_HOLYWATER:
+				torch->SetActive(false);
 				SIMON->SetThrowDagger(false);
 				SIMON->SetThrowAxe(false);
 				SIMON->SetThrowHolyWater(true);
 				break;
 			case TORCH_STATE_DOUBLE_SHOOT:
+				torch->SetActive(false);
 				SIMON->SetNumWeapon(2);
 			}
 		}
@@ -421,66 +424,70 @@ void SceneGame::Update(DWORD dt)
 				effect->SetType(EFFECT_TYPE_DOOR);
 				effect->SetPosition(InOb->x, 57);
 				effects.push_back(effect);
-				camera->StartCamMove(3000);
+				camera->StartCamMove(CAM_MOVE_TIME1);
 				camera->SetCamMoving(true);
 				if (SIMON->GetStartPoint() == 0)
 				{
 					stage = 2;
-					SIMON->SetEndPoint(2060);
-					camera->SetEndPoint(2060);
+					SIMON->SetEndPoint(endstage2);
+					camera->SetEndPoint(endstage2);
 				}
-				else if (SIMON->GetStartPoint() == 1535)
+				else if (SIMON->GetStartPoint() == startstage2)
 				{
-					stage = 4;
+					SIMON->SetEndPoint(endstage4);
+					camera->SetEndPoint(endstage4);
 				}
 				SimonMove = true;
 			}
 			else if (InOb->type == SC_TYPE_AUTO_CLOSE_DOOR)
 			{
 				InOb->SetActive(false);
-				camera->StartCamMove(1745);
+				camera->StartCamMove(CAM_MOVE_TIME2);
 				camera->SetCamMoving(true);
 				SimonMove = false;
 				if (SIMON->GetStartPoint() == 0)
 				{
-					SIMON->SetStartPoint(1535);
-					camera->SetStartPoint(1535);
-					endpoint = 2060;
+					SIMON->SetStartPoint(startstage2);
+					camera->SetStartPoint(startstage2);
+					endpoint = endstage2;
 				}
 			}
 			else if (InOb->type == SC_TYPE_UNDER_GROUND)
 			{
-				if (SIMON->GetStartPoint() == 1535)
+				if (SIMON->GetStartPoint() == startstage2)
 				{
-					//stage = 3;
-					SIMON->SetStartPoint(1579);
-					SIMON->SetEndPoint(2108);
-					camera->SetStartPoint(1579);
-					camera->SetEndPoint(2108);
-					SIMON->SetPosition(1611, 212);
+					SIMON->SetStartPoint(startstage3);
+					SIMON->SetEndPoint(endstage3);
+					camera->SetStartPoint(startstage3);
+					camera->SetEndPoint(endstage3);
+					SIMON->SetPosition(simonposlandtounderground1x, simonposlandtounderground1y);
 				}
-				else if (SIMON->GetStartPoint() == 1579)
+				else if (SIMON->GetStartPoint() == startstage3)
 				{
-					//stage = 2;
-					SIMON->SetStartPoint(1535);
-					SIMON->SetEndPoint(2060);
-					camera->SetStartPoint(1535);
-					camera->SetEndPoint(2060);
-					SIMON->SetPosition(1581, 190);
+					SIMON->SetStartPoint(startstage2);
+					SIMON->SetEndPoint(endstage2);
+					camera->SetStartPoint(startstage2);
+					camera->SetEndPoint(endstage2);
+					SIMON->SetPosition(simonposundergroundtoland1x, simonposundergroundtoland1y);
 				}
 			}
 			else if (InOb->type == SC_TYPE_UNDER_TO_LAND)
 			{
-				if (stage == 2)
+				if (SIMON->GetStartPoint() == startstage2)
 				{
-					stage = 3;
-					SIMON->SetPosition(1931, 212);
+					SIMON->SetStartPoint(startstage3);
+					SIMON->SetEndPoint(endstage3);
+					camera->SetStartPoint(startstage3);
+					camera->SetEndPoint(endstage3);
+					SIMON->SetPosition(simonposlandtounderground2x, simonposlandtounderground2y);
 				}
-				else if (stage == 3)
+				else if (SIMON->GetStartPoint() == startstage3)
 				{
-					stage = 2;
-					SIMON->SetPosition(1901, 190);
-
+					SIMON->SetStartPoint(startstage2);
+					SIMON->SetEndPoint(endstage2);
+					camera->SetStartPoint(startstage2);
+					camera->SetEndPoint(endstage2);
+					SIMON->SetPosition(simonposundergroundtoland2x, simonposundergroundtoland2y);
 				}
 			}
 			else if (InOb->type == MONEY_SPAWNER)
@@ -499,14 +506,14 @@ void SceneGame::Update(DWORD dt)
 					{
 						ghoul = new CGhoul();
 						ghoul->nx = 1;
-						ghoul->SetPosition(camera->GetPosition().x - 20 - i * 20, 170);
+						ghoul->SetPosition(camera->GetPosition().x - 20 - i * 20, ghouly);
 						enemy.push_back(ghoul);
 					}
 					for (int i = 0; i < (4 - a); i++)
 					{
 						ghoul = new CGhoul();
 						ghoul->nx = -1;
-						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 20, 170);
+						ghoul->SetPosition(camera->GetPosition().x + SCREEN_WIDTH + i * 20, ghouly);
 						enemy.push_back(ghoul);
 					}
 					SpawnDelayGhoulStart();
@@ -517,17 +524,17 @@ void SceneGame::Update(DWORD dt)
 			{
 				if (spawndelaypanther == 0)
 				{
-					panther = new CPanther(SIMON, camera, 690);
+					panther = new CPanther(SIMON, camera, panther1x);
 					panther->nx = -1;
-					panther->SetPosition(690, 124);
+					panther->SetPosition(panther1x, panther1y);
 					enemy.push_back(panther);
-					panther = new CPanther(SIMON, camera, 863);
+					panther = new CPanther(SIMON, camera, panther2x);
 					panther->nx = -1;
-					panther->SetPosition(863, 92);
+					panther->SetPosition(panther2x, panther2y);
 					enemy.push_back(panther);
-					panther = new CPanther(SIMON, camera, 960);
+					panther = new CPanther(SIMON, camera, panther3x);
 					panther->nx = -1;
-					panther->SetPosition(960, 124);
+					panther->SetPosition(panther3x, panther3y);
 					enemy.push_back(panther);
 					SpawnDelayPantherStart();
 				}
@@ -1125,6 +1132,72 @@ void SceneGame::LoadSceneObject(int scene)
 		grid->mapcol = 35;
 	}
 }
+
+void SceneGame::LoadElementFromFile(string source)
+{
+	vector<int> numbers;
+	int flag = 0;
+	int number;
+	int arr[28];
+	int simonstartx;
+	int simonstarty;
+	ifstream file_objects(source);
+	if (file_objects.is_open())
+	{
+		while (!file_objects.eof())
+		{
+			while (file_objects >> number)
+			{
+				arr[flag] = number;
+				flag++;
+				if (flag == 27)
+				{
+					simonposstartx = arr[0];
+				    simonposstarty = arr[1];
+					simonposlandtounderground1x = arr[2];
+					simonposlandtounderground1y = arr[3];
+					simonposundergroundtoland1x = arr[4];
+					simonposundergroundtoland1y = arr[5];
+					simonposlandtounderground2x = arr[6];
+					simonposlandtounderground2y = arr[7];
+					simonposundergroundtoland2x = arr[8];
+					simonposundergroundtoland2y = arr[9];
+					hiddenmoneyposx = arr[10];
+					hiddenmoneyposy = arr[11];
+				    ghouly = arr[12];
+					panther1x = arr[13];
+					panther1y = arr[14];
+					panther2x = arr[15];
+					panther2y = arr[16];
+					panther3x = arr[17];
+					panther3y = arr[18];
+					startstage1 = arr[19];
+					endstage1 = arr[20];
+					startstage2 = arr[21];
+					endstage2 = arr[22];
+					startstage3 = arr[23];
+					endstage3 = arr[24];
+					startstage4 = arr[25];
+					endstage4 = arr[26];
+					effectdoory = arr[27];
+				}
+			}
+		}
+	}
+}
+
+void SceneGame::LoadSceneElement(int scene)
+{
+	if (scene == 1)
+	{
+		LoadElementFromFile(SOURCE_ENTRANCE_ELEMENT_TXT);
+	}
+	if (scene == 2)
+	{
+		LoadElementFromFile(SOURCE_CASTLE_ELEMENT_TXT);
+	}
+}
+
 SceneGame::~SceneGame()
 {
 	delete Tile;

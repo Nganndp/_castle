@@ -13,8 +13,8 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	x += dx; 
 	if (nx > 0)
-		vx = 0.07f;
-	else vx = -0.07f;
+		vx = BULLET_SPEED;
+	else vx = -BULLET_SPEED;
 }
 
 void CFireBullet::SetState(int state)
@@ -38,7 +38,7 @@ void CFireBullet::GetBoundingBox(float& left, float& top, float& right, float& b
 {
 	left = x ;
 	top = y;
-	right = x + 9;
-	bottom = y + 9;
+	right = x + SHEART_WIDTH;
+	bottom = y + SHEART_HEIGHT;
 }
 
