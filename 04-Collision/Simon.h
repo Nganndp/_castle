@@ -26,6 +26,8 @@ class CSimon: public CGameObject
 	int isUntouchable;
 	int alpha;
 	int numweapon;
+	int startpoint;
+	int endpoint;
 	float autowalkingtime;
 	bool active = true;
 	bool sit = false;
@@ -62,10 +64,6 @@ public:
 		alpha = 255;
 		level = SIMON_LEVEL_MS_1;
 	}
-	void StandUp();
-	void SitDown();
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects, float startpoint, float endpoint);
-	virtual void Render(Camera *camera);
 	int GetLevel()
 	{
 		return level;
@@ -101,6 +99,14 @@ public:
 	int GetNumWeapon()
 	{
 		return numweapon;
+	}
+	int GetStartPoint()
+	{
+		return startpoint;
+	}
+	int GetEndPOint()
+	{
+		return endpoint;
 	}
 	boolean GetSit()
 	{
@@ -173,6 +179,14 @@ public:
 	{
 		numweapon = a;
 	}
+	void SetStartPoint(int a)
+	{
+		startpoint = a;
+	}
+	void SetEndPoint(int b)
+	{
+		endpoint = b;
+	}
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
 	void StartJumpMove() { jumpmove = 1; jump_start = GetTickCount(); }
 	void StartAttack() { attack = 1; attack_start = GetTickCount();
@@ -190,6 +204,9 @@ public:
 	void StartIsUnTouchable() { isUntouchable = 1; isUntouchable_start = GetTickCount(); }
 	void SetSit(boolean a) { sit= a; };
 	void SetJump(int a) { jump = a; }
-	void CheckCollisionWithGround(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);
+	void StandUp();
+	void SitDown();
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);
+	virtual void Render(Camera* camera);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

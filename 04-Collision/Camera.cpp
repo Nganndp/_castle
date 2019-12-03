@@ -9,7 +9,7 @@ Camera::~Camera()
 {
 }
 
-void Camera::Update(DWORD dt, float startpoint, float endpoint, float camstoppoint, int stage)
+void Camera::Update(DWORD dt, float start, float end)
 {
 	if (GetTickCount() - cammove_start > cameramovetime)
 	{
@@ -20,7 +20,7 @@ void Camera::Update(DWORD dt, float startpoint, float endpoint, float camstoppoi
 	{
 		cam_x += 1;
 	}
-	if (cam_x >= 1535 && stage ==2)
+	if (cam_x >= startpoint && endpoint == end)
 	{
 		CamMoving = false;
 	}

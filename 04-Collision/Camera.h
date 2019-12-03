@@ -9,19 +9,24 @@ public:
 	float cam_x;
 	float cam_y;
 	int cammove = 0;
+	int startpoint;
+	int endpoint;
 	bool CamMoving = false;
 	float cameramovetime;
 	DWORD cammove_start;
 	Camera();
 	~Camera();
-
-	void Update(DWORD dt, float startpoint, float endpoint, float camstoppoint, int stage);
-	void SetCamera(float x, float y);
-	void SetCamMoving(bool a) { CamMoving = a; }
-	void StartCamMove(float a) { cammove = 1; cammove_start = GetTickCount(); cameramovetime = a; }
 	int GetCamMove()
 	{
 		return cammove;
+	}
+	int GetStartPoint()
+	{
+		return startpoint;
+	}
+	int GetEndPoint()
+	{
+		return endpoint;
 	}
 	boolean GetCamMoving()
 	{
@@ -29,6 +34,17 @@ public:
 	}
 	D3DXVECTOR2 GetPosition();
 	D3DXVECTOR2 transform(float x_world, float y_world);
-
+	void SetStartPoint(int a)
+	{
+		startpoint = a;
+	}
+	void SetEndPoint(int b)
+	{
+		endpoint = b;
+	}
+	void SetCamera(float x, float y);
+	void SetCamMoving(bool a) { CamMoving = a; }
+	void StartCamMove(float a) { cammove = 1; cammove_start = GetTickCount(); cameramovetime = a; }
+	void Update(DWORD dt, float start, float end);
 };
 

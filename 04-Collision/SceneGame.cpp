@@ -180,17 +180,15 @@ void SceneGame::OnKeyDown(int KeyCode)
 		}
 		break;
 	case DIK_2:
-		scene = 2;
-		stage = 1;
-	    LoadResources();
+	    LoadResources(SOURCE_CASTLE_PNG, ID_TEX_CASTLE, SOURCE_CASTLE_TXT, 2);
         break;
-		case DIK_3:
+	case DIK_3:
 			stage = 3;
 			SIMON->SetPosition(1931, 212);
 			SIMON->SetOnStair(true);
 			SIMON->SetStairUp(false);
 			break;
-		case DIK_4:
+	case DIK_4:
 			stage = 2;
 			SIMON->SetPosition(1901, 190);
 			SIMON->SetOnStair(true);
@@ -252,27 +250,32 @@ void  SceneGame::KeyState(BYTE* states)
 	else
 		SIMON->SetState(SIMON_STATE_IDLE);
 }
-void SceneGame::LoadResources()
+void SceneGame::LoadResources(LPCWSTR picturePath, int idTex, const char* filepath, int scene)
 {
 	camera->SetCamera(0, 0);
-
-	if (scene == 1)
-	{
-		SIMON->SetPosition(10, 154);
-		Tile = new TileMap(L"textures\\entrance_tilemap.png", ID_TEX_ENTRANCESTAGE, 42, 0);
-		Tile->LoadMap("ReadFile\\Map\\entrance.txt");
-		LoadSceneObject(1);
-		hiddenmoney->SetPosition(600, 168);
-	}
-	else if (scene == 2)
-	{
-		grid->ClearGrid();
-		SIMON->SetPosition(10, 172);
-		Tile = new TileMap(L"textures\\castle_tilemap.png", ID_TEX_CASTLE, 42, 0);
-		Tile->LoadMap("ReadFile\\Map\\castle.txt");
-		LoadSceneObject(2);
-		hiddenmoney->SetPosition(1922, 300);
-    }
+	grid->ClearGrid();
+    SIMON->SetPosition(10, 154);
+	hiddenmoney->SetPosition(600, 168);
+	Tile = new TileMap(picturePath, idTex, 42, 0);
+	Tile->LoadMap(filepath);
+	LoadSceneObject(scene);
+	SIMON->SetStartPoint(0);
+	SIMON->SetEndPoint(770);
+	camera->SetStartPoint(0);
+	camera->SetEndPoint(770);
+	//else if (scene == 2)
+	//{
+	//	grid->ClearGrid();
+	//	SIMON->SetPosition(1490, 53);
+	//	Tile = new TileMap(SOURCE_CASTLE_PNG, ID_TEX_CASTLE, 42, 0);
+	//	Tile->LoadMap(SOURCE_CASTLE_TXT);
+	//	LoadSceneObject(2);
+	//	hiddenmoney->SetPosition(1922, 300);
+	//	SIMON->SetStartPoint(0);
+	//	SIMON->SetEndPoint(1550);
+	//	camera->SetStartPoint(0);
+	//	camera->SetEndPoint(1550);
+ //   }
 }
 /*
 	Update world status for this frame
@@ -307,39 +310,32 @@ void SceneGame::Update(DWORD dt)
 		CTorch* torch = dynamic_cast<CTorch*>(torches[i]);
 		if (SIMON->CheckCollision(torch))
 		{
+			torch->SetActive(false);
 			switch (torch->GetState())
 			{
-			case TORCH_STATE_NORMAL:
-			case TORCH_STATE_CANDLE:
-				break;
 			case TORCH_STATE_LHEART:
-				torch->SetActive(false);
 				break;
 			case TORCH_STATE_SHEART:
-				torch->SetActive(false);
 				break;
 			case TORCH_STATE_CHIKEN:
-				torch->SetActive(false);
+				break;
 			case TORCH_STATE_CROSS:
-				torch->SetActive(false);
 				SIMON->SetEatCross(true);
 				enemy.clear();
 				break;
 			case TORCH_STATE_CLOCK:
-				torch->SetActive(false);
 				StopEnemyStart();
 				break;
 			case TORCH_STATE_MONEY1:
-				torch->SetActive(false);
+				break;
 			case TORCH_STATE_MONEY2:
-				torch->SetActive(false);
+				break;
 			case TORCH_STATE_MONEY3:
-				torch->SetActive(false);
+				break;
 			case TORCH_STATE_MONEY4:
-				torch->SetActive(false);
+				break;
 			case TORCH_STATE_MSUP:
 				SIMON->StartChangeColor();
-				torch->SetActive(false);
 				if (SIMON->GetLevel() == SIMON_LEVEL_MS_1)
 				{
 					SIMON->SetLevel(SIMON_LEVEL_MS_2);
@@ -350,25 +346,21 @@ void SceneGame::Update(DWORD dt)
 				}
 				break;
 			case TORCH_STATE_DAGGER:
-				torch->SetActive(false);
 				SIMON->SetThrowDagger(true);
 				SIMON->SetThrowAxe(false);
 				SIMON->SetThrowHolyWater(false);
 				break;
 			case TORCH_STATE_AXE:
-				torch->SetActive(false);
 				SIMON->SetThrowDagger(false);
 				SIMON->SetThrowAxe(true);
 				SIMON->SetThrowHolyWater(false);
 				break;
 			case TORCH_STATE_HOLYWATER:
-				torch->SetActive(false);
 				SIMON->SetThrowDagger(false);
 				SIMON->SetThrowAxe(false);
 				SIMON->SetThrowHolyWater(true);
 				break;
 			case TORCH_STATE_DOUBLE_SHOOT:
-				torch->SetActive(false);
 				SIMON->SetNumWeapon(2);
 			}
 		}
@@ -412,9 +404,7 @@ void SceneGame::Update(DWORD dt)
 			{
 				if (SIMON->GetAutoWalkingTime() == 0)
 				{
-					scene = 2;
-					stage = 1;
-					LoadResources();
+					LoadResources(SOURCE_CASTLE_PNG, ID_TEX_CASTLE, SOURCE_CASTLE_TXT, 2);
 				}
 			}
 			else if (InOb->type == SC_TYPE_AUTO_HELPER)
@@ -433,26 +423,49 @@ void SceneGame::Update(DWORD dt)
 				effects.push_back(effect);
 				camera->StartCamMove(3000);
 				camera->SetCamMoving(true);
-				if (stage == 1)
+				if (SIMON->GetStartPoint() == 0)
 				{
 					stage = 2;
+					SIMON->SetEndPoint(2060);
+					camera->SetEndPoint(2060);
 				}
-				else if (stage == 2)
+				else if (SIMON->GetStartPoint() == 1535)
 				{
-					stage = 3;
+					stage = 4;
 				}
 				SimonMove = true;
 			}
+			else if (InOb->type == SC_TYPE_AUTO_CLOSE_DOOR)
+			{
+				InOb->SetActive(false);
+				camera->StartCamMove(1745);
+				camera->SetCamMoving(true);
+				SimonMove = false;
+				if (SIMON->GetStartPoint() == 0)
+				{
+					SIMON->SetStartPoint(1535);
+					camera->SetStartPoint(1535);
+					endpoint = 2060;
+				}
+			}
 			else if (InOb->type == SC_TYPE_UNDER_GROUND)
 			{
-				if (stage == 2)
+				if (SIMON->GetStartPoint() == 1535)
 				{
-					stage = 3;
+					//stage = 3;
+					SIMON->SetStartPoint(1579);
+					SIMON->SetEndPoint(2108);
+					camera->SetStartPoint(1579);
+					camera->SetEndPoint(2108);
 					SIMON->SetPosition(1611, 212);
 				}
-				else if (stage == 3)
+				else if (SIMON->GetStartPoint() == 1579)
 				{
-					stage = 2;
+					//stage = 2;
+					SIMON->SetStartPoint(1535);
+					SIMON->SetEndPoint(2060);
+					camera->SetStartPoint(1535);
+					camera->SetEndPoint(2060);
 					SIMON->SetPosition(1581, 190);
 				}
 			}
@@ -469,13 +482,6 @@ void SceneGame::Update(DWORD dt)
 					SIMON->SetPosition(1901, 190);
 
 				}
-			}
-			else if (InOb->type == SC_TYPE_AUTO_CLOSE_DOOR)
-			{
-				InOb->SetActive(false);
-				camera->StartCamMove(1750);
-				camera->SetCamMoving(true);
-				SimonMove = false;
 			}
 			else if (InOb->type == MONEY_SPAWNER)
 			{
@@ -895,48 +901,12 @@ void SceneGame::Update(DWORD dt)
 	{
 		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 0);
 	}
-	if (stage == 3)
+	if (SIMON->GetStartPoint() == 1579)
 	{
 		camera->SetCamera((SIMON->x + 15) - SCREEN_WIDTH / 2, 200);
 	}
 
 	//Map boundary
-	if (camera->GetCamMoving() == false)
-	{
-		if (scene == 1)
-		{
-			startpoint = 0;
-			endpoint = 770;
-			camstoppoint = 0;
-		}
-		if (scene == 2)
-		{
-			if (stage == 1)
-			{
-				startpoint = 0;
-				endpoint = 1550;
-				camstoppoint = 0;
-			}
-			if (stage == 2)
-			{
-				startpoint = 1535;
-				endpoint = 2060;
-				camstoppoint = 1535;
-			}
-			if (stage == 3)
-			{
-				startpoint = 1579;
-				endpoint = 2108;
-				camstoppoint = 0;
-			}
-		}
-	}
-	if (camera->GetCamMoving() == true)
-	{
-		startpoint = 0;
-		endpoint = 10000;
-	}
-	camera->Update(dt, startpoint, endpoint, camstoppoint, stage);
 
 	//Deleate enemy when out of camera
 	for (int i = 0; i < enemy.size(); i++)
@@ -974,7 +944,8 @@ void SceneGame::Update(DWORD dt)
 	{
 		bricks[i]->Update(dt, &bricks);
 	}
-	SIMON->Update(dt, &bricks, startpoint, endpoint);
+	camera->Update(dt, startpoint, endpoint);
+	SIMON->Update(dt, &bricks);
 	MS->Update(dt, &bricks);
 	hiddenmoney->Update(dt, &bricks);
 
@@ -1150,6 +1121,8 @@ void SceneGame::LoadSceneObject(int scene)
 	if (scene == 2)
 	{
 		LoadObjectFromFile("ReadFile\\Objects\\ObjectsScene2.txt");
+		grid->maprow = 6;
+		grid->mapcol = 35;
 	}
 }
 SceneGame::~SceneGame()

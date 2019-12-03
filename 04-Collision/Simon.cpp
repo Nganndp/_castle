@@ -1,6 +1,6 @@
 #include "Simon.h"
 
-void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, float startpoint, float endpoint)
+void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 	//adjust Simon pos

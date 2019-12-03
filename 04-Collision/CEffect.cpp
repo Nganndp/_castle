@@ -13,7 +13,7 @@ void CEffect::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else 
 	vy += (GRAVITY/2) *dt;
-	if (y > camera->GetPosition().y + SCREEN_HEIGHT || x > camera->GetPosition().x + SCREEN_WIDTH || x + 17 < camera->GetPosition().x)
+	if (y > camera->GetPosition().y + SCREEN_HEIGHT || x > camera->GetPosition().x + SCREEN_WIDTH || x < camera->GetPosition().x - 20)
 	{
 		SetActive(false);
 	}
@@ -26,15 +26,15 @@ void CEffect::Render(Camera* camera)
 	int ani;
 	if (type == EFFECT_TYPE_DOOR)
 	{
-		ani = 0;
+		ani = EFFECT_ANI_DOOR;
 	}
 	else if (type == EFFECT_TYPE_BRICK)
 	{
-		ani = 1;
+		ani = EFFECT_ANI_BRICK;
 	}
 	else if (type == EFFECT_TYPE_WATER)
 	{
-		ani = 2;
+		ani = EFFECT_ANI_WATER;
 	}
 	animations[ani]->Render(camera->transform(x, y), 255);
 	RenderBoundingBox(camera);

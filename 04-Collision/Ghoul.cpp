@@ -24,8 +24,8 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (isStop == false)
 		{
 			if (nx > 0)
-				vx = 0.06f;
-			else vx = -0.06f;
+				vx = 0.07f;
+			else vx = -0.07f;
 		}
 	}
 	if (state != ENEMY_STATE_MOVING && die == 0)

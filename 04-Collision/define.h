@@ -33,6 +33,12 @@ public:
 #define ID_TEX_BBOX 13	
 #define ID_TEX_ENEMY 14
 
+//Source file
+#define SOURCE_ENTRANCE_PNG L"textures\\entrance_tilemap.png"
+#define SOURCE_ENTRANCE_TXT "ReadFile\\Map\\entrance.txt"
+#define SOURCE_CASTLE_PNG L"textures\\castle_tilemap.png"
+#define SOURCE_CASTLE_TXT "ReadFile\\Map\\castle.txt"
+
 //Simon
 #define SIMON_WALKING_SPEED		    0.05f 
 #define	SIMON_AUTO_WALKING_STAIR_SPEED   0.2f
@@ -276,9 +282,9 @@ public:
 #define EFFECT_TYPE_DOOR 1
 #define EFFECT_TYPE_WATER 2
 #define EFFECT_TYPE_BRICK 3
-#define EFFECT_ANI_DOOR 1
+#define EFFECT_ANI_DOOR 0
 #define EFFECT_ANI_WATER 2
-#define EFFECT_ANI_BRICK 3
+#define EFFECT_ANI_BRICK 1
 };
 
 

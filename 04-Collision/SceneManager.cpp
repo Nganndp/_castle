@@ -36,7 +36,7 @@ void SceneManager::OnKeyUp(int KeyCode)
 {
 }
 
-void SceneManager::LoadResources()
+void SceneManager::LoadResources(LPCWSTR picturePath, int idTex, const char* filepath, int scene)
 {
 }
 

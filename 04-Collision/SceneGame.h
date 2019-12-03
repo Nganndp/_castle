@@ -43,7 +43,7 @@ public:
 	void OnKeyDown(int KeyCode);
 	void OnKeyUp(int KeyCode);
 
-	void LoadResources();
+	virtual void LoadResources(LPCWSTR picturePath, int idTex, const char* filepath, int scene) override;
 	void Update(DWORD dt);
 	void Render();
 	void LoadObjectFromFile(string source);
@@ -105,5 +105,36 @@ public:
 	DWORD spawndelayfishmantimer_start;
 	DWORD spawndelaypanthertimer_start;
 	DWORD stopenemytimer_start;
+
+
+
+	//read from file
+	int simonposstartx;
+	int simonposstarty;
+	int simonposundergroundtoland1x;
+	int simonposundergroundtoland1y;
+    int simonposlandtounderground1x;
+	int simonposlandtounderground1y;
+	int simonposundergroundtoland2x;
+	int simonposundergroundtoland2y;
+	int simonposlandtounderground2x;
+	int simonposlandtounderground2y;
+	int hiddenmoneyposx;
+	int hiddenmoneyposy;
+	int ghouly;
+	int panther1x;
+	int panther1y;
+	int panther2x;
+	int panther2y;
+	int panther3x;
+	int panther3y;
+	int startstage1;
+	int endstage1;
+	int startstage2;
+	int endstage2;
+	int startstage3;
+	int endstage3;
+	int startstage4;
+	int endstage4;
 };
 

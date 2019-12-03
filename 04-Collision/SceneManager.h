@@ -18,7 +18,7 @@ public:
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
 
-	virtual void LoadResources();
+	virtual void LoadResources(LPCWSTR picturePath, int idTex, const char* filepath, int scene);
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void ChangeScene();
