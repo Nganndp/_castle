@@ -43,6 +43,7 @@ public:
 #define SOURCE_CASTLE_TXT "ReadFile\\Map\\castle.txt"
 #define SOURCE_ENTRANCE_ELEMENT_TXT "ReadFile\\SceneElement\\Scene1.txt"
 #define SOURCE_CASTLE_ELEMENT_TXT "ReadFile\\SceneElement\\Scene2.txt"
+#define SOURCE_TORCH_ELEMENT_TXT "ReadFile\\SceneElement\\Torch.txt"
 
 //Simon
 #define SIMON_WALKING_SPEED		    0.05f 
@@ -254,6 +255,7 @@ public:
 #define ENEMY_STATE_ATTACK 6
 
 //Ghoul
+#define GHOUL_SPEED 0.05f
 #define GHOUL_BOX_WIDTH 16
 #define GHOUL_BOX_HEIGHT 32
 #define GHOUL_ANI_IDLE_RIGHT 0
@@ -277,7 +279,8 @@ public:
 #define FISHMAN_BOX_WIDTH 16
 #define FISHMAN_BOX_HEIGHT 32
 #define FISHMAN_ATTACK_TIME 300
-#define FISHMAN_JUMP_SPEED 0.015f
+#define FISHMAN_JUMP_SPEED 0.012f
+#define FISHMAN_SPEED 0.03f
 #define FISHMAN_ANI_IDLE_RIGHT 0
 #define FISHMAN_ANI_IDLE_LEFT 1
 #define FISHMAN_ANI_WALKING_RIGHT 2
@@ -294,7 +297,7 @@ public:
 #define PANTHER_BOX_WIDTH
 #define PANTHER_BOX_HEIGHT 
 #define PANTHER_GRAVITY 0.2f
-#define PANTHER_SPEED 0.23f
+#define PANTHER_SPEED 0.17f
 #define PANTHER_JUMP_SPEED_X 0.12
 #define PANTHER_JUMP_SPEED_Y -0.1f
 #define PANTHER_ANI_IDLE 0

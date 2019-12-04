@@ -35,8 +35,7 @@ public:
 		return rect;
 	}
 	void GetBoundingBox(float &left, float &top, float &right, float &bottom);
-
-	
+	virtual void CollisionOccurred(vector<LPGAMEOBJECT>* coObjects) override;
 };
 
 

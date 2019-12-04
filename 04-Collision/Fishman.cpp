@@ -11,6 +11,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (active == false)
 		return;
 	CGameObject::Update(dt, coObjects);
+	
 	if (state == ENEMY_STATE_JUMPING)
 		vy = -FISHMAN_JUMP_SPEED * dt;
 	if (isOnGround && state != ENEMY_STATE_SHEART && state != ENEMY_STATE_DIE)
@@ -100,50 +101,31 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		SetState(ENEMY_STATE_SHEART);
 	}
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
-	coEvents.clear();
-
-	CalcPotentialCollisions(coObjects, coEvents);
-
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
+	if (isFire)
 	{
-		if (!isStop)
+		firebullet = new CFireBullet();
+		if (nx > 0)
 		{
-			x += dx; //dx=vx*dt
-			y += dy;
+			firebullet->nx = 1;
+			firebullet->SetPosition(x + 18, y + 5);
 		}
-		isOnGround = false;
+		else
+		{
+			firebullet->nx = -1;
+			firebullet->SetPosition(x - 9, y + 5);
+		}
+		firebullets.push_back(firebullet);
+		isFire = false;
 	}
-	else
+	for (int i = 0; i < firebullets.size(); i++)
 	{
-		float min_tx, min_ty, nx = 0, ny;
-
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-		// block 
-		if (!isStop)
-			x += dx;
-
-
-
-		if (!isStop)
-		{
-			if (ny == 1)
-				y += dy;
-		}
-		if (ny == -1)
-		{
-			y += min_ty * dy + ny * 0.2f;
-			isOnGround = true;
-		}
-
+		firebullets[i]->Update(dt, coObjects);
 	}
+	Collision(coObjects);
+}
 
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
+void CFishman::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
+{
 
 }
 
@@ -154,13 +136,13 @@ void CFishman::SetState(int state)
 	switch (state)
 	{
 	case ENEMY_STATE_FALLING:
-		vy = 0.015f * dt;
+		vy = FISHMAN_JUMP_SPEED * dt;
 		break;
 	case ENEMY_STATE_MOVING:
 		if (nx == 1)
-			vx = 0.03f;
+			vx = FISHMAN_SPEED;
 		else
-			vx = -0.03f;
+			vx = -FISHMAN_SPEED;
 		break;
 	case ENEMY_STATE_ATTACK:
 	case ENEMY_STATE_DIE:
@@ -208,6 +190,10 @@ void CFishman::Render(Camera* camera)
 	}
 	animations[ani]->Render(camera->transform(x, y), 255);
 	RenderBoundingBox(camera);
+	for (int i = 0; i < firebullets.size(); i++)
+	{
+		firebullets[i]->Render(camera);
+	}
 }
 
 void CFishman::GetBoundingBox(float& left, float& top, float& right, float& bottom)

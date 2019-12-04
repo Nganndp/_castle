@@ -125,6 +125,8 @@ void CGameObject::RenderBoundingBox(Camera* camera)
 		CGame::GetInstance()->Draw(pos.x, pos.y, bbox, rect.left, rect.top, rect.right, rect.bottom, bboxcolor);
 	}
 }
+
+
 bool CGameObject::CheckOverlap(LPGAMEOBJECT coO)
 {
 	float sl, st, sr, sb;
@@ -150,6 +152,53 @@ bool CGameObject::CheckCollision(CGameObject* object)
 	}
 	delete e;
 }
+
+void CGameObject::Collision(vector<LPGAMEOBJECT>* coObjects)
+{
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+	coEvents.clear();
+	CalcPotentialCollisions(coObjects, coEvents);
+	if (coEvents.size() == 0)
+	{
+		if (!isStop)
+		{
+			x += dx;
+			y += dy;
+		}
+		isOnGround = false;
+	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny;
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+		// block 
+		if (!isStop)
+			x += dx;
+		if (!isStop)
+		{
+			if (ny == 1)
+				y += dy;
+		}
+		if (ny == -1)
+		{
+			y += min_ty * dy + ny * 0.2f;
+			isOnGround = true;
+		}
+		if (state == ENEMY_STATE_SHEART)
+		{
+			if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
+		}
+		CollisionOccurred(coObjects);
+	}
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
+
+void CGameObject::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
+{
+
+}
+
 void CGameObject::AddAnimation(int aniId)
 {
 	LPANIMATION ani = CAnimations::GetInstance()->Get(aniId);

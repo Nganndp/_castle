@@ -2,7 +2,7 @@
 
 void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (active == false || isTouchable != true)
+	if (active == false /*|| isTouchable != true*/)
 	{
 		return;
 	}
@@ -10,51 +10,51 @@ void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		{
 			left = x;
 			top = y;
-			right = x + 16;
-			bottom = y + 30;
+			right = x + normalwidth;
+			bottom = y + normalheight;
 
 		}
 		else if (state == TORCH_STATE_CANDLE)
 		{
 			left = x;
 			top = y;
-			right = x + 10;
-			bottom = y + 15;
+			right = x + candlewidth;
+			bottom = y + candleheight;
 		}
 		else if (state == TORCH_STATE_LHEART)
 		{
 			left = x;
 			top = y;
-			right = x + 15;
-			bottom = y + 10;
+			right = x + lheartwidth;
+			bottom = y + lheartheight;
 		}
 		else if (state == TORCH_STATE_DAGGER)
 		{
 			left = x;
 			top = y;
-			right = x + 18;
-			bottom = y + 9;
+			right = x + daggerwidth;
+			bottom = y + daggerheight;
 		}
 		else if (state == TORCH_STATE_SHEART)
 		{
 			left = x;
 			top = y;
-			right = x + 9;
-			bottom = y + 9;
+			right = x + sheartswidth;
+			bottom = y + sheartheight;
 		}
 		else if (state == TORCH_STATE_MONEY1 || state == TORCH_STATE_MONEY2 || state == TORCH_STATE_MONEY3 || state == TORCH_STATE_MONEY4)
 		{
 			left = x;
 			top = y;
-			right = x + 15;
-			bottom = y + 16;
+			right = x + moneywidth;
+			bottom = y + moneyheight;
 		}
 		else
 		{
 			left = x;
 			top = y;
-			right = x + 16;
-			bottom = y + 17;
+			right = x + otherswidth;
+			bottom = y + othersheight;
 		}
 }
 
@@ -68,41 +68,35 @@ void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		vy = GRAVITY * dt;
 	if (isOnGround == false)
 	    {
-		if (vx < 0 && x < FirstX-15)
+		if (vx < 0 && x < FirstX- ENEMY_SHEART_RANGE)
 		{
-	    	x = FirstX-15; vx = -vx;
+	    	x = FirstX- ENEMY_SHEART_RANGE; vx = -vx;
 		}
-        else if (vx > 0 && x > FirstX + 15)
+        else if (vx > 0 && x > FirstX + ENEMY_SHEART_RANGE)
 		{
-			x = FirstX + 15; vx = -vx;
+			x = FirstX + ENEMY_SHEART_RANGE; vx = -vx;
 		}
 		if (state == TORCH_STATE_SHEART || state == TORCH_STATE_LHEART)
 		{
-			vx = -0.05f;
+			vx = ENEMY_SHEART_SPEED;
 		}
 		else vx = 0;
 		}
 	}
-	if (GetTickCount() - dietime_start > 300)
+	if (GetTickCount() - dietime_start > ENEMY_DIE_TIME)
 	{
 		dietime_start = 0;
 		die = 0;
 	}
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
+	Collision(coObjects);
+}
 
-	coEvents.clear();
-	CalcPotentialCollisions(coObjects, coEvents);float min_tx, min_ty, nx = 0, ny;
-
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-	    // block 
-		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-		y += min_ty * dy + ny * 0.4f;
-
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-		if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
-		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+void CTorch::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
+{
+	if (isOnGround)
+	{
+		vx = 0;
+	}
 }
 
 void CTorch::Render(Camera * camera)
@@ -179,4 +173,43 @@ void CTorch::Render(Camera * camera)
 	}
 	animations[ani]->Render(camera->transform(x,y), 255);
 		RenderBoundingBox(camera);
+}
+void CTorch::LoadElementFromFile(string source)
+{
+	vector<int> numbers;
+	int flag = 0;
+	int number;
+	int arr[15];
+	int simonstartx;
+	int simonstarty;
+	ifstream file_objects(source);
+	if (file_objects.is_open())
+	{
+		while (!file_objects.eof())
+		{
+			while (file_objects >> number)
+			{
+				arr[flag] = number;
+				flag++;
+				if (flag == 14)
+				{
+					normalwidth = arr[0];
+					normalheight = arr[1];
+					candlewidth = arr[2];
+					candleheight = arr[3];
+					sheartswidth = arr[4];
+					sheartheight = arr[5];
+					lheartwidth = arr[6];
+					lheartheight = arr[7];
+					daggerwidth = arr[8];
+					daggerheight = arr[9];
+					moneywidth = arr[10];
+					moneyheight = arr[11];
+					otherswidth = arr[12];
+					othersheight = arr[13];
+					end = arr[14];
+				}
+			}
+		}
+	}
 }

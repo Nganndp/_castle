@@ -139,5 +139,6 @@ public:
 	int startstage4;
 	int endstage4;
 	int effectdoory;
+	int end;
 };
 

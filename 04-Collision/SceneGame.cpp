@@ -183,9 +183,11 @@ void SceneGame::OnKeyDown(int KeyCode)
         break;
 	case DIK_3:
 			stage = 3;
-			SIMON->SetPosition(1931, 212);
-			SIMON->SetOnStair(true);
-			SIMON->SetStairUp(false);
+			SIMON->SetStartPoint(startstage3);
+			SIMON->SetEndPoint(endstage3);
+			camera->SetStartPoint(startstage3);
+			camera->SetEndPoint(endstage3);
+			SIMON->SetPosition(simonposlandtounderground1x, simonposlandtounderground1y);
 			break;
 	case DIK_4:
 			stage = 2;
@@ -194,6 +196,9 @@ void SceneGame::OnKeyDown(int KeyCode)
 			SIMON->SetStairUp(false);
 			SIMON->nx = -1;
 			break;
+	case DIK_5:
+		StopEnemyStart();
+		break;
 	}
 }
 
@@ -422,7 +427,7 @@ void SceneGame::Update(DWORD dt)
 					SIMON->x = InOb->x - 24;
 				effect = new CEffect(camera);
 				effect->SetType(EFFECT_TYPE_DOOR);
-				effect->SetPosition(InOb->x, 57);
+				effect->SetPosition(InOb->x, effectdoory);
 				effects.push_back(effect);
 				camera->StartCamMove(CAM_MOVE_TIME1);
 				camera->SetCamMoving(true);
@@ -688,28 +693,7 @@ void SceneGame::Update(DWORD dt)
 			}
 		}
 	}
-	for (int i = 0; i < enemy.size(); i++)
-	{
-		if (enemy.at(i)->type == FISHMAN)
-		{
-			if (enemy.at(i)->isFire)
-			{
-				firebullet = new CFireBullet();
-				if (enemy.at(i)->nx > 0)
-				{
-					firebullet->nx = 1;
-					firebullet->SetPosition(enemy.at(i)->x + 18, enemy.at(i)->y + 5);
-				}
-				else
-				{
-					firebullet->nx = -1;
-					firebullet->SetPosition(enemy.at(i)->x - 9, enemy.at(i)->y + 5);
-				}
-				enemy.push_back(firebullet);
-				enemy.at(i)->isFire = false;
-			}
-		}
-	}
+
 	//Simon Collision with enemy
 	for (int i = 0; i < enemy.size(); i++)
 	{
@@ -739,6 +723,31 @@ void SceneGame::Update(DWORD dt)
 			else if (enemy.at(i)->GetState() == ENEMY_STATE_SHEART)
 			{
 				enemy.erase(enemy.begin() + i);
+			}
+		}
+	}
+
+	for (int i = 0; i < enemy.size(); i++)
+	{
+		if (enemy.at(i)->type == FISHMAN)
+		{
+			CFishman* fish = dynamic_cast<CFishman*>(enemy[i]);
+			if (SIMON->CheckCollision(fish->firebullet))
+			{
+				if (SIMON->GetUntouchable() == 0)
+				{
+					if (enemy.at(i)->nx > 0)
+					{
+						SIMON->nx = -1;
+					}
+					else SIMON->nx = 1;
+					if (SIMON->GetOnStair() == false)
+					{
+						SIMON->StartIsDamaged();
+					}
+					SIMON->StartIsUnTouchable();
+				}
+
 			}
 		}
 	}
@@ -852,7 +861,6 @@ void SceneGame::Update(DWORD dt)
 			{
 				enemy.at(i)->StartDieTime();
 				enemy.at(i)->SetState(ENEMY_STATE_DIE);
-				enemy.at(i)->isOnGround = false;
 			}
 		}
 	}
@@ -918,7 +926,7 @@ void SceneGame::Update(DWORD dt)
 	//Deleate enemy when out of camera
 	for (int i = 0; i < enemy.size(); i++)
 	{
-		if (enemy.at(i)->x < camera->GetPosition().x - 20 && enemy.at(i)->nx < 0)
+		if (enemy.at(i)->x < camera->GetPosition().x - (enemy.at(i)->GetBound().right - enemy.at(i)->GetBound().left)  && enemy.at(i)->nx < 0)
 		{
 			if (enemy.at(i)->type == PANTHER)
 				return;
@@ -1138,7 +1146,7 @@ void SceneGame::LoadElementFromFile(string source)
 	vector<int> numbers;
 	int flag = 0;
 	int number;
-	int arr[28];
+	int arr[29];
 	int simonstartx;
 	int simonstarty;
 	ifstream file_objects(source);
@@ -1150,7 +1158,7 @@ void SceneGame::LoadElementFromFile(string source)
 			{
 				arr[flag] = number;
 				flag++;
-				if (flag == 27)
+				if (flag == 28)
 				{
 					simonposstartx = arr[0];
 				    simonposstarty = arr[1];
@@ -1180,6 +1188,7 @@ void SceneGame::LoadElementFromFile(string source)
 					startstage4 = arr[25];
 					endstage4 = arr[26];
 					effectdoory = arr[27];
+					end = arr[28];
 				}
 			}
 		}

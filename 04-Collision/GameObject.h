@@ -128,6 +128,8 @@ public:
 	virtual void Render(Camera* camera) = 0;
 	virtual void SetState(int state) { this->state = state; }
 	virtual void SetLevel(int level) { this->level = level; }
+	virtual void CollisionOccurred(vector<LPGAMEOBJECT>* coObjects);
+	virtual void Collision(vector<LPGAMEOBJECT>* coObjects);
 	virtual RECT GetBound()
 	{
 		RECT rect;

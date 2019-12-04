@@ -51,7 +51,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				vx = ENEMY_SHEART_SPEED;
 			}
 		}
-		if (state == ENEMY_STATE_MOVING && vx < 0 && x <= Simon->x - (SCREEN_WIDTH/2))
+		if (vx < 0 && x <= camera->GetPosition().x)
 		{
 			x = camera->GetPosition().x;
 			nx = 1;
@@ -67,45 +67,12 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			SetState(ENEMY_STATE_SHEART);
 		}
-		vector<LPCOLLISIONEVENT> coEvents;
-		vector<LPCOLLISIONEVENT> coEventsResult;
+		Collision(coObjects);
+}
 
-		coEvents.clear();
-        CalcPotentialCollisions(coObjects, coEvents);
-		if (coEvents.size() == 0)
-		{
-			if (!isStop)
-			{
-				x += dx; 
-				y += dy;
-			}
-			isOnGround = false;
-		}
-		else
-		{
-			float min_tx, min_ty, nx = 0, ny;
+void CPanther::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
+{
 
-			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-			// block 		
-			y += min_ty * dy + ny * 0.2f;
-
-			if (nx == -1 || nx == 1)
-			{
-				x += dx;
-			}
-
-			if (ny == 1)
-			{
-				y += dy;
-			}
-			if (ny == -1)
-			{
-				isOnGround = true;
-				vy = 0;
-			}
-		}
-		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
 void CPanther::SetState(int state)

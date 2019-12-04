@@ -11,30 +11,10 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (active == false)
 		return;
 	CGameObject::Update(dt, coObjects);
+
 	if (state == ENEMY_STATE_SHEART)
 	{
-		vector<LPCOLLISIONEVENT> coEvents;
-		vector<LPCOLLISIONEVENT> coEventsResult;
-
-		coEvents.clear();
-
-		CalcPotentialCollisions(coObjects, coEvents);
-		float min_tx, min_ty, nx = 0, ny;
-
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-		// block 
-		y += min_ty * dy + ny * 0.2f;
-
-		// block 
-		if (nx != 1)
-			x += min_tx * dx + nx * 0.2f;;
-
-		if (nx == 1)  
-			x += dx;
-		if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
-		if (ny != 0) vy = 0;
-		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+		Collision(coObjects);
 	}
 	if (GetTickCount() - dietime_start > ENEMY_DIE_TIME)
 	{
@@ -82,6 +62,11 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vx = ENEMY_SHEART_SPEED;
 		}
 	}
+}
+
+void CBat::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
+{
+
 }
 
 void CBat::SetState(int state)

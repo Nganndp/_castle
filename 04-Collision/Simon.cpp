@@ -51,7 +51,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 			    vy = -SIMON_JUMP_SPEED_Y;
 			    isOnGround = false;
-		        //dx = 0;
 			}
 		}
 		else if (GetTickCount() - isDamaged_start >= (SIMON_JUMP_TIME / 2))

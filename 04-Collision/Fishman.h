@@ -2,6 +2,7 @@
 #include "LoadAnimations.h"
 #include "GameObject.h"
 #include "Camera.h"
+#include "FireBullet.h"
 
 class CFishman :public CGameObject
 {
@@ -9,6 +10,7 @@ class CFishman :public CGameObject
 	bool isFalling;
 	bool isAttack;
 	DWORD timerAttack = 0;
+
 public:
 	CFishman(CGameObject * Simon, Camera * camera, float movepoint) :CGameObject()
 	{
@@ -20,11 +22,15 @@ public:
 		this->movepoint = movepoint;
 		this->Simon = Simon;
 		this->camera = camera;
+		firebullet = new CFireBullet();
+		firebullet->SetActive(false);
 	};
 	~CFishman();
 	float movepoint;
 	CGameObject* Simon;
 	Camera* camera;
+	CFireBullet* firebullet;
+	vector<LPGAMEOBJECT> firebullets;
 	bool GetStop()
 	{
 		return isStop;
@@ -46,8 +52,7 @@ public:
 		return rect;
 	}
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-
-
+	void CollisionOccurred(vector<LPGAMEOBJECT>* coObjects) override;
 };
 
 

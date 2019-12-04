@@ -190,17 +190,22 @@ public:
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
 	void StartJumpMove() { jumpmove = 1; jump_start = GetTickCount(); }
 	void StartAttack() { attack = 1; attack_start = GetTickCount();
-	animations[SIMON_ANI_ATTACK_RIGHT]->SetCurrentcFrame(-1);
-	animations[SIMON_ANI_ATTACK_LEFT]->SetCurrentcFrame(-1);
+	RestartAttack();
 	}
 	void StartSitAttack() {
 		sitattack = 1; sitattack_start = GetTickCount();
+		RestartAttack();
+	}
+	void RestartAttack()
+	{
+		animations[SIMON_ANI_ATTACK_RIGHT]->SetCurrentcFrame(-1);
+		animations[SIMON_ANI_ATTACK_LEFT]->SetCurrentcFrame(-1);
 		animations[SIMON_ANI_SIT_ATTACK_RIGHT]->SetCurrentcFrame(-1);
 		animations[SIMON_ANI_SIT_ATTACK_LEFT]->SetCurrentcFrame(-1);
 	}
 	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); vx = 0; }
 	void StartAutoWalking(float a) { autowalking = 1; autowalking_start = GetTickCount(); autowalkingtime = a; }
-	void StartIsDamaged() { isDamaged = 1; isDamaged_start = GetTickCount(); }
+	void StartIsDamaged() { isDamaged = 1; isDamaged_start = GetTickCount(); RestartAttack();}
 	void StartIsUnTouchable() { isUntouchable = 1; isUntouchable_start = GetTickCount(); }
 	void SetSit(boolean a) { sit= a; };
 	void SetJump(int a) { jump = a; }

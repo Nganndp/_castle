@@ -13,8 +13,7 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 
 	vy = GRAVITY * dt;
-
-	if (GetTickCount() - dietime_start > 200)
+	if (GetTickCount() - dietime_start > ENEMY_DIE_TIME)
 	{
 		dietime_start = 0;
 		die = 0;
@@ -24,8 +23,8 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (isStop == false)
 		{
 			if (nx > 0)
-				vx = 0.07f;
-			else vx = -0.07f;
+				vx = GHOUL_SPEED;
+			else vx = -GHOUL_SPEED;
 		}
 	}
 	if (state != ENEMY_STATE_MOVING && die == 0)
@@ -36,69 +35,50 @@ void CGhoul::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (isOnGround == false)
 		{
-			if (vx < 0 && x < FirstX-15)
+			if (vx < 0 && x < FirstX-ENEMY_SHEART_RANGE)
 			{
-				x = FirstX-15; vx = -vx;
+				x = FirstX- ENEMY_SHEART_RANGE; vx = -vx;
 			}
 
-			if (vx > 0 && x > FirstX + 15)
+			if (vx > 0 && x > FirstX + ENEMY_SHEART_RANGE)
 			{
-				x = FirstX + 15; vx = -vx;
+				x = FirstX + ENEMY_SHEART_RANGE; vx = -vx;
 			}
-			vx = -0.05f;
+			vx = -ENEMY_SHEART_SPEED;
 		}
 	}
+	Collision(coObjects);
+}
+void CGhoul::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
+{
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
 
 	CalcPotentialCollisions(coObjects, coEvents);
+	float min_tx, min_ty, nx = 0, ny;
 
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
+	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
+
+	for (UINT i = 0; i < coEventsResult.size(); i++)
 	{
-		if (!isStop)
-		{
-			x += dx;
-			y += dy;
-		}
-		isOnGround = false;
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
+		LPCOLLISIONEVENT e = coEventsResult[i];
 
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-		y += min_ty * dy + ny * 0.2f;
-		if (nx != 0)
+		if (dynamic_cast<CBrick*>(e->obj))
 		{
-			x += dx;
-		}
-		if (state == ENEMY_STATE_SHEART)
-		{
-			if (ny == -1) { isOnGround = true; vy = 0; vx = 0; }
-		}
-		if (ny != 0) vy = 0;
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (dynamic_cast<CBrick*>(e->obj))
+			CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+			if (e->nx < 0)
 			{
-				CBrick* brick = dynamic_cast<CBrick*>(e->obj);
-				if (e->nx < 0)
-				{
-					this->nx = 1;
-					this->nx = -1;
-				}
+				this->nx = -1;
+			}
+			if (e->nx > 0)
+			{
+				this->nx = 1;
 			}
 		}
 	}
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
-
 void CGhoul::SetState(int state)
 {
 	CGameObject::SetState(state);
