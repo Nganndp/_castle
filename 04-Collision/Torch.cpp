@@ -2,7 +2,7 @@
 
 void CTorch::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (active == false /*|| isTouchable != true*/)
+	if (active == false)
 	{
 		return;
 	}
@@ -63,7 +63,7 @@ void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CGameObject::Update(dt, coObjects);
 	if (active != true)
 		return;
-	if (state != TORCH_STATE_NORMAL && state != TORCH_STATE_CANDLE && die ==0)
+	if (state != TORCH_STATE_NORMAL && state != TORCH_STATE_CANDLE && state != TORCH_STATE_INVI_POT_TORCH && state != TORCH_STATE_AXE_TORCH && die ==0)
 	{
 		vy = GRAVITY * dt;
 	if (isOnGround == false)
@@ -127,7 +127,7 @@ void CTorch::Render(Camera * camera)
 	{
 		ani = TORCH_ANI_AXE;
 	}
-	if (state == TORCH_STATE_CANDLE)
+	if (state == TORCH_STATE_CANDLE || state == TORCH_STATE_INVI_POT_TORCH || state == TORCH_STATE_AXE_TORCH)
 	{
 		ani = TORCH_ANI_CANDLE;
 	}
@@ -166,6 +166,10 @@ void CTorch::Render(Camera * camera)
 	if (state == TORCH_STATE_MONEY4)
 	{
 		ani = TORCH_ANI_MONEY4;
+	}
+	if (state == TORCH_STATE_INVI_POT)
+	{
+		ani = TORCH_ANI_INVI_POT;
 	}
 	if (die != 0)
 	{

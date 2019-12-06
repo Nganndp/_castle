@@ -9,37 +9,25 @@ TileMap::TileMap(LPCWSTR picturePath, int id, int translate_y, int translate_x)
 	LPDIRECT3DTEXTURE9 tex = textures->Get(this->id);
 	if (id == ID_TEX_ENTRANCESTAGE)
 	{
-		int t = 0;
-		int k = 0;
-		for (int j = 0; j < 4; j++)
-		{
-			int l = 0, r = 16;
-			for (int i = t; i <= t + 15; i++)
-			{
-				sprites->Add(i, l, k, r, k + 16, tex);
-				l += 16;
-				r += 16;
-			}
-			t += 16;
-			k += 16;
-		}
+		rowtile = 4;
 	}
 	else if (id == ID_TEX_CASTLE)
 	{
-		int t = 0;
-		int k = 0;
-		for (int j = 0; j < 43; j++)
+		rowtile = 43;
+	}
+	int t = 0;
+	int k = 0;
+	for (int j = 0; j < rowtile; j++)
+	{
+		int l = 0, r = 16;
+		for (int i = t; i <= t + 15; i++)
 		{
-			int l = 0, r = 16;
-			for (int i = t; i <= t + 15; i++)
-			{
-				sprites->Add(i, l, k, r, k + 16, tex);
-				l += 16;
-				r += 16;
-			}
-			t += 16;
-			k += 16;
+			sprites->Add(i, l, k, r, k + 16, tex);
+			l += 16;
+			r += 16;
 		}
+		t += 16;
+		k += 16;
 	}
 }
 

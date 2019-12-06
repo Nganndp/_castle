@@ -72,7 +72,8 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CPanther::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
 {
-
+	if (!isStop)
+		x += dx;
 }
 
 void CPanther::SetState(int state)

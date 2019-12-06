@@ -9,11 +9,11 @@ void CAxe::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 
 	CGameObject::Update(dt);
 
-	if (y > camera->GetPosition().y + SCREEN_HEIGHT || x > camera->GetPosition().x + SCREEN_WIDTH || x + 17 < camera->GetPosition().x)
+	if (y > camera->GetPosition().y + SCREEN_HEIGHT || x > camera->GetPosition().x + SCREEN_WIDTH || x + AXE_WIDTH < camera->GetPosition().x)
 	{
 		SetActive(false);
 	}
-	vy += 0.0001f * dt; 
+	vy += AXE_GRAVITY * dt; 
 	y += dy;
 	x += dx;
 
@@ -21,26 +21,26 @@ void CAxe::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 	{
 		if (nx > 0)
 		{
-			vx = 0.0093f * dt;
+			vx = AXE_FLY_SPEED * dt;
 		}
 		else
 		{
-			vx = -0.0093f * dt;
+			vx = -AXE_FLY_SPEED * dt;
 		}
-		vy = -0.17f;
+		vy = -AXE_DROP_SPEED;
 	}
 	else 
 	{
 		if (nx > 0)
 		{
-			vx = 0.0093f * dt;
+			vx = AXE_FLY_SPEED * dt;
 		}
 		else
 		{
-			vx = -0.0093f * dt;
+			vx = -AXE_FLY_SPEED * dt;
 		}
-		if (abs(x - this->firstPos) >= 70)  
-			vy = 0.15f;
+		if (abs(x - this->firstPos) >= AXE_FLY_RANGE)  
+			vy = AXE_DROP_SPEED;
     }
 
 	this->SetPosition(x, y);
@@ -63,6 +63,6 @@ void CAxe::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
 	top = y;
-	right = x + 17;
-	bottom = y + 17;
+	right = x + AXE_WIDTH;
+	bottom = y + AXE_HEIGHT;
 }

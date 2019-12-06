@@ -1,6 +1,7 @@
 #pragma once
 #include "LoadAnimations.h"
 #include "GameObject.h"
+#include "Simon.h"
 class CFireBullet :public CGameObject
 	{
 		bool isStop = false;

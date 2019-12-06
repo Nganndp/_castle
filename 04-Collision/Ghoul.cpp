@@ -78,6 +78,8 @@ void CGhoul::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
+	if (!isStop)
+		x += dx;
 }
 void CGhoul::SetState(int state)
 {

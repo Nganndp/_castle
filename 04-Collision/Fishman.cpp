@@ -119,14 +119,15 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	for (int i = 0; i < firebullets.size(); i++)
 	{
-		firebullets[i]->Update(dt, coObjects);
+		firebullets[i]->Update(dt, &simon);
 	}
 	Collision(coObjects);
 }
 
 void CFishman::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
 {
-
+	if (!isStop)
+		x += dx;
 }
 
 void CFishman::SetState(int state)

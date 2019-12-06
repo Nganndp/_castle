@@ -28,6 +28,7 @@ class CSimon: public CGameObject
 	int numweapon;
 	int startpoint;
 	int endpoint;
+	int untouchabletime;
 	float autowalkingtime;
 	bool active = true;
 	bool sit = false;
@@ -35,8 +36,8 @@ class CSimon: public CGameObject
 	bool isOnStair = false;
 	bool isStairUp = true;
 	bool isThrowDagger = false;
-	bool isThrowAxe = true;
-	bool isThrowHolyWater = false;
+	bool isThrowAxe = false;
+	bool isThrowHolyWater = true;
 	bool autowalkingdoor = false;
 	bool isEatCross;
 	bool isEatClock;
@@ -206,12 +207,12 @@ public:
 	void StartChangeColor() { changecolor = 1; changecolor_start = GetTickCount(); vx = 0; }
 	void StartAutoWalking(float a) { autowalking = 1; autowalking_start = GetTickCount(); autowalkingtime = a; }
 	void StartIsDamaged() { isDamaged = 1; isDamaged_start = GetTickCount(); RestartAttack();}
-	void StartIsUnTouchable() { isUntouchable = 1; isUntouchable_start = GetTickCount(); }
+	void StartIsUnTouchable(int a) { isUntouchable = 1; isUntouchable_start = GetTickCount(); untouchabletime = a; }
 	void SetSit(boolean a) { sit= a; };
 	void SetJump(int a) { jump = a; }
 	void StandUp();
 	void SitDown();
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render(Camera* camera);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

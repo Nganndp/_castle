@@ -28,6 +28,7 @@
 #include "Fishman.h"
 #include "Panther.h"
 #include "FireBullet.h"
+#include "Boss.h"
 #include "CEffect.h"
 
 #include<iostream>
@@ -72,6 +73,7 @@ public:
 	CFishman* fishman;
 	CPanther* panther;
 	CFireBullet* firebullet;
+	CBoss* phantombat;
 	CEffect* effect;
 	TileMap* tile;
 	InviObjects* InObj;
@@ -139,6 +141,10 @@ public:
 	int startstage4;
 	int endstage4;
 	int effectdoory;
+	int bossposx;
+	int bossposy;
+	int simonstartstage4posx;
+	int simonstartstage4posy;
 	int end;
 };
 

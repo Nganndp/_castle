@@ -174,8 +174,6 @@ void CGameObject::Collision(vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 		// block 
 		if (!isStop)
-			x += dx;
-		if (!isStop)
 		{
 			if (ny == 1)
 				y += dy;

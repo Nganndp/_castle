@@ -1,7 +1,6 @@
+#pragma once
 #include "GameObject.h"
 #include "Camera.h"
-#include "Torch.h"
-#include "Game.h"
 #include "LoadAnimations.h"
 #include "define.h"
 class CDagger :public CGameObject

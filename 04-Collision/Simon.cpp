@@ -62,7 +62,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
-	if (GetTickCount() - isUntouchable_start > SIMON_UNTOUCHABLE_TIME)
+	if (GetTickCount() - isUntouchable_start > untouchabletime)
 	{
 		isUntouchable_start = 0;
 		isUntouchable = 0;
@@ -70,7 +70,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		if (GetTickCount() - isUntouchable_start < SIMON_UNTOUCHABLE_TIME)
+		if (GetTickCount() - isUntouchable_start < untouchabletime)
 		{
 			alpha = 150;
 		}

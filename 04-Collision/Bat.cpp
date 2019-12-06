@@ -66,7 +66,8 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CBat::CollisionOccurred(vector<LPGAMEOBJECT>* coObjects)
 {
-
+	if (!isStop)
+		x += dx;
 }
 
 void CBat::SetState(int state)

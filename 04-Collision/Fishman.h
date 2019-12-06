@@ -24,6 +24,7 @@ public:
 		this->camera = camera;
 		firebullet = new CFireBullet();
 		firebullet->SetActive(false);
+		simon.push_back(this->Simon);
 	};
 	~CFishman();
 	float movepoint;
@@ -31,6 +32,7 @@ public:
 	Camera* camera;
 	CFireBullet* firebullet;
 	vector<LPGAMEOBJECT> firebullets;
+	vector<LPGAMEOBJECT> simon;
 	bool GetStop()
 	{
 		return isStop;

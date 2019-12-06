@@ -15,6 +15,27 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (nx > 0)
 		vx = BULLET_SPEED;
 	else vx = -BULLET_SPEED;
+	for (int i = 0; i < coObjects->size(); i++)
+	{
+		CSimon* simon = dynamic_cast<CSimon*>(coObjects->at(i));
+			if (this->CheckCollision(simon))
+			{
+				if (simon->GetUntouchable() == 0)
+				{
+					if (nx > 0)
+					{
+						simon->nx = -1;
+					}
+					else simon->nx = 1;
+					if (simon->GetOnStair() == false)
+					{
+						simon->StartIsDamaged();
+					}
+					simon->StartIsUnTouchable(SIMON_UNTOUCHABLE_TIME);
+				}
+
+			}
+	}
 }
 
 void CFireBullet::SetState(int state)

@@ -132,6 +132,9 @@
     <ClInclude Include="camera.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Header Files\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simon.cpp">
@@ -217,6 +220,9 @@
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Source Files\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

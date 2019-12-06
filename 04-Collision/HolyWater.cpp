@@ -1,61 +1,28 @@
 #include "HolyWater.h"
 
-void CHolyWater::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
+void CHolyWater::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (active != true)
 	{
 		return;
 	}
 
-	CGameObject::Update(dt, colliable_objects);
-
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-	coEvents.clear();
-	if (active == true)
-	{
-		CalcPotentialCollisions(colliable_objects, coEvents);
-	}
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
-
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-		//block 	
-		x += min_tx * dx;
-		y += min_ty * dy + ny * 0.2f;
-
-		if (ny == -1)
-		{
-			isOnGround = true;
-			vy = 0;
-			vx = 0;
-		}
-
-	}
-
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
+	CGameObject::Update(dt, coObjects);
+	Collision(coObjects);
 	if (isOnGround == false)
 	{
-		if (abs(x - this->firstPos) <= 25) 
+		if (abs(x - this->firstPos) <= HW_FLY_RANGE) 
 		{
 			if (nx == 1)
 			{
-				vx = 0.1f;
+				vx = HW_SPEED;
 
 			}
 			else
 			{
-				vx = -0.1f;
+				vx = -HW_SPEED;
 			}
-			vy = -0.02f; 
+			vy = -HW_GRAVITY; 
 
 		}
 		else 
@@ -63,19 +30,19 @@ void CHolyWater::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 
 			if (nx == 1)
 			{
-				vx = 0.08f;
+				vx = HW_DROP_SPEED;
 			}
 			else
 			{
-				vx = -0.08f;
+				vx = -HW_DROP_SPEED;
 			}
-			vy = 0.14f;
+			vy = HW_DROP_GRAVITY;
 		}
 		this->SetPosition(x, y);
 	}
 	if (isOnGround)
 	{
-		if (fire_timer < 1000)
+		if (fire_timer < HW_FIRE_TIME)
 			fire_timer+= dt;
 		else
 		{
@@ -106,6 +73,6 @@ void CHolyWater::GetBoundingBox(float& left, float& top, float& right, float& bo
 {
 	left = x;
 	top = y;
-	right = x + 18;
-	bottom = y + 14;
+	right = x + HW_FIRE_WIDTH;
+	bottom = y + HW_FIRE_HEIGHT;
 }

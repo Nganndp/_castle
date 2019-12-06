@@ -6,7 +6,7 @@ void CDagger::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		return;
 	}
-	if (y > camera->GetPosition().y + SCREEN_HEIGHT || x > camera->GetPosition().x + SCREEN_WIDTH || x + 17 < camera->GetPosition().x)
+	if (y > camera->GetPosition().y + SCREEN_HEIGHT || x > camera->GetPosition().x + SCREEN_WIDTH || x + DG_WIDTH < camera->GetPosition().x)
 	{
 		SetActive(false);
 	}
@@ -15,9 +15,9 @@ void CDagger::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	x += dx;
 
 	if (nx > 0)
-		this->vx = 0.2f;
+		this->vx = DG_FLY_SPEED;
 	else
-		this->vx = -0.2f;
+		this->vx = -DG_FLY_SPEED;
 }
 void CDagger::SetState(int state) {
 	CGameObject::SetState(state);
@@ -46,6 +46,6 @@ void CDagger::GetBoundingBox(float& left, float& top, float& right, float& botto
 {
 	top = y;
 	left = x;
-	right = x + 17;
-	bottom = y + 10;
+	right = x + DG_WIDTH;
+	bottom = y + DG_HEIGHT;
 }
