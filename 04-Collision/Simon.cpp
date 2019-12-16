@@ -6,8 +6,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//adjust Simon pos
 	if (x < startpoint)
 		x = startpoint;
-	if (x > endpoint - 39)
-		x = endpoint - 39;
+	if (x > endpoint - SIMON_TEX_WIDTH)
+		x = endpoint - SIMON_TEX_WIDTH;
 	if (isOnStair == false)
 	{
 		vy += SIMON_GRAVITY * dt;

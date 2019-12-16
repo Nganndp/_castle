@@ -44,6 +44,11 @@ public:
 #define SOURCE_ENTRANCE_ELEMENT_TXT "ReadFile\\SceneElement\\Scene1.txt"
 #define SOURCE_CASTLE_ELEMENT_TXT "ReadFile\\SceneElement\\Scene2.txt"
 #define SOURCE_TORCH_ELEMENT_TXT "ReadFile\\SceneElement\\Torch.txt"
+#define SOURCE_STAGE_ENTRANCE_TXT "ReadFile\\SceneElement\\StageScene1.txt"
+#define SOURCE_STAGE_CASTLE_TXT "ReadFile\\SceneElement\\StageScene2.txt"
+#define SOURCE_OBJECT_SCENE1_TXT "ReadFile\\Objects\\ObjectsScene1.txt"
+#define SOURCE_OBJECT_SCENE2_TXT "ReadFile\\Objects\\ObjectsScene2.txt"
+#define SOURCE_PANTHER_POS_TXT "ReadFile\\Objects\\PantherPos.txt"
 
 //Simon
 #define SIMON_WALKING_SPEED		    0.05f 
@@ -54,7 +59,7 @@ public:
 #define SIMON_GRAVITY			    0.001f
 #define SIMON_DIE_DEFLECT_SPEED	    0.5f
 #define PULL_UP_SIMON_AFTER_SITTING 8
-
+#define SIMON_TEX_WIDTH 39
 #define SIMON_STATE_IDLE			0
 #define SIMON_STATE_WALKING_RIGHT	100
 #define SIMON_STATE_WALKING_LEFT	200

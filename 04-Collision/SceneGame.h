@@ -13,6 +13,7 @@
 #include "GameObject.h"
 #include "Textures.h"
 #include "TileMap.h"
+#include "CStage.h"
 
 #include "SIMON.h"
 #include "MS.h"
@@ -49,8 +50,11 @@ public:
 	void Render();
 	void LoadObjectFromFile(string source);
 	void LoadElementFromFile(string source);
+	void LoadStageVariableFromFile(string source);
+	void LoadPantherPosFromFile(string source);
 	void LoadSceneObject(int a);
 	void LoadSceneElement(int a);
+	void LoadStageVaribale(int a);
 	void SpawnDelayGhoulStart() { spawndelayghoul = 1;  spawndelayghoultimer_start = GetTickCount(); }
 	void SpawnDelayBatStart() { spawndelaybat = 1;  spawndelaybattimer_start = GetTickCount(); }
 	void SpawnDelayFishmanStart() { spawndelayfishman = 1;  spawndelayfishmantimer_start = GetTickCount(); }
@@ -80,6 +84,7 @@ public:
 	Grid* grid;
 	CAnimations* animations;
 	CSprites* sprites;
+	CStage* stage;
 	LPANIMATION ani;
 	vector<LPGAMEOBJECT> weapon;
 	vector<LPGAMEOBJECT> torches;
@@ -88,13 +93,14 @@ public:
 	vector<LPGAMEOBJECT> enemy;
 	vector<LPGAMEOBJECT> effects;
     vector<LPGAMEOBJECT> ObjectsFromGrid;
+	vector<STAGE> stages;
 
 	bool castle = false;
 	bool SimonMove = false;
 	bool isChangeColor;
 	bool isGrey;
 	int scene;
-	int stage;
+	int stagename = 0;
 	int countChangeColor;
 	int spawndelayghoul = 0;
 	int spawndelaybat = 0;
@@ -113,38 +119,13 @@ public:
 
 
 	//read from file
-	int simonposstartx;
-	int simonposstarty;
-	int simonposlandtounderground1x;
-	int simonposlandtounderground1y;
-	int simonposundergroundtoland1x;
-	int simonposundergroundtoland1y;
-	int simonposlandtounderground2x;
-	int simonposlandtounderground2y;
-	int simonposundergroundtoland2x;
-	int simonposundergroundtoland2y;
 	int hiddenmoneyposx;
 	int hiddenmoneyposy;
-	int ghouly;
-	int panther1x;
-	int panther1y;
-	int panther2x;
-	int panther2y;
-	int panther3x;
-	int panther3y;
-	int startstage1;
-	int endstage1;
-	int startstage2;
-	int endstage2;
-	int startstage3;
-	int endstage3;
-	int startstage4;
-	int endstage4;
-	int effectdoory;
 	int bossposx;
 	int bossposy;
-	int simonstartstage4posx;
-	int simonstartstage4posy;
-	int end;
+	int startmap;
+	int endmap;
+	int ghouly;
+	int effectdoory;
 };
 

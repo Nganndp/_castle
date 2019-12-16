@@ -21,7 +21,7 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vx = -vx;
 	if (y <= BOSS_ATTACK_HEIGHT)
 		vy = 0;
-	if (GetTickCount() - dietime_start > 600)
+	if (GetTickCount() - dietime_start > (ENEMY_DIE_TIME*3))
 	{
 		dietime_start = 0;
 		die = 0;
