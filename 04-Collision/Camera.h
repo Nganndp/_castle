@@ -42,6 +42,10 @@ public:
 	{
 		endpoint = b;
 	}
+	void SetCamerax(float x)
+	{
+		this->cam_x = x;
+	}
 	void SetCamera(float x, float y);
 	void SetCamMoving(bool a) { CamMoving = a; }
 	void StartCamMove(float a) { cammove = 1; cammove_start = GetTickCount(); cameramovetime = a; }

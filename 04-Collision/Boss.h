@@ -6,6 +6,7 @@
 #include "MS.h"
 #include "Axe.h"
 #include "Dagger.h"
+#include "HolyWater.h"
 class CBoss :public CGameObject
 {
 	CSimon* Simon;
@@ -17,6 +18,7 @@ class CBoss :public CGameObject
 	DWORD timerAttack = 0;
 	vector<LPGAMEOBJECT> simondagger;
 	vector<LPGAMEOBJECT> simonaxe;
+	vector<LPGAMEOBJECT> simonholywater;
 	int ani;
 	int HP;
 	bool isAttack;
@@ -42,6 +44,11 @@ public:
 	{
 		isHurtbyweapon = true;
 		simondagger.push_back(dagger);
+	}
+	void GetSimonHolyWater(CHolyWater* holywater)
+	{
+		isHurtbyweapon = true;
+		simonholywater.push_back(holywater);
 	}
 	void SetFirstPos(int x, int y)
 	{

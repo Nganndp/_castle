@@ -12,7 +12,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		vy += SIMON_GRAVITY * dt;
 	}
-
+	if (health < 0)
+	{
+		health = 0;
+	}
+	if (health == 0)
+	{
+		isOnStair = false;
+	}
 	if (state != SIMON_STATE_DIE)
 
 		//timer
@@ -269,6 +276,10 @@ void CSimon::Render(Camera *camera)
 			ani = SIMON_ANI_JUMP_RIGHT;
 		else ani = SIMON_ANI_JUMP_LEFT;
 	}
+	if (isOnGround && health == 0)
+	{
+		ani = SIMON_ANI_DIE;
+	}
 	if (isDamaged)
 	{
 		if (nx > 0)
@@ -332,28 +343,28 @@ void CSimon::SetState(int state)
 	case SIMON_STATE_WALKING_UP_STAIR:
 		if (isStairUp == true)
 			{
-				vx = SIMON_WALKING_SPEED;
-				vy = -SIMON_WALKING_SPEED;
+				vx = SIMON_WALKING_STAIR_SPEED;
+				vy = -SIMON_WALKING_STAIR_SPEED;
 				nx = 1;
 			}
 		else if (isStairUp == false)
 			{
-				vx = -SIMON_WALKING_SPEED;
-				vy = -SIMON_WALKING_SPEED;
+				vx = -SIMON_WALKING_STAIR_SPEED;
+				vy = -SIMON_WALKING_STAIR_SPEED;
 				nx = -1;
 			}
 		break;
 	case SIMON_STATE_WALKING_DOWN_STAIR:
 		if (isStairUp == false)
 		{
-			vx = SIMON_WALKING_SPEED;
-			vy = SIMON_WALKING_SPEED;
+			vx = SIMON_WALKING_STAIR_SPEED;
+			vy = SIMON_WALKING_STAIR_SPEED;
 			nx = 1;
 		}
 		else if (isStairUp == true)
 		{
-			vx = -SIMON_WALKING_SPEED;
-			vy = SIMON_WALKING_SPEED;
+			vx = -SIMON_WALKING_STAIR_SPEED;
+			vy = SIMON_WALKING_STAIR_SPEED;
 			nx = -1;
 		}
 		break;

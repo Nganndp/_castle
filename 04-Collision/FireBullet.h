@@ -5,12 +5,16 @@
 class CFireBullet :public CGameObject
 	{
 		bool isStop = false;
+		CGameObject* Simon;
+		CGameObject* MS;
 	public:
-		CFireBullet() :CGameObject()
+		CFireBullet(CGameObject*Simon, CGameObject*MS) :CGameObject()
 		{
 			LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Firebulletani.txt", this);
 			type = FIREBULLET;
 			active = true;
+			this->Simon = Simon;
+			this->MS = MS;
 		};
 		~CFireBullet();
 		bool GetStop()

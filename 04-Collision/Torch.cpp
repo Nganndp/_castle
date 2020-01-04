@@ -65,7 +65,7 @@ void CTorch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		return;
 	if (state != TORCH_STATE_NORMAL && state != TORCH_STATE_CANDLE && state != TORCH_STATE_INVI_POT_TORCH && state != TORCH_STATE_AXE_TORCH && die ==0)
 	{
-		vy = GRAVITY * dt;
+		vy = GRAVITY*2 * dt;
 	if (isOnGround == false)
 	    {
 		if (vx < 0 && x < FirstX- ENEMY_SHEART_RANGE)

@@ -12,7 +12,7 @@ class CFishman :public CGameObject
 	DWORD timerAttack = 0;
 
 public:
-	CFishman(CGameObject * Simon, Camera * camera, float movepoint) :CGameObject()
+	CFishman(CGameObject * Simon, CGameObject * MS, Camera * camera, float movepoint) :CGameObject()
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\Fishmanani.txt", this);
 		SetState(ENEMY_STATE_JUMPING);
@@ -21,13 +21,16 @@ public:
 		isStop = false;
 		this->movepoint = movepoint;
 		this->Simon = Simon;
+		this->MS = MS;
 		this->camera = camera;
-		firebullet = new CFireBullet();
+		firebullet = new CFireBullet(Simon, MS);
 		firebullet->SetActive(false);
 		simon.push_back(this->Simon);
+		//simon.push_back(this->MS);
 	};
 	~CFishman();
 	float movepoint;
+	CGameObject* MS;
 	CGameObject* Simon;
 	Camera* camera;
 	CFireBullet* firebullet;

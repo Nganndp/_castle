@@ -147,6 +147,7 @@ void CBoss::CheckCollisionSimon()
 				if (Simon->GetOnStair() == false)
 				{
 					Simon->StartIsDamaged();
+					Simon->SetHealth(4);
 				}
 				Simon->StartIsUnTouchable(SIMON_UNTOUCHABLE_TIME);
 			}
@@ -183,6 +184,14 @@ void CBoss::CheckCollisionWeapon()
 	for (int i = 0; i < simondagger.size(); i++)
 	{
 		if (CheckCollision(simondagger.at(i)))
+		{
+			HP = HP - 2;
+			isHurtbyweapon = false;
+		}
+	}
+	for (int i = 0; i < simonholywater.size(); i++)
+	{
+		if (CheckCollision(simonholywater.at(i)))
 		{
 			HP = HP - 2;
 			isHurtbyweapon = false;

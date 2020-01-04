@@ -30,12 +30,17 @@ void CFireBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (simon->GetOnStair() == false)
 					{
 						simon->StartIsDamaged();
+						simon->SetHealth(2);
 					}
 					simon->StartIsUnTouchable(SIMON_UNTOUCHABLE_TIME);
 				}
 
 			}
 	}
+	if (this->CheckCollision(this->MS))
+	{
+		this->SetActive(false);
+}
 }
 
 void CFireBullet::SetState(int state)

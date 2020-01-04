@@ -60,6 +60,7 @@ public:
 	void SpawnDelayFishmanStart() { spawndelayfishman = 1;  spawndelayfishmantimer_start = GetTickCount(); }
 	void SpawnDelayPantherStart() { spawndelaypanther = 1;  spawndelaypanthertimer_start = GetTickCount(); }
 	void StopEnemyStart() { stopenemy = 1; stopenemytimer_start = GetTickCount(); }
+	void SimonRevive();
 	~SceneGame();
 	CGame* game;
 	Camera* camera;
@@ -110,6 +111,7 @@ public:
 	float cx, cy;
 	float startpoint, endpoint, camstoppoint;
     DWORD timerChangeColor;
+	DWORD timerSimonDie;
 	DWORD spawndelayghoultimer_start;
 	DWORD spawndelaybattimer_start;
 	DWORD spawndelayfishmantimer_start;

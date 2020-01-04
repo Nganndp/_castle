@@ -51,7 +51,8 @@ public:
 #define SOURCE_PANTHER_POS_TXT "ReadFile\\Objects\\PantherPos.txt"
 
 //Simon
-#define SIMON_WALKING_SPEED		    0.05f 
+#define SIMON_WALKING_SPEED		    0.07f 
+#define SIMON_WALKING_STAIR_SPEED		    0.05f 
 #define	SIMON_AUTO_WALKING_STAIR_SPEED   0.2f
 #define SIMON_JUMP_SPEED_X			0.12f
 #define SIMON_JUMP_SPEED_Y		    0.22f
@@ -102,13 +103,13 @@ public:
 #define SIMON_ANI_DOWN_STAIR_ATTACK_LEFT  25
 #define SIMON_ANI_IS_DAMAGED_LEFT 26
 #define SIMON_ANI_IS_DAMAGED_RIGHT 27
-#define SIMON_ANI_DIE		            99	
+#define SIMON_ANI_DIE		            28
 
 #define SIMON_LEVEL_MS_1            0
 #define SIMON_LEVEL_MS_2            1
 #define SIMON_LEVEL_MS_3            2
 
-#define SIMON_IDLE_BBOX_WIDTH       12
+#define SIMON_IDLE_BBOX_WIDTH       14
 #define SIMON_IDLE_BBOX_HEIGHT      30
 #define SIMON_SIT_BBOX_HEIGHT       22
 

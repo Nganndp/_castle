@@ -103,7 +103,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	if (isFire)
 	{
-		firebullet = new CFireBullet();
+		firebullet = new CFireBullet(this->Simon, this->MS);
 		if (nx > 0)
 		{
 			firebullet->nx = 1;

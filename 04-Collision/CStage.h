@@ -18,6 +18,8 @@ public:
 	int endpoint;
 	int simonposx;
 	int simonposy;
+	int simonrespawnx;
+	int simonrespawny;
 	int numoftemp;
 	int *temp = new int[10];
 	int tempo;
@@ -31,13 +33,15 @@ public:
 		this->simonposy = this->temp[b];
 		this->temp[b] = tempo2;
     }
-	void AddVariable(int stagename, int startpoint, int endpoint, int simonposx, int simonposy)
+	void AddVariable(int stagename, int startpoint, int endpoint, int simonposx, int simonposy, int simonrespawnx, int simonrespawny)
 	{
 		this->stagename = stagename;
 		this->startpoint = startpoint;
 		this->endpoint = endpoint;
 		this->simonposx = simonposx;
 		this->simonposy = simonposy;
+		this->simonrespawnx = simonrespawnx;
+		this->simonrespawny = simonrespawny;
 	}
 	void AddTemp(int temp, int i)
 	{

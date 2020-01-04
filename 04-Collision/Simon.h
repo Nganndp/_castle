@@ -29,6 +29,7 @@ class CSimon: public CGameObject
 	int startpoint;
 	int endpoint;
 	int untouchabletime;
+	int health;
 	float autowalkingtime;
 	bool active = true;
 	bool sit = false;
@@ -54,6 +55,7 @@ public:
 	{
 		LoadAnimations::LoadAnimationFromFile("ReadFile\\Ani\\simonani.txt", this);
 		numweapon = 1;
+		health = 16;
 		jump = 0;
 		attack = 0;
 		sitattack = 0;
@@ -108,6 +110,10 @@ public:
 	int GetEndPOint()
 	{
 		return endpoint;
+	}
+	int GetHealth()
+	{
+		return health;
 	}
 	boolean GetSit()
 	{
@@ -187,6 +193,14 @@ public:
 	void SetEndPoint(int b)
 	{
 		endpoint = b;
+	}
+	void SetHealth(int a)
+	{
+		health = health - a;
+	}
+	void SetHealthToZero()
+	{
+		health = 0;
 	}
 	void StartJump() { jump = 1; jump_start = GetTickCount(); }
 	void StartJumpMove() { jumpmove = 1; jump_start = GetTickCount(); }
